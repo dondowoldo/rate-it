@@ -771,3 +771,15 @@ h4 {
     height: 100%;
     width: 100%;
 }
+
+.gallery {
+    display: grid;
+    grid-template-columns: repeat(10, 80vw);
+    grid-template-rows: 1fr;
+    grid-column-gap: 1rem;
+    grid-row-gap: 1rem;
+    overflow-x: auto; /* Enable horizontal scrolling */
+    height: 90vh;
+    scroll-snap-type: x mandatory;
+    scroll-padding: 1rem;
+}
