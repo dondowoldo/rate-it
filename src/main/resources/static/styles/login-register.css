@@ -9,6 +9,44 @@
     font-family: 'Montserrat', sans-serif;
 }
 
+.header {
+    display: flex;
+    background-color: #568D73;
+    align-items: center;
+}
+
+.header-top {
+    display: flex;
+    color: white;
+    font-family: 'Righteous', sans-serif;
+    font-size: 3rem;
+    justify-content: center;
+}
+
+.header-top > a {
+    all: unset;
+    cursor: pointer;
+}
+
+.header-right {
+    display: flex;
+    justify-content: end;
+    align-content: center;
+}
+
+.content-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.content-header > h1 {
+    margin-bottom: 0;
+}
+
+
 .logo {
     display: block;
     margin-bottom: 80px;
@@ -23,6 +61,7 @@
     top: calc(50% - 240px);
     left: calc(50% - 160px);
     margin: 40px;
+    padding: 0;
 }
 
 .top-header {
