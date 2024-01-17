@@ -17,27 +17,30 @@
 </div>
 
 <div class="container">
-    <form class="signUp">
+    <form class="signUp" th:action="@{/users/signup}" method="post">
+        <p th:if="${error}" th:text="${error}"></p>
         <h3>REGISTER</h3>
 
         <label for="username" class="icon-label">Username</label>
         <div class="input-with-icon-user">
-            <input id="username" class="username" placeholder="Enter your username here.." required autocomplete="off">
+            <input type="text" name="username" id="username" class="username" th:value="${userDTO?.username}"
+                   placeholder="Enter your username here.." required autocomplete="off">
         </div>
 
         <label for="email" class="icon-label">Email</label>
         <div class="input-with-icon-email">
-            <input id="email" class="email" type="email" placeholder="Enter your email here.." required>
+            <input id="email" type="text" name="email" th:value="${userDTO?.email}"
+                   class="email" type="email" placeholder="Enter your email here.." required>
         </div>
 
         <label for="password" class="icon-label">Password</label>
         <div class="input-with-icon-password">
-            <input id="password" class="password" type="password" placeholder="Enter your password here.." required>
+            <input name="password" id="password" class="password" type="password" placeholder="Enter your password here.." required>
         </div>
 
         <label for="confirmPassword" class="icon-label">Confirmpassword</label>
         <div class="input-with-icon-password">
-            <input id="confirmPassword" class="password" type="password" placeholder="Enter your password here.."
+            <input name="confirmPassword" id="confirmPassword" class="password" type="password" placeholder="Enter your password here.."
                    required>
         </div>
 
@@ -48,7 +51,8 @@
         </div>
 
     </form>
-    <form class="signIn">
+    <form class="signIn" method="post" th:action="@{/users/login}">
+
         <h3>SIGN IN</h3>
         <div class="input-username2">
             <label for="username">Username</label>
@@ -77,8 +81,8 @@
 
 <script>
 
-    $(document).ready(function() {
-        setTimeout(function() {
+    $(document).ready(function () {
+        setTimeout(function () {
             $(".signIn").addClass("active-dx");
             $(".signUp").addClass("inactive-sx");
             $(".signUp").removeClass("active-sx");
