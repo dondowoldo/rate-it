@@ -6,7 +6,7 @@
 }
 
 h1 {
-    font-size: 2rem;
+    font-size: 3rem;
     font-weight: 600;
 }
 
@@ -17,13 +17,15 @@ h1 {
 
 /* Form Container Styles */
 .form-container {
-    margin-top: 20px;
+    margin-top: 20px; /* Adjust as needed */
 }
 
 .form-control {
-    border-radius: 10px; /* Add border-radius for rounded corners */
-    padding-left: 60px; /* Adjust space for the icon on the left */
-    width: calc(100% - 60px); /* Adjust width to accommodate icon */
+    border-radius: 20px; /* Add border-radius for rounded corners */
+    padding-left: 40px; /* Adjust space for the icon on the left */
+    padding-top: 10px;
+    text-align: center;
+
 }
 
 .form-group {
@@ -37,6 +39,9 @@ h1 {
     flex-direction: column;
     align-items: center;
     width: 100%; /* Adjust the width if needed */
+    background-color: #BED9CC;
+    border: solid 2px black;
+    border-radius: 35px;
 }
 
 /* Sign In Button Styles */
@@ -100,33 +105,95 @@ h1 {
 }
 
 .input-field {
+    display: flex;
+    align-items: center;
+}
+
+.input {
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    margin-bottom: 15px;
     text-align: center;
-    width: 100%;
+    margin-left: 20px;
+    margin-right: 20px;
+
 }
 
-.input-icons {
-    position: relative;
-    text-align: center;
-}
-
-.input-icons i {
-
-    position: absolute;
-    left: 50px;
-    top: 50%;
-    transform: translate(-50%, -50%);
-}
-
-.icon {
-    color: #568D73;
-    text-align: left;
+label {
+    margin-bottom: 5px;
+    font-size: 12px;
+    font-family: 'Montserrat', sans-serif;
 }
 
 .card-body {
-
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
+}
+
+.login {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.alerts {
+    text-align: center;
+}
+
+.login-button {
+    background-color: #E2E8E5;
+    color: black;
+    padding: 15px 30px;
+    border: solid 1px black;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-bottom: 20px;
+    font-size: 20px;
+    font-weight: bold;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.login-button:hover {
+    background-color: #45a049; /* Darker green on hover */
+}
+
+.control-label {
+    text-align: left;
+    font-family: 'Montserrat', sans-serif;
 
 }
+
+p {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 30px;
+    font-weight: bolder;
+
+
+}
+
+.header {
+    display: flex;
+    background-color: #568D73;
+    align-items: center;
+}
+
+a {
+    color: #999999;
+    font-size: 12px;
+    font-style: italic;
+    text-decoration: none;
+    font-family: 'Montserrat', sans-serif;
+
+}
+
+.forgot-password {
+
+    width: 100%;
+    text-align: right;
+    margin-top: 5px;
+    text-decoration: none;
+}
+
+
