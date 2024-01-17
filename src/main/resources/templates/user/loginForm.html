@@ -35,12 +35,14 @@
 
         <label for="password" class="icon-label">Password</label>
         <div class="input-with-icon-password">
-            <input name="password" id="password" class="password" type="password" placeholder="Enter your password here.." required>
+            <input name="password" id="password" class="password" type="password"
+                   placeholder="Enter your password here.." required>
         </div>
 
         <label for="confirmPassword" class="icon-label">Confirmpassword</label>
         <div class="input-with-icon-password">
-            <input name="confirmPassword" id="confirmPassword" class="password" type="password" placeholder="Enter your password here.."
+            <input name="confirmPassword" id="confirmPassword" class="password" type="password"
+                   placeholder="Enter your password here.."
                    required>
         </div>
 
@@ -51,17 +53,24 @@
         </div>
 
     </form>
+
+    <div class="alerts">
+        <div th:if="${param.error}" class="alert alert-danger">Invalid Username or Password</div>
+        <div th:if="${param.logout}" class="alert alert-success">You have been logged out.</div>
+    </div>
+
     <form class="signIn" method="post" th:action="@{/users/login}">
 
         <h3>SIGN IN</h3>
         <div class="input-username2">
             <label for="username">Username</label>
-            <input id="username2" class="username" placeholder="Enter your username here.." required
-                   autocomplete="off"/>
+            <input type="text" name="username " id="username2" class="username"
+                   placeholder="Enter your username here.." required autocomplete="off"/>
         </div>
         <div class="input-password2">
             <label for="password">Password</label>
-            <input id="password2" class="password" type="password" placeholder="Enter your password here.." required/>
+            <input name="password" id="password2" class="password" type="password" )
+                   placeholder="Enter your password here.." required/>
         </div>
 
         <div class="forgot-password">
