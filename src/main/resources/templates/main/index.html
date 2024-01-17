@@ -1,22 +1,18 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RateSpot</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" th:href="@{/styles/index.css}">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&family=Montserrat:wght@200;400;600&family=Righteous&family=Ubuntu:wght@400;500;700&display=swap"
-          rel="stylesheet">
+
+<head th:replace="~{fragments.html :: head(title='Main Page')}">
 </head>
+
 <body>
 <div class="container-fluid">
-    <header th:replace="~{fragments.html :: header}">
+    <header class="header">
+        <div th:replace="~{fragments.html :: hamburger-menu}"></div>
+        <div th:replace="~{fragments.html :: logo}"></div>
+        <div th:replace="~{fragments.html :: login-menu}"></div>
+        <script th:replace="~{fragments.html :: topbar-script}"></script>
     </header>
-    <div class="content mainpage-content">
+    <div class="content main-page-content">
         <section id="usersInterests" class="interests">
             <div th:unless="${likedInterests == null || likedInterests.isEmpty()}">
                 <div class="section-label">
@@ -53,12 +49,12 @@
                 <a th:if="${loggedUser}" th:href="@{/interests/create}"><h3>Create new</h3></a>
             </div>
 
-            <div class="filters">
-                <button id="location-button" class="filter-button">Location</button>
-                <button class="filter-button">Drink</button>
-                <button class="filter-button">Food</button>
-                <button class="filter-button">Outdoor</button>
-            </div>
+<!--            <div class="filters">-->
+<!--                <button id="location-button" class="filter-button">Location</button>-->
+<!--                <button class="filter-button">Drink</button>-->
+<!--                <button class="filter-button">Food</button>-->
+<!--                <button class="filter-button">Outdoor</button>-->
+<!--            </div>-->
             <div class="search-container">
                 <input type="text" class="search" name="query" oninput="loadInterests(this.value)" autocomplete="off"
                        placeholder="Find interests…">

@@ -1,5 +1,7 @@
 package it.rate.webapp.controllers;
 
+import it.rate.webapp.exceptions.badrequest.InvalidUserDetailsException;
+import it.rate.webapp.exceptions.notfound.InterestNotFoundException;
 import it.rate.webapp.models.*;
 import it.rate.webapp.services.*;
 import lombok.AllArgsConstructor;
@@ -19,12 +21,13 @@ import java.util.Optional;
 @RequestMapping("/interests")
 public class InterestController {
 
-  private InterestService interestService;
-  private CreateInterestService interestCreationService;
-  private UserService userService;
-  private RoleService roleService;
-  private PlaceService placeService;
-  private LikeService likeService;
+  private final InterestService interestService;
+  private final CreateInterestService createInterestService;
+  private final UserService userService;
+  private final RoleService roleService;
+  private final PermissionService permissionService;
+  private final PlaceService placeService;
+  private final LikeService likeService;
 
   @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
   @GetMapping("/create")
@@ -48,7 +51,7 @@ public class InterestController {
       @RequestParam List<String> criteriaNames,
       RedirectAttributes ra,
       Principal principal) {
-    Interest savedInterest = interestCreationService.save(name, description, criteriaNames);
+    Interest savedInterest = createInterestService.save(name, description, criteriaNames);
     if (principal != null) {
       AppUser loggedUser = userService.getByEmail(principal.getName());
       likeService.createLike(loggedUser, savedInterest);
@@ -59,27 +62,23 @@ public class InterestController {
 
   @GetMapping("/{interestId}")
   public String interestView(Model model, @PathVariable Long interestId, Principal principal) {
-    Optional<Interest> interest = interestService.findInterestById(interestId);
-    if (interest.isEmpty()) {
-      model.addAttribute("message", "This interest doesn't exist");
-      return "error/page";
-    }
+    Interest interest =
+        interestService.findById(interestId).orElseThrow(InterestNotFoundException::new);
 
     if (principal != null) {
       AppUser loggedUser = userService.getByEmail(principal.getName());
 
       model.addAttribute("loggedUser", loggedUser);
       model.addAttribute(
-          "like", likeService.existsById(new LikeId(loggedUser.getId(), interestId)));
+          "liked", likeService.existsById(new LikeId(loggedUser.getId(), interestId)));
+      model.addAttribute(
+          "ratingPermission", permissionService.hasRatingPermission(loggedUser, interest));
 
-      Optional<Role> loggedUserRole =
-          roleService.findByAppUserIdAndInterestId(loggedUser.getId(), interestId);
-      if (loggedUserRole.isPresent()) {
-        model.addAttribute("loggedUserRole", loggedUserRole.get());
-      }
+      Optional<Role> optRole = roleService.findById(new RoleId(loggedUser.getId(), interestId));
+      optRole.ifPresent(role -> model.addAttribute("role", role.getRole()));
     }
-    model.addAttribute("interest", interest.get());
-    model.addAttribute("places", placeService.getPlaceInfoDTOS(interest.get()));
+    model.addAttribute("interest", interest);
+    model.addAttribute("places", placeService.getPlaceInfoDTOS(interest));
     return "interest/page";
   }
 
@@ -109,7 +108,7 @@ public class InterestController {
           "loggedUser",
           userService
               .findByEmail(principal.getName())
-              .orElseThrow(() -> new RuntimeException("Email not found in the database")));
+              .orElseThrow(InvalidUserDetailsException::new));
       model.addAttribute(
           "likedInterests", interestService.getLikedInterestsDTOS(principal.getName()));
     }

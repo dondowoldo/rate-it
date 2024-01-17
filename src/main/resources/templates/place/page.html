@@ -1,35 +1,28 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:text="${place.name} + ' | RateSpot'">RateSpot</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://releases.transloadit.com/uppy/v3.20.0/uppy.min.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" th:href="@{/styles/index.css}">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&family=Montserrat:wght@200;400;600&family=Righteous&family=Ubuntu:wght@400;500;700&display=swap"
-          rel="stylesheet">
+<head th:replace="~{fragments.html :: head(title=${place.name})}">
 </head>
 
 <body th:object="${place}">
 <div class="container-fluid">
-    <header th:replace="~{fragments.html :: header}">
+    <header class="header">
+        <div th:replace="~{fragments.html :: hamburger-menu}"></div>
+        <div th:replace="~{fragments.html :: logo}"></div>
+        <div th:replace="${loggedUser != null && place.creator.equals(loggedUser)} ?
+         ~{fragments.html :: place-admin-menu} : ~{fragments.html :: login-menu}"></div>
+        <script th:replace="~{fragments.html :: topbar-script}"></script>
     </header>
     <div class="content">
-        <!--        <a th:href="@{/interests/{intId}/places/{placeId}/edit(intId=${place.interest.id}, placeId=${place.id})}">Edit-->
-        <!--            Place</a>-->
         <a class="place-interest"
            th:href="@{/interests/{interestId}(interestId=${place.interest.id})}">
             <h2 th:text="*{getInterest.name}"></h2>
         </a>
 
         <div class="place-image">
-            <img src="https://picsum.photos/500/300" alt="placeholder"/>
+            <img th:if="*{imageNames.isEmpty()}" src="https://picsum.photos/500/300" alt="Generic image"/>
+            <img th:unless="*{imageNames.isEmpty()}" id="picture-container" th:attr="data-image-id=*{imageNames.get(getImageNames().size() - 1)}" alt="Place image"/>
+
         </div>
 
         <header class="content-header place-header">
@@ -49,26 +42,27 @@
                   name="rating">
                 <div class="place-rating-criteria">
                     <div class="place-rating-criterion" th:each="criterionDTO : ${placeCriteria.criteria()}">
-                        <div th:text="${criterionDTO.criterion.name}"/>
+                        <div th:text="${criterionDTO.name()}"/>
 
                         <div th:class="${usersRatings} ? 'place-rating-average small' : 'place-rating-average'">
                             <i class="fas fa-star"></i>
-                            <span th:text="${#numbers.formatDecimal(criterionDTO.avgRating / 2, 1, 'DEFAULT', 1, 'DEFAULT')}"></span>
+                            <span class="rating"
+                                  th:text="${#numbers.formatDecimal(criterionDTO.avgRating / 2, 1, 'DEFAULT', 1, 'DEFAULT')}"></span>
                         </div>
 
                         <div th:if="${usersRatings}">
 
                             <div class="place-rating-stars">
                                 <th:block th:each="i: ${#numbers.sequence(0, 9)}">
-                                    <i th:class="'place-rating-star star-' + ${i+1} + ' ' + ${i < usersRatings.ratings.get(criterionDTO.criterion.id) ? 'is-active' : ''}"
+                                    <i th:class="'place-rating-star star-' + ${i+1} + ' ' + ${i < usersRatings.ratings.get(criterionDTO.id) ? 'is-active' : ''}"
                                        th:attr="data-star=${i+1}"></i>
                                 </th:block>
                             </div>
 
                             <input type="number" hidden="hidden"
-                                   th:value="${usersRatings.ratings.containsKey(criterionDTO.criterion.id)} ?
-                                        ${usersRatings.ratings.get(criterionDTO.criterion.id)}"
-                                   th:field="*{ratings[__${criterionDTO.criterion.id}__]}">
+                                   th:value="${usersRatings.ratings.containsKey(criterionDTO.id)} ?
+                                        ${usersRatings.ratings.get(criterionDTO.id)}"
+                                   th:field="*{ratings[__${criterionDTO.id}__]}">
                         </div>
                     </div>
                 </div>
@@ -81,23 +75,44 @@
                 </div>
             </form>
 
-            <!--            TODO: Request rate access button to appear only if user doesn't have access and interest is exclusive-->
-            <form th:unless="${usersRatings}"
-                  th:action="@{/interests/{id}/request(id=${place.interest.id})}"
-                  th:method="post">
-                <button class="button" type="submit">Request rate access</button>
-            </form>
+            <div class="place-rating-button-bar">
+                <span class="button pending"
+                      th:if="${loggedUser != null && place.interest.isExclusive() && applicant == true}">Pending Request</span>
+                <form th:if="${loggedUser != null && place.interest.isExclusive() && usersRatings == null && applicant != true}"
+                      th:action="@{/interests/{id}/request(id=${place.interest.id})}"
+                      th:method="post">
+                    <button class="button" type="submit">Request Rating Authority</button>
+                </form>
+                <a class="button"
+                   th:if="${loggedUser == null}"
+                   th:href="@{/users/login}">Login</a>
+            </div>
         </section>
 
         <div class="place-map">
-            Map placeholder
+            <div id="map"></div>
         </div>
     </div>
 </div>
 
 
-<script th:inline="javascript" src="/scripts/rating.js"></script>
-<script type="module" src="/scripts/imageUpload.js"></script>
+<script th:replace="~{fragments :: placeMap-script}"></script>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+
+    let latitude = [[${place.latitude}]];
+    let longitude = [[${place.longitude}]];
+    let name = [[${place.name}]];
+    let rating = [[${place.getAverageRating()}]];
+
+    /*]]>*/
+</script>
+
+<script src="/scripts/placeMap.js"></script>
+<script src="/scripts/imageFetcher.js"></script>
+<script th:if="${usersRatings}" src="/scripts/rating.js"></script>
+<script th:if="${usersRatings}" type="module" src="/scripts/imageUpload.js"></script>
+
 
 </body>
 </html>

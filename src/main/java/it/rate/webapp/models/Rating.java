@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.validator.constraints.Range;
 
 @Getter
 @Setter
@@ -12,7 +13,10 @@ import lombok.Setter;
 @Table(name = "ratings")
 public class Rating {
   @EmbeddedId private RatingId id;
-  private int score;
+
+  @Range(min = 1, max = 10)
+  @Column(nullable = false)
+  private int rating;
 
   @ManyToOne
   @MapsId("userId")
@@ -26,12 +30,12 @@ public class Rating {
   @MapsId("criterionId")
   private Criterion criterion;
 
-  public Rating(AppUser appUser, Place place, Criterion criterion, int score) {
+  public Rating(AppUser appUser, Place place, Criterion criterion, int rating) {
     this.id = new RatingId(appUser.getId(), place.getId(), criterion.getId());
     this.appUser = appUser;
     this.place = place;
     this.criterion = criterion;
-    this.score = score;
+    this.rating = rating;
   }
 
   public Long getCriterionId() {

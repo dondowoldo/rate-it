@@ -12,7 +12,7 @@ import it.rate.webapp.BaseTest;
 import it.rate.webapp.dtos.CriteriaOfPlaceDTO;
 import it.rate.webapp.dtos.CriterionAvgRatingDTO;
 import it.rate.webapp.dtos.PlaceInfoDTO;
-import it.rate.webapp.exceptions.BadRequestException;
+import it.rate.webapp.exceptions.badrequest.BadRequestException;
 import it.rate.webapp.models.*;
 import it.rate.webapp.repositories.PlaceRepository;
 import it.rate.webapp.repositories.RatingRepository;
@@ -59,7 +59,7 @@ class PlaceServiceTest extends BaseTest {
     // Mock the interestService to return an empty Optional when findInterestById is called with the
     // specified interestId
     // This simulates the scenario where no interest is found for the given ID
-    when(interestService.findInterestById(eq(interestId))).thenReturn(Optional.empty());
+    when(interestService.findById(eq(interestId))).thenReturn(Optional.empty());
 
     // Execute the test and verify that a BadRequestException is thrown
     // The assertThrows method checks that the specified exception is thrown when the lambda
@@ -82,7 +82,7 @@ class PlaceServiceTest extends BaseTest {
 
     // Mock the interestService to return the created Interest when findInterestById is called with
     // the specific interestId
-    when(interestService.findInterestById(eq(interestId))).thenReturn(Optional.of(interest));
+    when(interestService.findById(eq(interestId))).thenReturn(Optional.of(interest));
 
     // Mock the placeRepository to return whatever Place object it receives
     when(placeRepository.save(any())).thenAnswer(i -> i.getArgument(0));
@@ -126,31 +126,6 @@ class PlaceServiceTest extends BaseTest {
   }
 
   @Test
-  void nonExistingUser() {
-    Long placeId = 2L;
-    Place place = getPlaceNoId();
-    String loggedUser = "John@doe.com";
-
-    when(userService.findByEmail(eq(loggedUser))).thenReturn(Optional.empty());
-    when(placeRepository.findById(eq(placeId))).thenReturn(Optional.of(place));
-
-    assertThrows(BadRequestException.class, () -> placeService.isCreator(loggedUser, placeId));
-  }
-
-  @Test
-  void nonExistingPlace() {
-    Long placeId = (99999L);
-    AppUser creator = new AppUser();
-    String loggedUserEmail = "John@doe.com";
-    creator.setEmail(loggedUserEmail);
-
-    when(userService.findByEmail(eq(loggedUserEmail))).thenReturn(Optional.of(creator));
-    when(placeRepository.findById(eq(placeId))).thenReturn(Optional.empty());
-
-    assertThrows(BadRequestException.class, () -> placeService.isCreator(loggedUserEmail, placeId));
-  }
-
-  @Test
   void getPlaceInfoDTOSHappyCase() {
     Place place = getPlaceNoId();
     Interest interest = new Interest();
@@ -166,17 +141,18 @@ class PlaceServiceTest extends BaseTest {
             new Rating(userTwo, place, criteria.get(0), 5),
             new Rating(userTwo, place, criteria.get(1), 6));
 
+    CriterionAvgRatingDTO criterionAvgRatingOne =
+        new CriterionAvgRatingDTO(criteria.get(1).getId(), criteria.get(1).getName(), 5D);
+    CriterionAvgRatingDTO criterionAvgRatingTwo =
+        new CriterionAvgRatingDTO(criteria.get(0).getId(), criteria.get(0).getName(), 4D);
+
     interest.setPlaces(List.of(place));
     place.setRatings(ratings);
     place.setInterest(interest);
     interest.setCriteria(criteria);
 
     List<PlaceInfoDTO> expectedResult =
-        List.of(
-            new PlaceInfoDTO(
-                place,
-                new CriterionAvgRatingDTO(criteria.get(1), 5),
-                new CriterionAvgRatingDTO(criteria.get(0), 4)));
+        List.of(new PlaceInfoDTO(place, criterionAvgRatingOne, criterionAvgRatingTwo));
 
     when(ratingRepository.findAllByCriterionAndPlace(criteria.get(0), place))
         .thenReturn(Arrays.asList(ratings.get(0), ratings.get(2)));
@@ -224,8 +200,8 @@ class PlaceServiceTest extends BaseTest {
     CriteriaOfPlaceDTO expectedResult =
         new CriteriaOfPlaceDTO(
             Arrays.asList(
-                new CriterionAvgRatingDTO(criteria.get(0), 4),
-                new CriterionAvgRatingDTO(criteria.get(1), 5)));
+                new CriterionAvgRatingDTO(criteria.get(0).getId(), criteria.get(0).getName(), 4D),
+                new CriterionAvgRatingDTO(criteria.get(1).getId(), criteria.get(1).getName(), 5D)));
 
     when(ratingRepository.findAllByCriterionAndPlace(criteria.get(0), place))
         .thenReturn(Arrays.asList(ratings.get(0), ratings.get(2)));
@@ -251,7 +227,10 @@ class PlaceServiceTest extends BaseTest {
         .thenReturn(new ArrayList<>());
 
     CriteriaOfPlaceDTO expectedResult =
-        new CriteriaOfPlaceDTO(List.of(new CriterionAvgRatingDTO(criteria.get(0), -1)));
+        new CriteriaOfPlaceDTO(
+            List.of(
+                new CriterionAvgRatingDTO(
+                    criteria.get(0).getId(), criteria.get(0).getName(), -1D)));
 
     CriteriaOfPlaceDTO actualResult = placeService.getCriteriaOfPlaceDTO(place);
 
@@ -263,6 +242,7 @@ class PlaceServiceTest extends BaseTest {
     Place place = new Place();
     place.setName("name");
     place.setDescription("description");
+    place.setImageNames(List.of("image"));
     return place;
   }
 }

@@ -28,10 +28,12 @@ public class SecurityConfig {
                         "/scripts/**",
                         "/",
                         "/interests/{id}",
+                        "/interests/{id}/map",
                         "/interests/{interestId}/places/{placeId}",
                         "/users/signup",
                         "/users/login",
-                        "/api/v1/interests/suggestions")
+                        "/api/v1/interests/suggestions",
+                        "/api/v1/interests/{id}/places")
                     .permitAll()
                     .anyRequest()
                     .authenticated())

@@ -1,28 +1,23 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:if="${interest.id == null}" th:text="'New Interest | RateSpot'"></title>
-    <title th:unless="${interest.id == null}" th:text="'Editing... ' + ${interest.name} + ' | RateSpot '"></title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" th:href="@{/styles/index.css}">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&family=Montserrat:wght@200;400;600&family=Righteous&family=Ubuntu:wght@400;500;700&display=swap"
-          rel="stylesheet">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments.html :: head(title=${interest.id == null} ? 'New Interest' : 'Editing ' + ${interest.name})}">
 </head>
+
 <body>
 <div class="container-fluid">
-    <header th:replace="~{fragments.html :: header}">
+    <header class="header">
+        <div th:replace="~{fragments.html :: hamburger-menu}"></div>
+        <div th:replace="~{fragments.html :: logo}"></div>
+        <div th:replace="~{fragments.html :: login-menu}"></div>
+        <script th:replace="~{fragments.html :: topbar-script}"></script>
     </header>
 
     <div class="content">
         <form th:object="${interest}" th:data-interest-id="*{id}" name="myForm" th:action="${action}"
               th:method="${method}">
             <h2 th:if="${interest.id == null}">New Interest</h2>
-            <h2 th:unless="${interest.id == null}" th:text="'Editing... ' + ${interest.name}"></h2>
+            <h2 th:unless="${interest.id == null}" th:text="'Editing ' + ${interest.name}"></h2>
             <section class="input-param">
                 <h4>Name</h4>
                 <label>
@@ -32,15 +27,15 @@
 
             <section class="input-param">
                 <h4>Category</h4>
-                <p>sport food whatever placeholder</p>
+                <p>TBD</p>
             </section>
 
             <section class="input-param">
                 <h4>Visibility</h4>
                 <input type="checkbox" id="toggle" class="toggle-checkbox" name="exclusive" th:checked="*{exclusive}"/>
                 <label for="toggle" class="toggle-container">
-                    <div>Public</div>
-                    <div>Private</div>
+                    <span>Public</span>
+                    <span>Private</span>
                 </label>
             </section>
 
@@ -61,7 +56,7 @@
                                 <input class="input-text-field" type="text" name="criteriaNames"
                                        th:value="${criterion.name}" required/>
                                 <button class="role-option-button kick-button" type="button" onclick="removeCriteria(this, ${iterStat.index})">
-                                    <img src="/icons/cross.svg">
+                                    <img src="/icons/cross.svg" alt="Kick">
                                 </button>
                             </label>
                         </div>
@@ -69,9 +64,9 @@
                 </div>
 
                 <div class="add-criterion">
-                    <h7>Add criterion</h7>
+                    <span>Add criterion</span>
                     <button class="role-option-button accept-button" type="button" onclick="addCriteria()">
-                        <img src="/icons/add.svg">
+                        <img src="/icons/add.svg" alt="Add Criterion">
                     </button>
                 </div>
 
@@ -84,7 +79,7 @@
                 </label>
             </section>
 
-            <button class="dark-button" type="submit">Save</button>
+            <button class="button" type="submit">Save</button>
         </form>
     </div>
 

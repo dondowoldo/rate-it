@@ -3,17 +3,17 @@ package it.rate.webapp.services;
 import it.rate.webapp.dtos.CriteriaOfPlaceDTO;
 import it.rate.webapp.dtos.CriterionAvgRatingDTO;
 import it.rate.webapp.dtos.PlaceInfoDTO;
-import it.rate.webapp.exceptions.BadRequestException;
+import it.rate.webapp.exceptions.badrequest.BadRequestException;
+import it.rate.webapp.exceptions.badrequest.InvalidInterestDetailsException;
+import it.rate.webapp.exceptions.badrequest.InvalidUserDetailsException;
 import it.rate.webapp.models.*;
 import it.rate.webapp.models.AppUser;
 import it.rate.webapp.models.Interest;
 import it.rate.webapp.models.Place;
 import it.rate.webapp.repositories.PlaceRepository;
 import it.rate.webapp.repositories.RatingRepository;
-
 import java.util.*;
 import java.util.stream.Collectors;
-
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -31,13 +31,11 @@ public class PlaceService {
     String loggedInUserName = SecurityContextHolder.getContext().getAuthentication().getName();
 
     AppUser loggedUser =
-        userService
-            .findByEmail(loggedInUserName)
-            .orElseThrow(() -> new BadRequestException("User email not found in the database"));
+        userService.findByEmail(loggedInUserName).orElseThrow(InvalidUserDetailsException::new);
     Interest interest =
         interestService
-            .findInterestById(interestId)
-            .orElseThrow(() -> new BadRequestException("Interest ID not found in the database"));
+            .findById(interestId)
+            .orElseThrow(InvalidInterestDetailsException::new);
 
     loggedUser.getCreatedPlaces().add(place);
     interest.getPlaces().add(place);
@@ -51,22 +49,7 @@ public class PlaceService {
     return placeRepository.findById(id);
   }
 
-  public boolean isCreator(String loggedUserEmail, Long placeId) throws BadRequestException {
-
-    AppUser appUser =
-        userService
-            .findByEmail(loggedUserEmail)
-            .orElseThrow(() -> new BadRequestException("Email not found in database"));
-
-    Place place =
-        placeRepository
-            .findById(placeId)
-            .orElseThrow(() -> new BadRequestException("Place id not found in database"));
-
-    return place.getCreator().equals(appUser);
-  }
-
-  public Place getReferenceById(Long placeId) {
+  public Place getById(Long placeId) {
     return placeRepository.getReferenceById(placeId);
   }
 
@@ -99,11 +82,11 @@ public class PlaceService {
   private CriterionAvgRatingDTO getCriterionAvgRatingDTO(Criterion criterion, Place place) {
     double avgRating =
         ratingRepository.findAllByCriterionAndPlace(criterion, place).stream()
-            .mapToDouble(Rating::getScore)
+            .mapToDouble(Rating::getRating)
             .average()
             .orElse(-1);
 
-    return new CriterionAvgRatingDTO(criterion, avgRating);
+    return new CriterionAvgRatingDTO(criterion.getId(), criterion.getName(), avgRating);
   }
 
   private CriterionAvgRatingDTO getBestRatedCriterion(
@@ -124,5 +107,11 @@ public class PlaceService {
           .get();
     }
     throw new IllegalStateException("No criteria found");
+  }
+
+  public void addImage(Long placeId, String imageId) {
+    Place place = placeRepository.getReferenceById(placeId);
+    place.getImageNames().add(imageId);
+    placeRepository.save(place);
   }
 }

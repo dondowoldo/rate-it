@@ -2,6 +2,7 @@ package it.rate.webapp.models;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.validator.constraints.Range;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,10 +22,18 @@ public class Place {
 
   private String description;
   private String address;
+
+  @Column(nullable = false)
+  @Range(min = -90, max = 90)
   private double latitude;
-  private double longitude;
-  @Builder.Default
-  private boolean deleted = false;
+
+  @Column(nullable = false)
+  @Range(min = -180, max = 180)
+  private Double longitude;
+
+  @ElementCollection @Builder.Default private List<String> imageNames = new ArrayList<>();
+
+  @Builder.Default private boolean deleted = false;
 
   @ManyToOne
   @JoinColumn(name = "user_id")
@@ -37,6 +46,6 @@ public class Place {
   private List<Rating> ratings = new ArrayList<>();
 
   public double getAverageRating() {
-    return ratings.stream().mapToDouble(Rating::getScore).average().orElse(-1);
+    return ratings.stream().mapToDouble(Rating::getRating).average().orElse(-1);
   }
 }

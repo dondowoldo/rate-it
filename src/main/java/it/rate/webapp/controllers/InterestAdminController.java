@@ -1,6 +1,6 @@
 package it.rate.webapp.controllers;
 
-import it.rate.webapp.exceptions.BadRequestException;
+import it.rate.webapp.exceptions.badrequest.BadRequestException;
 import it.rate.webapp.models.Interest;
 import it.rate.webapp.models.Role;
 import it.rate.webapp.services.InterestService;
@@ -11,7 +11,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
@@ -26,7 +25,7 @@ public class InterestAdminController {
   private final UserService userService;
 
   @GetMapping("/edit")
-  @PreAuthorize("hasAnyAuthority(@permissionService.manageCommunity(#interestId))")
+  @PreAuthorize("@permissionService.manageCommunity(#interestId)")
   public String editInterestPage(@PathVariable Long interestId, Model model, Principal principal) {
     model.addAttribute("interest", interestService.getById(interestId));
     model.addAttribute("action", "/interests/" + interestId + "/admin/edit");
@@ -37,7 +36,7 @@ public class InterestAdminController {
     return "interest/form";
   }
 
-  @PreAuthorize("hasAnyAuthority(@permissionService.manageCommunity(#interestId))")
+  @PreAuthorize("@permissionService.manageCommunity(#interestId)")
   @PutMapping("/edit")
   public String editInterest(
       @PathVariable Long interestId,
@@ -51,7 +50,7 @@ public class InterestAdminController {
   }
 
   @GetMapping("/users")
-  @PreAuthorize("hasAnyAuthority(@permissionService.manageCommunity(#interestId))")
+  @PreAuthorize("@permissionService.manageCommunity(#interestId)")
   public String editUsersPage(@PathVariable Long interestId, Model model, Principal principal) {
     if (principal != null) {
       model.addAttribute("loggedUser", userService.getByEmail(principal.getName()));
@@ -61,22 +60,21 @@ public class InterestAdminController {
   }
 
   @DeleteMapping("/users/{userId}")
-  @PreAuthorize("hasAnyAuthority(@permissionService.manageCommunity(#interestId))")
+  @PreAuthorize("@permissionService.manageCommunity(#interestId)")
   public String removeUser(@PathVariable Long interestId, @PathVariable Long userId) {
     manageInterestService.removeRole(interestId, userId);
     return "redirect:/interests/{interestId}/admin/users";
   }
 
   @PutMapping("/users/{userId}")
-  @PreAuthorize("hasAnyAuthority(@permissionService.manageCommunity(#interestId))")
-  public String acceptUser(@PathVariable Long interestId, @PathVariable Long userId)
-      throws BadRequestException {
+  @PreAuthorize("@permissionService.manageCommunity(#interestId)")
+  public String acceptUser(@PathVariable Long interestId, @PathVariable Long userId) {
     manageInterestService.adjustRole(interestId, userId, Role.RoleType.VOTER);
     return "redirect:/interests/{interestId}/admin/users";
   }
 
   @GetMapping("/invite")
-  @PreAuthorize("hasAnyAuthority(@permissionService.manageCommunity(#interestId))")
+  @PreAuthorize("@permissionService.manageCommunity(#interestId)")
   public String inviteUsers(@PathVariable Long interestId, Model model, Principal principal) {
     if (principal != null) {
       model.addAttribute("loggedUser", userService.getByEmail(principal.getName()));
@@ -86,7 +84,7 @@ public class InterestAdminController {
   }
 
   @PostMapping("/invite")
-  @PreAuthorize("hasAnyAuthority(@permissionService.manageCommunity(#interestId))")
+  @PreAuthorize("@permissionService.manageCommunity(#interestId)")
   public String inviteUser(
       @PathVariable Long interestId, String inviteBy, String user, RedirectAttributes ra) {
     try {
@@ -94,8 +92,8 @@ public class InterestAdminController {
       ra.addFlashAttribute("status", "Invite successfully sent");
       ra.addFlashAttribute("statusClass", "successful");
       ra.addFlashAttribute("isChecked", inviteBy.equals("username"));
-    } catch (ResponseStatusException e) {
-      ra.addFlashAttribute("status", e.getReason());
+    } catch (BadRequestException e) {
+      ra.addFlashAttribute("status", e.getMessage());
       ra.addFlashAttribute("statusClass", "error");
       ra.addFlashAttribute("user", user);
       ra.addFlashAttribute("isChecked", inviteBy.equals("username"));

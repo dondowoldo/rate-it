@@ -102,9 +102,9 @@ public class WebappApplication implements CommandLineRunner {
     Role r2 = new Role(u2, i1, Role.RoleType.VOTER);
     Role r3 = new Role(u3, i2, Role.RoleType.CREATOR);
     Role r4 = new Role(u3, i1, Role.RoleType.VOTER);
-    //    Role r5 = new Role(u1, i2, Role.RoleType.VOTER);
+    Role r5 = new Role(u1, i2, Role.RoleType.VOTER);
     Role r6 = new Role(u4, i1, Role.RoleType.APPLICANT);
-    roleRepository.saveAll(List.of(r1, r2, r3, r4, r6));
+    roleRepository.saveAll(List.of(r1, r3, r4, r6));
 
     Like v1 = new Like(u1, i1);
     Like v2 = new Like(u2, i1);
@@ -116,33 +116,33 @@ public class WebappApplication implements CommandLineRunner {
 
     Place p1 =
         Place.builder()
-            .name("Koláčkárna")
-            .latitude(50.777667)
-            .longitude(14.431667)
+            .name("Koláčové království")
+            .latitude(50.061903)
+            .longitude(14.437743)
             .description("Příjemné místo k posezení")
-            .address("Kdovíkde 13, Kdovíco 8, 666 66")
+            .address("28, Táborská 583, Nusle, 140 00 Praha 4")
             .creator(u1)
             .interest(i1)
             .build();
 
     Place p2 =
         Place.builder()
-            .name("Pekařství na rohu")
-            .latitude(50.777876)
-            .longitude(14.431276)
+            .name("Matějovo pekařství")
+            .latitude(49.200842)
+            .longitude(16.612979)
             .description("Top")
-            .address("Ulice 7, Město 2, 222 42")
+            .address("15, M. Horákové 1957, Černá Pole, 602 00 Brno-střed")
             .creator(u2)
             .interest(i1)
             .build();
 
     Place p3 =
         Place.builder()
-            .name("Lavička v parku")
-            .latitude(50.787536)
-            .longitude(14.873876)
+            .name("Lavička v parku Ostrava")
+            .latitude(49.84983)
+            .longitude(18.29078)
             .description("Klídek")
-            .address("Pod Drnem 6, Praha 2, 120 00")
+            .address("Komenského Sady, 702 00 Moravská Ostrava a Přívoz")
             .creator(u3)
             .interest(i2)
             .build();
