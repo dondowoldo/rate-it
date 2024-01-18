@@ -38,13 +38,14 @@ public class InterestRestController {
     return ResponseEntity.ok().body(interestService.getAllSuggestionDtos());
   }
 
-  @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
   @GetMapping("/my")
+  @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
   public ResponseEntity<?> getMyInterestsSuggestions(Principal principal) {
     if (principal == null) {
       return ResponseEntity.badRequest().body("User not found");
     }
-    return ResponseEntity.ok().body(interestService.getLikedInterestsDTOS(principal.getName()));
+    AppUser loggedUser = userService.getByEmail(principal.getName());
+    return ResponseEntity.ok().body(interestService.getLikedInterestsDTOS(loggedUser));
   }
 
   @GetMapping("/{interestId}/users")
@@ -70,6 +71,18 @@ public class InterestRestController {
     return ResponseEntity.badRequest().body("This interest doesn't exist");
   }
 
+  @PostMapping("/{interestId}/like")
+  @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
+  public ResponseEntity<?> like(
+      @PathVariable Long interestId, @RequestBody LikeDTO like, Principal principal) {
+    if (principal != null) {
+      AppUser loggedUser = userService.getByEmail(principal.getName());
+      Interest interest = interestService.getById(interestId);
+      likeService.changeLike(loggedUser, interest, like.liked());
+    }
+    return ResponseEntity.ok().body(like);
+  }
+
   private ResponseEntity<?> handleCoordinates(CoordinatesDTO coordinates) {
     Set<ConstraintViolation<CoordinatesDTO>> validationErrors = validator.validate(coordinates);
     if (validationErrors.isEmpty()) {
@@ -79,16 +92,5 @@ public class InterestRestController {
         .body(
             new ErrorMessagesDTO(
                 validationErrors.stream().map(ConstraintViolation::getMessage).toList()));
-  }
-
-  @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
-  @PostMapping("/{interestId}/like")
-  public ResponseEntity<?> like(@PathVariable Long interestId, @RequestBody LikeDTO like, Principal principal) {
-    if (principal != null) {
-      AppUser loggedUser = userService.getByEmail(principal.getName());
-      Interest interest = interestService.getById(interestId);
-      likeService.changeLike(loggedUser, interest, like.liked());
-    }
-    return ResponseEntity.ok().body(like);
   }
 }

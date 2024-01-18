@@ -97,13 +97,10 @@ public class InterestController {
   @GetMapping("/my")
   public String myInterests(Model model, Principal principal) {
     if (principal != null) {
+      AppUser loggedUser = userService.getByEmail(principal.getName());
+      model.addAttribute("loggedUser", loggedUser);
       model.addAttribute(
-          "loggedUser",
-          userService
-              .findByEmail(principal.getName())
-              .orElseThrow(InvalidUserDetailsException::new));
-      model.addAttribute(
-          "likedInterests", interestService.getLikedInterestsDTOS(principal.getName()));
+          "likedInterests", interestService.getLikedInterestsDTOS(loggedUser));
     }
     return "interest/seeAll";
   }

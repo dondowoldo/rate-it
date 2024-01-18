@@ -107,8 +107,8 @@ public class InterestService {
     return interestRepository.save(interest);
   }
 
-  public List<LikedInterestsDTO> getLikedInterestsDTOS(@NotBlank String loggedUser) {
-    return interestRepository.findAllByLikes_AppUser_Email(loggedUser).stream()
+  public List<LikedInterestsDTO> getLikedInterestsDTOS(AppUser loggedUser) {
+    return interestRepository.findAllByLikes_AppUser(loggedUser).stream()
         .sorted(Comparator.comparing(i -> i.getName().toLowerCase()))
         .map(LikedInterestsDTO::new)
         .collect(Collectors.toList());
