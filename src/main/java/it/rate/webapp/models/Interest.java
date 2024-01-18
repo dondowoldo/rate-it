@@ -21,7 +21,10 @@ public class Interest {
   @Column(nullable = false)
   private String name;
 
-  @NotBlank private String description;
+  @NotBlank
+  @Column(nullable = false)
+  private String description;
+
   @Builder.Default private boolean deleted = false;
   private boolean exclusive;
 

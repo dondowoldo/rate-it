@@ -16,7 +16,5 @@ public interface InterestRepository extends JpaRepository<Interest, Long> {
           + "ORDER BY likesCount DESC")
   List<Interest> findAllSortByLikes();
 
-  List<Interest> findAllByLikes_AppUser_Email(String email);
-
   List<Interest> findAllByLikes_AppUser(AppUser appUser);
 }

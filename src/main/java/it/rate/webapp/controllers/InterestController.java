@@ -1,7 +1,6 @@
 package it.rate.webapp.controllers;
 
 import it.rate.webapp.exceptions.badrequest.InvalidInterestDetailsException;
-import it.rate.webapp.exceptions.badrequest.InvalidUserDetailsException;
 import it.rate.webapp.exceptions.notfound.InterestNotFoundException;
 import it.rate.webapp.models.*;
 import it.rate.webapp.services.*;
@@ -11,8 +10,6 @@ import java.util.List;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -29,33 +26,32 @@ public class InterestController {
   private final PermissionService permissionService;
   private final PlaceService placeService;
   private final LikeService likeService;
+  private final CriterionService criterionService;
 
   @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
   @GetMapping("/create")
-  public String createPage(Model model, Principal principal) {
+  public String createInterest(Model model, Principal principal) {
     List<Criterion> criteria = new ArrayList<>();
     model.addAttribute("criteria", criteria);
     model.addAttribute("interest", new Interest());
     model.addAttribute("action", "/interests/create");
     model.addAttribute("method", "post");
-    if (principal != null) {
-      model.addAttribute("loggedUser", userService.getByEmail(principal.getName()));
-    }
+    model.addAttribute("loggedUser", userService.getByEmail(principal.getName()));
+
     return "interest/form";
   }
 
   @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
   @PostMapping("/create")
-  public String createNew(
+  public String createInterest(
       @ModelAttribute Interest interest,
       @RequestParam List<String> criteriaNames,
       RedirectAttributes ra,
       Principal principal) {
-    Interest savedInterest = interestService.save(interest, criteriaNames);
-    if (principal != null) {
-      AppUser loggedUser = userService.getByEmail(principal.getName());
-      likeService.createLike(loggedUser, savedInterest);
-    }
+    AppUser loggedUser = userService.getByEmail(principal.getName());
+    Interest savedInterest = interestService.saveNew(interest, loggedUser);
+    criterionService.createNew(savedInterest, criteriaNames);
+    likeService.createLike(loggedUser, savedInterest);
 
     ra.addAttribute("id", savedInterest.getId());
     return "redirect:/interests/{id}";
@@ -96,12 +92,10 @@ public class InterestController {
   @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
   @GetMapping("/my")
   public String myInterests(Model model, Principal principal) {
-    if (principal != null) {
-      AppUser loggedUser = userService.getByEmail(principal.getName());
-      model.addAttribute("loggedUser", loggedUser);
-      model.addAttribute(
-          "likedInterests", interestService.getLikedInterestsDTOS(loggedUser));
-    }
+    AppUser loggedUser = userService.getByEmail(principal.getName());
+    model.addAttribute("loggedUser", loggedUser);
+    model.addAttribute("likedInterests", interestService.getLikedInterestsDTOS(loggedUser));
+
     return "interest/seeAll";
   }
 }

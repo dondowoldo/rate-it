@@ -40,10 +40,10 @@ class InterestServiceTest extends BaseTest {
         .thenReturn(Interest.builder().criteria(updatedCriteria).build());
     when(criterionRepository.saveAll(any())).thenAnswer(i -> i.getArgument(0));
 
-    Interest savedInterest = interestService.saveEditedInterest(interest, newCriteriaNames);
+    Interest savedInterest = interestService.save(interest);
 
-    verify(criterionRepository, times(1)).deleteByNameAndInterestId("c1", interest.getId());
-    verify(criterionRepository, times(1)).deleteByNameAndInterestId("c2", interest.getId());
+    verify(criterionRepository, times(1)).deleteByNameAndInterest("c1", interest);
+    verify(criterionRepository, times(1)).deleteByNameAndInterest("c2", interest);
 
     assertSame(savedInterest.getCriteria(), updatedCriteria);
   }
@@ -62,9 +62,9 @@ class InterestServiceTest extends BaseTest {
         .thenReturn(Interest.builder().criteria(updatedCriteria).build());
     when(criterionRepository.saveAll(any())).thenAnswer(i -> i.getArgument(0));
 
-    Interest savedInterest = interestService.saveEditedInterest(interest, newCriteriaNames);
+    Interest savedInterest = interestService.save(interest);
 
-    verify(criterionRepository, times(1)).deleteByNameAndInterestId("c2", interest.getId());
+    verify(criterionRepository, times(1)).deleteByNameAndInterest("c2", interest);
 
     assertSame(savedInterest.getCriteria(), updatedCriteria);
   }
@@ -79,9 +79,9 @@ class InterestServiceTest extends BaseTest {
     when(interestRepository.save(any())).thenReturn(interest);
     when(criterionRepository.saveAll(any())).thenReturn(getOldCriteria());
 
-    Interest savedInterest = interestService.saveEditedInterest(interest, criteriaNames);
+    Interest savedInterest = interestService.save(interest);
 
-    verify(criterionRepository, times(0)).deleteByNameAndInterestId(any(), any());
+    verify(criterionRepository, times(0)).deleteByNameAndInterest(any(), any());
 
     assertSame(savedInterest.getCriteria(), interest.getCriteria());
   }

@@ -35,7 +35,7 @@ public class InterestRestController {
     if (usersCoords.isPresent()) {
       return handleCoordinates(usersCoords.get());
     }
-    return ResponseEntity.ok().body(interestService.getAllSuggestionDtos());
+    return ResponseEntity.ok().body(interestService.getAllSuggestionDTOS());
   }
 
   @GetMapping("/my")
@@ -86,7 +86,7 @@ public class InterestRestController {
   private ResponseEntity<?> handleCoordinates(CoordinatesDTO coordinates) {
     Set<ConstraintViolation<CoordinatesDTO>> validationErrors = validator.validate(coordinates);
     if (validationErrors.isEmpty()) {
-      return ResponseEntity.ok().body(interestService.getAllSuggestionDtos(coordinates));
+      return ResponseEntity.ok().body(interestService.getAllSuggestionDTOS(coordinates));
     }
     return ResponseEntity.badRequest()
         .body(
