@@ -1,5 +1,6 @@
 package it.rate.webapp.controllers;
 
+import it.rate.webapp.exceptions.badrequest.InvalidInterestDetailsException;
 import it.rate.webapp.exceptions.badrequest.InvalidUserDetailsException;
 import it.rate.webapp.exceptions.notfound.InterestNotFoundException;
 import it.rate.webapp.models.*;
@@ -10,6 +11,8 @@ import java.util.List;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +24,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class InterestController {
 
   private final InterestService interestService;
-  private final CreateInterestService createInterestService;
   private final UserService userService;
   private final RoleService roleService;
   private final PermissionService permissionService;
@@ -49,12 +51,12 @@ public class InterestController {
       @RequestParam List<String> criteriaNames,
       RedirectAttributes ra,
       Principal principal) {
-    Interest savedInterest = createInterestService.save(interest, criteriaNames);
+    Interest savedInterest = interestService.save(interest, criteriaNames);
     if (principal != null) {
       AppUser loggedUser = userService.getByEmail(principal.getName());
       likeService.createLike(loggedUser, savedInterest);
     }
-  
+
     ra.addAttribute("id", savedInterest.getId());
     return "redirect:/interests/{id}";
   }
@@ -83,8 +85,11 @@ public class InterestController {
 
   @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
   @PostMapping("/{interestId}/request")
-  public String applyForVoterAuthority(@PathVariable Long interestId) {
-    interestService.setApplicantRole(interestId);
+  public String applyForVoterAuthority(@PathVariable Long interestId, Principal principal) {
+    Interest interest =
+        interestService.findById(interestId).orElseThrow(InvalidInterestDetailsException::new);
+    AppUser loggedUser = userService.getByEmail(principal.getName());
+    roleService.setRole(interest, loggedUser, Role.RoleType.APPLICANT);
     return "redirect:/interests/{interestId}";
   }
 

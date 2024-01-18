@@ -4,7 +4,6 @@ import it.rate.webapp.dtos.CoordinatesDTO;
 import it.rate.webapp.dtos.InterestSuggestionDTO;
 import it.rate.webapp.dtos.InterestUserDTO;
 import it.rate.webapp.dtos.LikedInterestsDTO;
-import it.rate.webapp.exceptions.badrequest.InvalidInterestDetailsException;
 import it.rate.webapp.models.*;
 import it.rate.webapp.repositories.*;
 import jakarta.validation.Valid;
@@ -24,10 +23,10 @@ import org.springframework.validation.annotation.Validated;
 @AllArgsConstructor
 public class InterestService {
 
-  private InterestRepository interestRepository;
-  private RoleRepository roleRepository;
-  private CriterionRepository criterionRepository;
-  private UserRepository userRepository;
+  private final InterestRepository interestRepository;
+  private final RoleRepository roleRepository;
+  private final CriterionRepository criterionRepository;
+  private final UserRepository userRepository;
 
   public Optional<Interest> findById(Long id) {
     return interestRepository.findById(id);
@@ -35,18 +34,6 @@ public class InterestService {
 
   public Interest getById(Long id) {
     return interestRepository.getReferenceById(id);
-  }
-
-  public void setApplicantRole(Long interestId) {
-    Interest interest =
-        interestRepository.findById(interestId).orElseThrow(InvalidInterestDetailsException::new);
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    AppUser currentUser = userRepository.getByEmail(authentication.getName());
-    if (interest.isExclusive()) {
-      roleRepository.save(new Role(currentUser, interest, Role.RoleType.APPLICANT));
-    } else {
-      throw new InvalidInterestDetailsException("Cannot set role for non-exclusive interest");
-    }
   }
 
   public List<Interest> findAllSortByLikes() {
@@ -71,6 +58,28 @@ public class InterestService {
 
   public List<Interest> getLikedInterests(String loggedUser) {
     return interestRepository.findAllByLikes_AppUser_Email(loggedUser);
+  }
+
+  public Interest save(
+          @Valid Interest interest,
+          @NotEmpty List<@NotBlank String> receivedCriteria) {
+
+    List<Criterion> criteria =
+            receivedCriteria.stream().map(c -> Criterion.builder().name(c).build()).toList();
+
+    criterionRepository.saveAll(criteria);
+
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    AppUser currentUser = userRepository.getByEmail(authentication.getName());
+
+    interestRepository.save(interest);
+    criteria.forEach(c -> c.setInterest(interest));
+
+    Role newRole = new Role(currentUser, interest, Role.RoleType.CREATOR);
+    interest.setRoles(List.of(newRole));
+    roleRepository.save(newRole);
+
+    return interest;
   }
 
   public Interest saveEditedInterest(
