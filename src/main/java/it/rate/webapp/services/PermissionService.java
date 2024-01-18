@@ -41,7 +41,7 @@ public class PermissionService {
     if (!interestRepository.existsById(interestId)) {
       throw new InterestNotFoundException();
     }
-    AppUser user = userService.authenticatedUser();
+    AppUser user = userService.getAuthenticatedUser();
     if (user == null) {
       return false;
     }
@@ -53,11 +53,11 @@ public class PermissionService {
   }
 
   public boolean canCreateInterest() {
-    return userService.authenticatedUser() != null;
+    return userService.getAuthenticatedUser() != null;
   }
 
   public boolean hasPlaceEditPermissions(Long placeId, Long interestId) {
-    AppUser user = userService.authenticatedUser();
+    AppUser user = userService.getAuthenticatedUser();
     if (user == null) {
       return false;
     }
@@ -84,7 +84,7 @@ public class PermissionService {
   }
 
   private boolean canRateOrCreate(Interest i) {
-    AppUser user = userService.authenticatedUser();
+    AppUser user = userService.getAuthenticatedUser();
     if (user == null) {
       return false;
     }

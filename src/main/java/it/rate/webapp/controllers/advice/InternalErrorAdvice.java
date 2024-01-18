@@ -42,9 +42,9 @@ public class InternalErrorAdvice {
     Arrays.stream(e.getStackTrace())
         .forEach(line -> stackTrace.append(line.toString()).append("\n"));
     String user =
-        userService.authenticatedUser() == null
+        userService.getAuthenticatedUser() == null
             ? "Anonymous"
-            : userService.authenticatedUser().getEmail();
+            : userService.getAuthenticatedUser().getEmail();
 
     EmailMessageDTO report =
         new EmailMessageDTO(

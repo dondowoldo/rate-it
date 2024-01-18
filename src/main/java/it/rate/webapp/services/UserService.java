@@ -24,6 +24,26 @@ public class UserService {
   private final PasswordEncoder passwordEncoder;
   private final Validator validator;
 
+  public Optional<AppUser> findById(Long userId) {
+    return userRepository.findById(userId);
+  }
+
+  public Optional<AppUser> findByEmail(String email) {
+    return userRepository.findByEmail(email);
+  }
+
+  public AppUser getByEmail(String email) {
+    return userRepository.getByEmail(email);
+  }
+
+  public Optional<AppUser> findByUsernameIgnoreCase(String username) {
+    return userRepository.findByUsernameIgnoreCase(username);
+  }
+
+  public Optional<AppUser> findByEmailIgnoreCase(String email) {
+    return userRepository.findByEmailIgnoreCase(email);
+  }
+
   public AppUser save(AppUser appUser) {
     return userRepository.save(appUser);
   }
@@ -53,31 +73,11 @@ public class UserService {
     return userRepository.save(user);
   }
 
-  public Optional<AppUser> findByEmail(String email) {
-    return userRepository.findByEmail(email);
-  }
-
-  public Optional<AppUser> findByUsernameIgnoreCase(String username) {
-    return userRepository.findByUsernameIgnoreCase(username);
-  }
-
-  public AppUser authenticatedUser() {
+  public AppUser getAuthenticatedUser() {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     if (authentication != null && !(authentication.getPrincipal().equals("anonymousUser"))) {
       return userRepository.getByEmail(authentication.getName());
     }
     return null;
-  }
-
-  public Optional<AppUser> findByEmailIgnoreCase(String email) {
-    return userRepository.findByEmailIgnoreCase(email);
-  }
-
-  public AppUser getByEmail(String email) {
-    return userRepository.getByEmail(email);
-  }
-
-  public Optional<AppUser> findById(Long userId) {
-    return userRepository.findById(userId);
   }
 }
