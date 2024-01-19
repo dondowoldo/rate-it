@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
-import java.util.List;
+import java.util.Set;
 
 @Controller
 @AllArgsConstructor
@@ -42,7 +42,7 @@ public class InterestAdminController {
   public String editInterest(
       @PathVariable Long interestId,
       @ModelAttribute Interest editedInterest,
-      @RequestParam List<String> criteriaNames,
+      @RequestParam Set<String> criteriaNames,
       RedirectAttributes ra) {
     editedInterest.setId(interestId);
     criterionService.updateExisting(interestService.save(editedInterest), criteriaNames);

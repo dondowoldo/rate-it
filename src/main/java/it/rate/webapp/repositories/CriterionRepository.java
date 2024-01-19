@@ -4,8 +4,8 @@ import it.rate.webapp.models.Criterion;
 import it.rate.webapp.models.Interest;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.Set;
+import java.util.List;
 
 public interface CriterionRepository extends JpaRepository<Criterion, Long> {
-  Set<Criterion> findAllByInterest(Interest interest);
+  List<Criterion> findAllByInterest(Interest interest);
 }

@@ -8,6 +8,8 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+
 import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -45,7 +47,7 @@ public class InterestController {
   @PostMapping("/create")
   public String createInterest(
       @ModelAttribute Interest interest,
-      @RequestParam List<String> criteriaNames,
+      @RequestParam Set<String> criteriaNames,
       RedirectAttributes ra,
       Principal principal) {
     AppUser loggedUser = userService.getByEmail(principal.getName());
