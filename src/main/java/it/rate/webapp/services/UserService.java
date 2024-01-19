@@ -60,11 +60,12 @@ public class UserService {
 
   public List<InterestUserDTO> getUsersDTO(Interest interest, @NotNull Role.RoleType role) {
     return interest.getRoles().stream()
-            .filter(r -> r.getRole().equals(role))
-            .map(InterestUserDTO::new)
-            .sorted(Comparator.comparing(dto -> dto.userName().toLowerCase()))
-            .collect(Collectors.toList());
+        .filter(r -> r.getRole().equals(role))
+        .map(InterestUserDTO::new)
+        .sorted(Comparator.comparing(dto -> dto.userName().toLowerCase()))
+        .collect(Collectors.toList());
   }
+
   public AppUser registerUser(SignupUserInDTO userDTO) {
     Set<ConstraintViolation<SignupUserInDTO>> violations = validator.validate(userDTO);
     if (!violations.isEmpty()) {
