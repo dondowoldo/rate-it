@@ -5,10 +5,13 @@ import it.rate.webapp.models.Interest;
 import it.rate.webapp.models.Like;
 import it.rate.webapp.models.LikeId;
 import it.rate.webapp.repositories.LikeRepository;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 @Service
+@Validated
 @AllArgsConstructor
 public class LikeService {
 
@@ -18,7 +21,7 @@ public class LikeService {
     return likeRepository.existsById(likeId);
   }
 
-  public void createLike(AppUser user, Interest interest) {
+  public void createLike(@Valid AppUser user, @Valid Interest interest) {
     likeRepository.save(new Like(user, interest));
   }
 
@@ -26,7 +29,7 @@ public class LikeService {
     likeRepository.deleteById(likeId);
   }
 
-  public void setLike(AppUser user, Interest interest, boolean like) {
+  public void setLike(@Valid AppUser user, @Valid Interest interest, boolean like) {
     if (like) {
       this.createLike(user, interest);
     } else {

@@ -27,7 +27,7 @@ public class InterestService {
     return interestRepository.getReferenceById(interestId);
   }
 
-  public Interest save(@Valid Interest interest) {
+  public Interest save(Interest interest) {
     return interestRepository.save(interest);
   }
 
@@ -35,12 +35,12 @@ public class InterestService {
     return interestRepository.findAllSortByLikes();
   }
 
-  public List<Interest> findAllLikedByAppUser(AppUser appUser) {
+  public List<Interest> findAllLikedByAppUser(@Valid AppUser appUser) {
     return interestRepository.findAllByLikes_AppUser(appUser);
   }
 
-  public List<LikedInterestsDTO> getLikedInterestsDTOS(AppUser loggedUser) {
-    return interestRepository.findAllByLikes_AppUser(loggedUser).stream()
+  public List<LikedInterestsDTO> getLikedInterestsDTOS(@Valid AppUser appUser) {
+    return interestRepository.findAllByLikes_AppUser(appUser).stream()
         .sorted(Comparator.comparing(i -> i.getName().toLowerCase()))
         .map(LikedInterestsDTO::new)
         .collect(Collectors.toList());
@@ -52,7 +52,7 @@ public class InterestService {
         .collect(Collectors.toList());
   }
 
-  public List<InterestSuggestionDTO> getAllSuggestionDTOS(CoordinatesDTO usersCoords) {
+  public List<InterestSuggestionDTO> getAllSuggestionDTOS(@Valid CoordinatesDTO usersCoords) {
     return findAllSortByLikes().stream()
         .map(
             interest ->

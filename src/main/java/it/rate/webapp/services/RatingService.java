@@ -6,26 +6,27 @@ import it.rate.webapp.exceptions.badrequest.InvalidRatingException;
 import it.rate.webapp.models.*;
 import it.rate.webapp.repositories.CriterionRepository;
 import it.rate.webapp.repositories.RatingRepository;
-import jakarta.validation.Validator;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.*;
 
 @Service
+@Validated
 @AllArgsConstructor
 public class RatingService {
 
-  private final Validator validator;
   private final RatingRepository ratingRepository;
   private final CriterionRepository criterionRepository;
 
-  public RatingsDTO getUsersRatingsDto(AppUser appUser, Place place) {
+  public RatingsDTO getUsersRatingsDto(@Valid AppUser appUser, @Valid Place place) {
     List<Rating> ratings = ratingRepository.findAllByAppUserAndPlace(appUser, place);
     return new RatingsDTO(ratings);
   }
 
-  public void updateRating(RatingsDTO ratings, Place place, AppUser appUser) {
+  public void updateRating(@Valid RatingsDTO ratings, @Valid Place place, @Valid AppUser appUser) {
     Set<Criterion> ratedCriteria = validateRatings(ratings, place);
 
     ratings
@@ -73,9 +74,6 @@ public class RatingService {
             (key, value) -> {
               Criterion criterion = getCriterion(key);
               ratedCriteria.add(criterion);
-              if (!validator.validate(ratings).isEmpty()) {
-                throw new InvalidRatingException();
-              }
             });
     if (!ratedCriteria.containsAll(placeCriteria)) {
       throw new InvalidRatingException();

@@ -11,7 +11,7 @@ public record LikedInterestsDTO(Long id, String name, String creator, Long follo
         interest.getId(),
         interest.getName(),
         interest.getRoles().stream()
-            .filter(role -> role.getRole().equals(Role.RoleType.CREATOR))
+            .filter(role -> role.getRoleType().equals(Role.RoleType.CREATOR))
             .findFirst()
             .map(Role::getAppUser)
             .map(AppUser::getUsername)

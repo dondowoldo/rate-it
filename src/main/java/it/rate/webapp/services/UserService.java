@@ -10,6 +10,7 @@ import it.rate.webapp.models.Interest;
 import it.rate.webapp.models.Role;
 import it.rate.webapp.repositories.UserRepository;
 import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Valid;
 import jakarta.validation.Validator;
 
 import java.util.Comparator;
@@ -54,13 +55,10 @@ public class UserService {
     return userRepository.findByEmailIgnoreCase(email);
   }
 
-  public AppUser save(AppUser appUser) {
-    return userRepository.save(appUser);
-  }
-
-  public List<InterestUserDTO> getUsersDTO(Interest interest, @NotNull Role.RoleType role) {
+  public List<InterestUserDTO> getUsersDTO(
+      @Valid Interest interest, @NotNull Role.RoleType roleType) {
     return interest.getRoles().stream()
-        .filter(r -> r.getRole().equals(role))
+        .filter(r -> r.getRoleType().equals(roleType))
         .map(InterestUserDTO::new)
         .sorted(Comparator.comparing(dto -> dto.userName().toLowerCase()))
         .collect(Collectors.toList());

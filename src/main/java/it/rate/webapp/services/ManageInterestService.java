@@ -29,7 +29,7 @@ public class ManageInterestService {
             .findById(new RoleId(userId, interestId))
             .orElseThrow(InvalidRoleDetailsException::new);
 
-    if (role.getRole().equals(Role.RoleType.CREATOR)) {
+    if (role.getRoleType().equals(Role.RoleType.CREATOR)) {
       throw new InvalidRoleDetailsException("Cannot remove creator role");
     }
     RoleId roleId = new RoleId(role.getId().getUserId(), role.getId().getInterestId());
@@ -43,7 +43,7 @@ public class ManageInterestService {
         roleService
             .findById(new RoleId(userId, interestId))
             .orElseThrow(InvalidRoleDetailsException::new);
-    role.setRole(roleType);
+    role.setRoleType(roleType);
     return roleService.save(role);
   }
 

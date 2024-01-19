@@ -32,7 +32,7 @@ public class MapController {
 
       model.addAttribute("loggedUser", loggedUser);
       Optional<Role> optRole = roleService.findById(new RoleId(loggedUser.getId(), interestId));
-      optRole.ifPresent(role -> model.addAttribute("role", role.getRole()));
+      optRole.ifPresent(role -> model.addAttribute("role", role.getRoleType()));
       model.addAttribute("liked", likeService.existsById(new LikeId(loggedUser.getId(), interestId)));
     }
     model.addAttribute("interest", interest);

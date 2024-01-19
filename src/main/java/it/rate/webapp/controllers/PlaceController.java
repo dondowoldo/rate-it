@@ -67,7 +67,7 @@ public class PlaceController {
         model.addAttribute("usersRatings", ratingService.getUsersRatingsDto(loggedUser, place));
       }
       Optional<Role> optRole = roleService.findById(new RoleId(loggedUser.getId(), interestId));
-      if (optRole.isPresent() && optRole.get().getRole().equals(Role.RoleType.APPLICANT)) {
+      if (optRole.isPresent() && optRole.get().getRoleType().equals(Role.RoleType.APPLICANT)) {
         model.addAttribute("applicant", true);
       }
     }

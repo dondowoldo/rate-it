@@ -141,7 +141,7 @@ class ManageInterestServiceTest extends BaseTest {
     manageInterestService.adjustRole(1L, 1L, roleToApply);
 
     verify(roleService, times(1)).save(same(roleToAdjust));
-    assertEquals(roleToApply, roleToAdjust.getRole());
+    assertEquals(roleToApply, roleToAdjust.getRoleType());
   }
 
   @Test
@@ -227,7 +227,7 @@ class ManageInterestServiceTest extends BaseTest {
 
     verify(roleService, times(1)).save(newRole);
     verify(roleRepository, times(1)).save(newRole);
-    assertEquals(roleToCreate, newRole.getRole());
+    assertEquals(roleToCreate, newRole.getRoleType());
     assertEquals(userWithoutRole, newRole.getAppUser());
   }
 

@@ -6,6 +6,8 @@ import it.rate.webapp.models.Interest;
 import it.rate.webapp.models.Role;
 import it.rate.webapp.models.RoleId;
 import it.rate.webapp.repositories.RoleRepository;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -25,13 +27,14 @@ public class RoleService {
     return roleRepository.findById(roleId);
   }
 
-  public Role save(Role role) {
+  public Role save(@Valid Role role) {
     return roleRepository.save(role);
   }
 
-  public void setRole(Interest interest, AppUser appUser, Role.RoleType role) {
-    if (interest.isExclusive()) {
-      roleRepository.save(new Role(appUser, interest, role));
+  public void setRole(
+      @Valid Interest interest, @Valid AppUser appUser, @NotNull Role.RoleType roleType) {
+    if (interest.isExclusive() || roleType.equals(Role.RoleType.CREATOR)) {
+      roleRepository.save(new Role(appUser, interest, roleType));
     } else {
       throw new InvalidInterestDetailsException("Cannot set role for non-exclusive interest");
     }

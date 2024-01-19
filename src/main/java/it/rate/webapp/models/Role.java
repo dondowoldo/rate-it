@@ -1,7 +1,6 @@
 package it.rate.webapp.models;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
@@ -16,7 +15,7 @@ public class Role {
   @NotNull
   @Column(nullable = false)
   @Enumerated(EnumType.STRING)
-  private RoleType role;
+  private RoleType roleType;
 
   @ManyToOne
   @MapsId("userId")
@@ -26,11 +25,11 @@ public class Role {
   @MapsId("interestId")
   private Interest interest;
 
-  public Role(AppUser appUser, Interest interest, RoleType role) {
+  public Role(AppUser appUser, Interest interest, RoleType roleType) {
     this.id = new RoleId(appUser.getId(), interest.getId());
     this.appUser = appUser;
     this.interest = interest;
-    this.role = role;
+    this.roleType = roleType;
   }
 
   public enum RoleType {

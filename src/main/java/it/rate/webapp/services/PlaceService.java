@@ -11,10 +11,14 @@ import it.rate.webapp.repositories.PlaceRepository;
 import it.rate.webapp.repositories.RatingRepository;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 @Service
+@Validated
 @AllArgsConstructor
 public class PlaceService {
 
@@ -29,23 +33,23 @@ public class PlaceService {
     return placeRepository.getReferenceById(placeId);
   }
 
-  public Place savePlace(Place place, Interest interest, AppUser appUser) {
+  public Place savePlace(Place place, @Valid Interest interest, @Valid AppUser appUser) {
     place.setCreator(appUser);
     place.setInterest(interest);
 
     return placeRepository.save(place);
   }
 
-  public void addImage(Place place, String imageId) {
+  public void addImage(@Valid Place place, String imageId) {
     place.getImageNames().add(imageId);
     placeRepository.save(place);
   }
 
-  public List<PlaceInfoDTO> getPlaceInfoDTOS(Interest interest) {
+  public List<PlaceInfoDTO> getPlaceInfoDTOS(@Valid Interest interest) {
     return interest.getPlaces().stream().map(this::getPlaceInfoDTO).collect(Collectors.toList());
   }
 
-  public CriteriaOfPlaceDTO getCriteriaOfPlaceDTO(Place place) {
+  public CriteriaOfPlaceDTO getCriteriaOfPlaceDTO(@Valid Place place) {
     List<CriterionAvgRatingDTO> criteriaAvgRatingDTOs = new ArrayList<>();
 
     place
