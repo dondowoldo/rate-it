@@ -18,8 +18,8 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class PlaceService {
 
-  private PlaceRepository placeRepository;
-  private RatingRepository ratingRepository;
+  private final PlaceRepository placeRepository;
+  private final RatingRepository ratingRepository;
 
   public Optional<Place> findById(Long id) {
     return placeRepository.findById(id);

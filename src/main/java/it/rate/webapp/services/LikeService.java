@@ -12,14 +12,10 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class LikeService {
 
-  private LikeRepository likeRepository;
+  private final LikeRepository likeRepository;
 
-  public void changeLike(AppUser user, Interest interest, boolean like) {
-    if (like) {
-      this.createLike(user, interest);
-    } else {
-      this.deleteById(new LikeId(user.getId(), interest.getId()));
-    }
+  public boolean existsById(LikeId likeId) {
+    return likeRepository.existsById(likeId);
   }
 
   public void createLike(AppUser user, Interest interest) {
@@ -30,7 +26,11 @@ public class LikeService {
     likeRepository.deleteById(likeId);
   }
 
-  public boolean existsById(LikeId likeId) {
-    return likeRepository.existsById(likeId);
+  public void changeLike(AppUser user, Interest interest, boolean like) {
+    if (like) {
+      this.createLike(user, interest);
+    } else {
+      this.deleteById(new LikeId(user.getId(), interest.getId()));
+    }
   }
 }
