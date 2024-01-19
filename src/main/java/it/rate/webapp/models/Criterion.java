@@ -1,6 +1,8 @@
 package it.rate.webapp.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -14,10 +16,9 @@ import java.util.List;
 @Entity
 @Table(name = "criteria")
 public class Criterion {
-  @Id @GeneratedValue private Long id;
-  private String name;
-  @Builder.Default
-  private boolean deleted = false;
+  @Id @GeneratedValue @NotNull private Long id;
+  @NotNull @NotBlank private String name;
+  @Builder.Default private boolean deleted = false;
 
   @ManyToOne private Interest interest;
 

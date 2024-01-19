@@ -36,6 +36,15 @@ public class PlaceService {
     return placeRepository.save(place);
   }
 
+  public void addImage(Place place, String imageId) {
+    place.getImageNames().add(imageId);
+    placeRepository.save(place);
+  }
+
+  public List<PlaceInfoDTO> getPlaceInfoDTOS(Interest interest) {
+    return interest.getPlaces().stream().map(this::getPlaceInfoDTO).collect(Collectors.toList());
+  }
+
   public CriteriaOfPlaceDTO getCriteriaOfPlaceDTO(Place place) {
     List<CriterionAvgRatingDTO> criteriaAvgRatingDTOs = new ArrayList<>();
 
@@ -46,10 +55,6 @@ public class PlaceService {
             criterion -> criteriaAvgRatingDTOs.add(getCriterionAvgRatingDTO(criterion, place)));
 
     return new CriteriaOfPlaceDTO(criteriaAvgRatingDTOs);
-  }
-
-  public List<PlaceInfoDTO> getPlaceInfoDTOS(Interest interest) {
-    return interest.getPlaces().stream().map(this::getPlaceInfoDTO).collect(Collectors.toList());
   }
 
   private PlaceInfoDTO getPlaceInfoDTO(Place place) {
@@ -75,10 +80,5 @@ public class PlaceService {
     }
 
     return new CriterionAvgRatingDTO(criterion.getId(), criterion.getName(), avgRating);
-  }
-
-  public void addImage(Place place, String imageId) {
-    place.getImageNames().add(imageId);
-    placeRepository.save(place);
   }
 }

@@ -26,7 +26,7 @@ public class LikeService {
     likeRepository.deleteById(likeId);
   }
 
-  public void changeLike(AppUser user, Interest interest, boolean like) {
+  public void setLike(AppUser user, Interest interest, boolean like) {
     if (like) {
       this.createLike(user, interest);
     } else {

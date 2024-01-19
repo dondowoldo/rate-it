@@ -1,6 +1,8 @@
 package it.rate.webapp.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Getter
@@ -9,8 +11,9 @@ import lombok.*;
 @Entity
 @Table(name = "roles")
 public class Role {
-  @EmbeddedId private RoleId id;
+  @EmbeddedId @NotNull private RoleId id;
 
+  @NotNull
   @Column(nullable = false)
   @Enumerated(EnumType.STRING)
   private RoleType role;

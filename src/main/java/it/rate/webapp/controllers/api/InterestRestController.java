@@ -78,7 +78,7 @@ public class InterestRestController {
     if (principal != null) {
       AppUser loggedUser = userService.getByEmail(principal.getName());
       Interest interest = interestService.getById(interestId);
-      likeService.changeLike(loggedUser, interest, like.liked());
+      likeService.setLike(loggedUser, interest, like.liked());
     }
     return ResponseEntity.ok().body(like);
   }
