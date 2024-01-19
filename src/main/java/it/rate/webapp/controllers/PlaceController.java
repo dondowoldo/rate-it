@@ -3,10 +3,7 @@ package it.rate.webapp.controllers;
 import it.rate.webapp.dtos.RatingsDTO;
 import it.rate.webapp.exceptions.badrequest.InvalidPlaceDetailsException;
 import it.rate.webapp.exceptions.notfound.PlaceNotFoundException;
-import it.rate.webapp.models.AppUser;
-import it.rate.webapp.models.Place;
-import it.rate.webapp.models.Role;
-import it.rate.webapp.models.RoleId;
+import it.rate.webapp.models.*;
 import it.rate.webapp.services.*;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
@@ -27,6 +24,7 @@ public class PlaceController {
   private final RatingService ratingService;
   private final PermissionService permissionService;
   private final RoleService roleService;
+  private final InterestService interestService;
 
   @GetMapping("/new")
   @PreAuthorize("@permissionService.createPlace(#interestId)")
@@ -43,8 +41,10 @@ public class PlaceController {
 
   @PostMapping("/new")
   @PreAuthorize("@permissionService.createPlace(#interestId)")
-  public String createNewPlace(@PathVariable Long interestId, @ModelAttribute Place place) {
-    Place createdPlace = placeService.savePlace(place, interestId);
+  public String createNewPlace(@PathVariable Long interestId, @ModelAttribute Place place, Principal principal) {
+    AppUser loggedUser = userService.getByEmail(principal.getName());
+    Interest interest = interestService.getById(interestId);
+    Place createdPlace = placeService.savePlace(place, interest, loggedUser);
     return String.format("redirect:/interests/%d/places/%d", interestId, createdPlace.getId());
   }
 
@@ -107,12 +107,15 @@ public class PlaceController {
   @PutMapping("/{placeId}/edit")
   @PreAuthorize("@permissionService.hasPlaceEditPermissions(#placeId, #interestId)")
   public String editPlace(
-      @PathVariable Long interestId, @PathVariable Long placeId, @ModelAttribute Place place) {
+      @PathVariable Long interestId, @PathVariable Long placeId, @ModelAttribute Place place, Principal principal) {
 
     if (!placeId.equals(place.getId())) {
       throw new InvalidPlaceDetailsException("Invalid place id");
     }
-    placeService.savePlace(place, interestId);
+    Interest interest = interestService.getById(interestId);
+    AppUser loggedUser = userService.getByEmail(principal.getName());
+    placeService.savePlace(place, interest, loggedUser);
+
     return String.format("redirect:/interests/%d/places/%d", interestId, place.getId());
   }
 }

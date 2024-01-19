@@ -23,25 +23,7 @@ import org.springframework.stereotype.Service;
 public class PlaceService {
 
   private PlaceRepository placeRepository;
-  private UserService userService;
-  private InterestService interestService;
   private RatingRepository ratingRepository;
-
-  public Place savePlace(Place place, Long interestId) throws BadRequestException {
-    String loggedInUserName = SecurityContextHolder.getContext().getAuthentication().getName();
-
-    AppUser loggedUser =
-        userService.findByEmail(loggedInUserName).orElseThrow(InvalidUserDetailsException::new);
-    Interest interest =
-        interestService.findById(interestId).orElseThrow(InvalidInterestDetailsException::new);
-
-    loggedUser.getCreatedPlaces().add(place);
-    interest.getPlaces().add(place);
-    place.setCreator(loggedUser);
-    place.setInterest(interest);
-
-    return placeRepository.save(place);
-  }
 
   public Optional<Place> findById(Long id) {
     return placeRepository.findById(id);
@@ -49,6 +31,13 @@ public class PlaceService {
 
   public Place getById(Long placeId) {
     return placeRepository.getReferenceById(placeId);
+  }
+
+  public Place savePlace(Place place, Interest interest, AppUser appUser) {
+    place.setCreator(appUser);
+    place.setInterest(interest);
+
+    return placeRepository.save(place);
   }
 
   public CriteriaOfPlaceDTO getCriteriaOfPlaceDTO(Place place) {

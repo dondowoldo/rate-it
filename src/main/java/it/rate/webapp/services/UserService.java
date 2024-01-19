@@ -1,23 +1,33 @@
 package it.rate.webapp.services;
 
 import it.rate.webapp.config.security.ServerRole;
+import it.rate.webapp.dtos.InterestUserDTO;
 import it.rate.webapp.dtos.SignupUserInDTO;
 import it.rate.webapp.exceptions.badrequest.InvalidUserDetailsException;
 import it.rate.webapp.exceptions.badrequest.UserAlreadyExistsException;
 import it.rate.webapp.models.AppUser;
+import it.rate.webapp.models.Interest;
+import it.rate.webapp.models.Role;
 import it.rate.webapp.repositories.UserRepository;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
+
+import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 @Service
+@Validated
 @AllArgsConstructor
 public class UserService {
   private final UserRepository userRepository;
@@ -48,6 +58,13 @@ public class UserService {
     return userRepository.save(appUser);
   }
 
+  public List<InterestUserDTO> getUsersDTO(Interest interest, @NotNull Role.RoleType role) {
+    return interest.getRoles().stream()
+            .filter(r -> r.getRole().equals(role))
+            .map(InterestUserDTO::new)
+            .sorted(Comparator.comparing(dto -> dto.userName().toLowerCase()))
+            .collect(Collectors.toList());
+  }
   public AppUser registerUser(SignupUserInDTO userDTO) {
     Set<ConstraintViolation<SignupUserInDTO>> violations = validator.validate(userDTO);
     if (!violations.isEmpty()) {

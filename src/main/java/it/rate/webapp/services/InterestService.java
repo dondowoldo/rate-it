@@ -2,12 +2,10 @@ package it.rate.webapp.services;
 
 import it.rate.webapp.dtos.CoordinatesDTO;
 import it.rate.webapp.dtos.InterestSuggestionDTO;
-import it.rate.webapp.dtos.InterestUserDTO;
 import it.rate.webapp.dtos.LikedInterestsDTO;
 import it.rate.webapp.models.*;
 import it.rate.webapp.repositories.*;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import java.util.*;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
@@ -72,14 +70,6 @@ public class InterestService {
     return interestRepository.findAllByLikes_AppUser(loggedUser).stream()
         .sorted(Comparator.comparing(i -> i.getName().toLowerCase()))
         .map(LikedInterestsDTO::new)
-        .collect(Collectors.toList());
-  }
-
-  public List<InterestUserDTO> getUsersDTO(Interest interest, @NotNull Role.RoleType role) {
-    return interest.getRoles().stream()
-        .filter(r -> r.getRole().equals(role))
-        .map(InterestUserDTO::new)
-        .sorted(Comparator.comparing(dto -> dto.userName().toLowerCase()))
         .collect(Collectors.toList());
   }
 

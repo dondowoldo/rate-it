@@ -49,7 +49,8 @@ class PlaceServiceTest extends BaseTest {
 
   @Test()
   void saveNewPlaceInvalidInterest() {
-    Long interestId = 2L;
+    Interest interest = Interest.builder().id(2L).build();
+    AppUser creator = new AppUser();
     Place place = getPlaceNoId();
 
     // Mock the userService to return a new AppUser object when findByEmail is called with any
@@ -59,12 +60,12 @@ class PlaceServiceTest extends BaseTest {
     // Mock the interestService to return an empty Optional when findInterestById is called with the
     // specified interestId
     // This simulates the scenario where no interest is found for the given ID
-    when(interestService.findById(eq(interestId))).thenReturn(Optional.empty());
+    when(interestService.findById(eq(interest.getId()))).thenReturn(Optional.empty());
 
     // Execute the test and verify that a BadRequestException is thrown
     // The assertThrows method checks that the specified exception is thrown when the lambda
     // expression is executed
-    assertThrows(BadRequestException.class, () -> placeService.savePlace(place, interestId));
+    assertThrows(BadRequestException.class, () -> placeService.savePlace(place, interest, creator));
     // The lambda expression calls the saveNewPlace method with the test data, which should throw
     // the exception due to the invalid interest ID
   }
@@ -72,23 +73,22 @@ class PlaceServiceTest extends BaseTest {
   @Test
   void saveNewPlace() throws BadRequestException {
     // Prepare test data and mock responses
-    Long interestId = 2L;
     Place place = getPlaceNoId();
     AppUser creator = new AppUser();
-    Interest interest = new Interest();
+    Interest interest = Interest.builder().id(2L).build();
 
     // Mock the userService to return the created AppUser when findByEmail is called with any string
     when(userService.findByEmail(any())).thenReturn(Optional.of(creator));
 
     // Mock the interestService to return the created Interest when findInterestById is called with
     // the specific interestId
-    when(interestService.findById(eq(interestId))).thenReturn(Optional.of(interest));
+    when(interestService.findById(eq(interest.getId()))).thenReturn(Optional.of(interest));
 
     // Mock the placeRepository to return whatever Place object it receives
     when(placeRepository.save(any())).thenAnswer(i -> i.getArgument(0));
 
     // Call the method under test
-    Place res = placeService.savePlace(place, interestId);
+    Place res = placeService.savePlace(place, interest, creator);
 
     // Assertions to verify the results
     assertSame(res.getCreator(), creator);
