@@ -1,12 +1,12 @@
 package it.rate.webapp.services;
 
-import it.rate.webapp.exceptions.badrequest.InvalidInterestDetailsException;
 import it.rate.webapp.exceptions.badrequest.InvalidUserDetailsException;
 import it.rate.webapp.exceptions.internalerror.InternalErrorException;
 import it.rate.webapp.models.AppUser;
 import it.rate.webapp.models.Interest;
 import it.rate.webapp.models.Role;
 import it.rate.webapp.repositories.RoleRepository;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -19,21 +19,15 @@ import org.springframework.validation.annotation.Validated;
 @Validated
 @AllArgsConstructor
 public class ManageInterestService {
-  private final InterestService interestService;
   private final RoleRepository roleRepository;
   private final UserService userService;
 
 
   public Role inviteUser(
-          @NotNull Long interestId,
+          @Valid @NotNull Interest interest,
           @NotBlank @Pattern(regexp = "\\b(?:username|email)\\b") String inviteBy,
           @NotBlank String user,
           @NotNull Role.RoleType roleType) {
-
-    Interest interest =
-            interestService
-                    .findById(interestId)
-                    .orElseThrow(InvalidInterestDetailsException::new);
 
     AppUser appUser;
     if (inviteBy.equals("username")) {

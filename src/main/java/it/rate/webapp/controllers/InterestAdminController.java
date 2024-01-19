@@ -91,8 +91,9 @@ public class InterestAdminController {
   @PreAuthorize("@permissionService.manageCommunity(#interestId)")
   public String inviteUser(
       @PathVariable Long interestId, String invitedBy, String user, RedirectAttributes ra) {
+    Interest interest = interestService.getById(interestId);
     try {
-      manageInterestService.inviteUser(interestId, invitedBy, user, Role.RoleType.VOTER);
+      manageInterestService.inviteUser(interest, invitedBy, user, Role.RoleType.VOTER);
       ra.addFlashAttribute("status", "Invite successfully sent");
       ra.addFlashAttribute("statusClass", "successful");
       ra.addFlashAttribute("isChecked", invitedBy.equals("username"));

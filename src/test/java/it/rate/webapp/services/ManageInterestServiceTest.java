@@ -20,9 +20,7 @@ import static org.mockito.Mockito.*;
 
 class ManageInterestServiceTest extends BaseTest {
 
-  @MockBean InterestService interestService;
   @MockBean RoleRepository roleRepository;
-  @MockBean RoleService roleService;
   @MockBean UserService userService;
 
   @Autowired ManageInterestService manageInterestService;
@@ -32,13 +30,13 @@ class ManageInterestServiceTest extends BaseTest {
 
   @BeforeEach
   void setUp() {
-    u1 = AppUser.builder().username("Lojza").id(1L).build();
+    u1 = AppUser.builder().username("Lojza").id(1L).password("password").email("l@l.com").build();
+
+    i1 = Interest.builder().id(1L).name("IT").description("IT").exclusive(true).build();
 
     AppUser u2 = AppUser.builder().username("Alfonz").id(2L).build();
 
     AppUser u3 = AppUser.builder().username("Karel").id(3L).build();
-
-    i1 = new Interest();
 
     Role r1 = new Role(u1, i1, Role.RoleType.CREATOR);
     Role r2 = new Role(u2, i1, Role.RoleType.VOTER);
@@ -56,7 +54,7 @@ class ManageInterestServiceTest extends BaseTest {
         () -> manageInterestService.inviteUser(null, null, null, null));
     assertThrows(
         ConstraintViolationException.class,
-        () -> manageInterestService.inviteUser(1L, null, null, null));
+        () -> manageInterestService.inviteUser(i1, null, null, null));
     assertThrows(
         ConstraintViolationException.class,
         () -> manageInterestService.inviteUser(null, "email", null, null));
@@ -68,54 +66,52 @@ class ManageInterestServiceTest extends BaseTest {
         () -> manageInterestService.inviteUser(null, null, null, Role.RoleType.APPLICANT));
     assertThrows(
         ConstraintViolationException.class,
-        () -> manageInterestService.inviteUser(1L, "email", null, null));
+        () -> manageInterestService.inviteUser(i1, "email", null, null));
 
     assertThrows(
         ConstraintViolationException.class,
-        () -> manageInterestService.inviteUser(1L, null, "franta", null));
+        () -> manageInterestService.inviteUser(i1, null, "franta", null));
 
     assertThrows(
         ConstraintViolationException.class,
-        () -> manageInterestService.inviteUser(1L, null, null, Role.RoleType.APPLICANT));
+        () -> manageInterestService.inviteUser(i1, null, null, Role.RoleType.APPLICANT));
 
     assertThrows(
         ConstraintViolationException.class,
-        () -> manageInterestService.inviteUser(1L, "email", "franta", null));
+        () -> manageInterestService.inviteUser(i1, "email", "franta", null));
 
     assertThrows(
         ConstraintViolationException.class,
-        () -> manageInterestService.inviteUser(1L, "email", null, Role.RoleType.APPLICANT));
+        () -> manageInterestService.inviteUser(i1, "email", null, Role.RoleType.APPLICANT));
 
     assertThrows(
         ConstraintViolationException.class,
-        () -> manageInterestService.inviteUser(1L, null, "franta", Role.RoleType.APPLICANT));
+        () -> manageInterestService.inviteUser(i1, null, "franta", Role.RoleType.APPLICANT));
   }
 
   @Test
-  void inviteUserNonExistentInterestThrowsNotFound() {
-    when(interestService.findById(any())).thenReturn(Optional.empty());
+  void inviteUserNonExistingUser() {
     Exception e =
         assertThrows(
-            InvalidInterestDetailsException.class,
-            () -> manageInterestService.inviteUser(1L, "username", "franta", Role.RoleType.VOTER));
+                InvalidUserDetailsException.class,
+            () -> manageInterestService.inviteUser(i1, "username", "franta", Role.RoleType.VOTER));
 
-    assertEquals("Interest with given details not found", e.getMessage());
+    assertEquals("User with given details not found", e.getMessage());
   }
 
   @Test
-  void createNewRoleNonExistentUser() {
-    when(interestService.findById(any())).thenReturn(Optional.of(i1));
+  void createNewRoleNonExistingUser() {
     when(userService.findByUsernameIgnoreCase(any())).thenReturn(Optional.empty());
     when(userService.findByUsernameIgnoreCase(any())).thenReturn(Optional.empty());
 
     assertThrows(
         InvalidUserDetailsException.class,
-        () -> manageInterestService.inviteUser(1L, "username", "franta", Role.RoleType.APPLICANT));
+        () -> manageInterestService.inviteUser(i1, "username", "franta", Role.RoleType.APPLICANT));
 
     assertThrows(
         InvalidUserDetailsException.class,
         () ->
-            manageInterestService.inviteUser(1L, "email", "test@test.cz", Role.RoleType.APPLICANT));
+            manageInterestService.inviteUser(i1, "email", "test@test.cz", Role.RoleType.APPLICANT));
   }
 
   @Test
@@ -123,31 +119,29 @@ class ManageInterestServiceTest extends BaseTest {
       throws InvalidInterestDetailsException, InvalidUserDetailsException {
     AppUser userWithoutRole = new AppUser();
     Role.RoleType roleToCreate = Role.RoleType.VOTER;
-    when(interestService.findById(any())).thenReturn(Optional.of(i1));
     when(userService.findByUsernameIgnoreCase(any())).thenReturn(Optional.of(userWithoutRole));
-    when(roleService.save(any())).then(i -> roleRepository.save(i.getArgument(0)));
-    when(roleRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+    when(roleRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
 
-    Role newRole = manageInterestService.inviteUser(1L, "username", "franta", roleToCreate);
+    Role newRole = manageInterestService.inviteUser(i1, "username", "franta", roleToCreate);
 
-    verify(roleService, times(1)).save(newRole);
     verify(roleRepository, times(1)).save(newRole);
+    verify(userService, times(1)).findByUsernameIgnoreCase("franta");
+
     assertEquals(roleToCreate, newRole.getRoleType());
     assertEquals(userWithoutRole, newRole.getAppUser());
   }
 
   @Test
   void inviteUserThrowsBadRequestForInvalidInviteForm() {
-    when(interestService.findById(any())).thenReturn(Optional.of(i1));
 
     assertThrows(
         ConstraintViolationException.class,
-        () -> manageInterestService.inviteUser(1L, "usernaaame", "franta", Role.RoleType.VOTER));
+        () -> manageInterestService.inviteUser(i1, "usernaaame", "franta", Role.RoleType.VOTER));
 
     assertThrows(
         ConstraintViolationException.class,
         () ->
             manageInterestService.inviteUser(
-                1L, "emaail", "franta@franta.cz", Role.RoleType.VOTER));
+                    i1, "emaail", "franta@franta.cz", Role.RoleType.VOTER));
   }
 }
