@@ -4,7 +4,6 @@ import it.rate.webapp.BaseTest;
 import it.rate.webapp.models.AppUser;
 import it.rate.webapp.models.Interest;
 import it.rate.webapp.models.LikeId;
-import it.rate.webapp.models.Place;
 import it.rate.webapp.repositories.CriterionRepository;
 import it.rate.webapp.repositories.InterestRepository;
 import it.rate.webapp.repositories.LikeRepository;
@@ -53,11 +52,11 @@ public class LikeServiceTest extends BaseTest {
 
   private AppUser getMockAppUser() {
     return AppUser.builder()
-            .id(1L)
-            .username("Lojza")
-            .email("lojza@lojza.cz")
-            .password("pass")
-            .build();
+        .id(1L)
+        .username("Lojza")
+        .email("lojza@lojza.cz")
+        .password("pass")
+        .build();
   }
 
   private Interest getMockInterest() {
