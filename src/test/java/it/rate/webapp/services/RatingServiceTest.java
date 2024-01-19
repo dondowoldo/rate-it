@@ -13,6 +13,8 @@ import it.rate.webapp.models.*;
 import it.rate.webapp.repositories.CriterionRepository;
 import it.rate.webapp.repositories.RatingRepository;
 import java.util.*;
+
+import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -24,15 +26,15 @@ class RatingServiceTest extends BaseTest {
 
   @Test
   void updateRatingMissingCriterionInRatings() {
-    AppUser appUser = new AppUser();
-    Place p = new Place();
-    Interest i = new Interest();
+    AppUser appUser = getMockAppUser();
+    Place p = getMockPlace();
+    Interest i = getMockInterest();
 
     p.setInterest(i);
 
-    Criterion c1 = Criterion.builder().id(1L).build();
-    Criterion c2 = Criterion.builder().id(2L).build();
-    Criterion c3 = Criterion.builder().id(3L).build();
+    Criterion c1 = Criterion.builder().id(1L).name("Criterion1").build();
+    Criterion c2 = Criterion.builder().id(2L).name("Criterion2").build();
+    Criterion c3 = Criterion.builder().id(3L).name("Criterion3").build();
 
     i.setCriteria(Arrays.asList(c1, c2, c3));
 
@@ -60,15 +62,15 @@ class RatingServiceTest extends BaseTest {
 
   @Test
   void updateRatingScoreOutOfRange() {
-    AppUser appUser = new AppUser();
-    Place p = new Place();
-    Interest i = new Interest();
+    AppUser appUser = getMockAppUser();
+    Place p = getMockPlace();
+    Interest i = getMockInterest();
 
     p.setInterest(i);
 
-    Criterion c1 = Criterion.builder().id(1L).build();
-    Criterion c2 = Criterion.builder().id(2L).build();
-    Criterion c3 = Criterion.builder().id(3L).build();
+    Criterion c1 = Criterion.builder().id(1L).name("Criterion1").build();
+    Criterion c2 = Criterion.builder().id(2L).name("Criterion2").build();
+    Criterion c3 = Criterion.builder().id(3L).name("Criterion3").build();
 
     i.setCriteria(Arrays.asList(c1, c2, c3));
 
@@ -92,20 +94,21 @@ class RatingServiceTest extends BaseTest {
     when(criterionRepository.findById(eq(c3.getId()))).thenReturn(Optional.of(c3));
 
     assertThrows(
-        InvalidRatingException.class, () -> ratingService.updateRating(ratingsDTO, p, appUser));
+        ConstraintViolationException.class,
+        () -> ratingService.updateRating(ratingsDTO, p, appUser));
   }
 
   @Test
   void updateRatingOk() {
-    AppUser appUser = new AppUser();
-    Place p = new Place();
-    Interest i = new Interest();
+    AppUser appUser = getMockAppUser();
+    Place p = getMockPlace();
+    Interest i = getMockInterest();
 
     p.setInterest(i);
 
-    Criterion c1 = Criterion.builder().id(1L).build();
-    Criterion c2 = Criterion.builder().id(2L).build();
-    Criterion c3 = Criterion.builder().id(3L).build();
+    Criterion c1 = Criterion.builder().id(1L).name("Criterion1").build();
+    Criterion c2 = Criterion.builder().id(2L).name("Criterion2").build();
+    Criterion c3 = Criterion.builder().id(3L).name("Criterion3").build();
 
     i.setCriteria(Arrays.asList(c1, c2, c3));
 
@@ -133,5 +136,28 @@ class RatingServiceTest extends BaseTest {
     verify(ratingRepository, times(2)).save(any());
     verify(criterionRepository, times(3)).findById(any());
     verify(ratingRepository, times(3)).findById(any());
+  }
+
+  private AppUser getMockAppUser() {
+    return AppUser.builder()
+        .id(1L)
+        .username("Lojza")
+        .email("lojza@lojza.cz")
+        .password("pass")
+        .build();
+  }
+
+  private Place getMockPlace() {
+    return Place.builder()
+        .id(1L)
+        .name("Place")
+        .description("Description")
+        .latitude(1.0)
+        .longitude(1.0)
+        .build();
+  }
+
+  private Interest getMockInterest() {
+    return Interest.builder().id(1L).name("Interest").description("Description").build();
   }
 }
