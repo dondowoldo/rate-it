@@ -39,10 +39,6 @@ public class UserService {
     return userRepository.findById(userId);
   }
 
-  public Optional<AppUser> findByEmail(String email) {
-    return userRepository.findByEmail(email);
-  }
-
   public AppUser getByEmail(String email) {
     return userRepository.getByEmail(email);
   }
