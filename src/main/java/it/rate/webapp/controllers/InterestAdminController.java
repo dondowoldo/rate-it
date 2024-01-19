@@ -3,10 +3,7 @@ package it.rate.webapp.controllers;
 import it.rate.webapp.exceptions.badrequest.BadRequestException;
 import it.rate.webapp.models.Interest;
 import it.rate.webapp.models.Role;
-import it.rate.webapp.services.CriterionService;
-import it.rate.webapp.services.InterestService;
-import it.rate.webapp.services.ManageInterestService;
-import it.rate.webapp.services.UserService;
+import it.rate.webapp.services.*;
 import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -23,6 +20,7 @@ import java.util.Set;
 public class InterestAdminController {
   private final InterestService interestService;
   private final ManageInterestService manageInterestService;
+  private final RoleService roleService;
   private final UserService userService;
   private final CriterionService criterionService;
 
@@ -63,7 +61,7 @@ public class InterestAdminController {
   @DeleteMapping("/users/{userId}")
   @PreAuthorize("@permissionService.manageCommunity(#interestId)")
   public String removeUser(@PathVariable Long interestId, @PathVariable Long userId) {
-    manageInterestService.removeRole(interestId, userId);
+    roleService.removeRole(interestId, userId);
 
     return "redirect:/interests/{interestId}/admin/users";
   }

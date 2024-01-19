@@ -15,56 +15,46 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
+
 @Service
-@AllArgsConstructor
 @Validated
+@AllArgsConstructor
 public class ManageInterestService {
   private final InterestService interestService;
   private final RoleService roleService;
   private final UserService userService;
 
-  public void removeRole(@NotNull Long interestId, @NotNull Long userId) {
-    Role role =
-        roleService
-            .findById(new RoleId(userId, interestId))
-            .orElseThrow(InvalidRoleDetailsException::new);
 
-    if (role.getRoleType().equals(Role.RoleType.CREATOR)) {
-      throw new InvalidRoleDetailsException("Cannot remove creator role");
-    }
-    RoleId roleId = new RoleId(role.getId().getUserId(), role.getId().getInterestId());
-    roleService.deleteByRoleId(roleId);
-  }
 
   public Role adjustRole(
-      @NotNull Long interestId, @NotNull Long userId, @NotNull Role.RoleType roleType) {
+          @NotNull Long interestId, @NotNull Long userId, @NotNull Role.RoleType roleType) {
 
     Role role =
-        roleService
-            .findById(new RoleId(userId, interestId))
-            .orElseThrow(InvalidRoleDetailsException::new);
+            roleService
+                    .findById(new RoleId(userId, interestId))
+                    .orElseThrow(InvalidRoleDetailsException::new);
     role.setRoleType(roleType);
     return roleService.save(role);
   }
 
   public Role inviteUser(
-      @NotNull Long interestId,
-      @NotBlank @Pattern(regexp = "\\b(?:username|email)\\b") String inviteBy,
-      @NotBlank String user,
-      @NotNull Role.RoleType roleType) {
+          @NotNull Long interestId,
+          @NotBlank @Pattern(regexp = "\\b(?:username|email)\\b") String inviteBy,
+          @NotBlank String user,
+          @NotNull Role.RoleType roleType) {
 
     Interest interest =
-        interestService
-            .findById(interestId)
-            .orElseThrow(InvalidInterestDetailsException::new);
+            interestService
+                    .findById(interestId)
+                    .orElseThrow(InvalidInterestDetailsException::new);
 
     AppUser appUser;
     if (inviteBy.equals("username")) {
       appUser =
-          userService.findByUsernameIgnoreCase(user).orElseThrow(InvalidUserDetailsException::new);
+              userService.findByUsernameIgnoreCase(user).orElseThrow(InvalidUserDetailsException::new);
     } else if (inviteBy.equals("email")) {
       appUser =
-          userService.findByEmailIgnoreCase(user).orElseThrow(InvalidUserDetailsException::new);
+              userService.findByEmailIgnoreCase(user).orElseThrow(InvalidUserDetailsException::new);
     } else {
       throw new InternalErrorException("Invalid inviteBy parameter");
     }

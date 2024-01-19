@@ -8,12 +8,10 @@ import it.rate.webapp.exceptions.badrequest.InvalidUserDetailsException;
 import it.rate.webapp.models.AppUser;
 import it.rate.webapp.models.Interest;
 import it.rate.webapp.models.Role;
-import it.rate.webapp.models.RoleId;
 import it.rate.webapp.repositories.RoleRepository;
 import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import java.util.List;
@@ -25,8 +23,8 @@ import static org.mockito.Mockito.*;
 class ManageInterestServiceTest extends BaseTest {
 
   @MockBean InterestService interestService;
-  @MockBean RoleService roleService;
   @MockBean RoleRepository roleRepository;
+  @MockBean RoleService roleService;
   @MockBean UserService userService;
 
   @Autowired ManageInterestService manageInterestService;
@@ -49,54 +47,6 @@ class ManageInterestServiceTest extends BaseTest {
     Role r3 = new Role(u3, i1, Role.RoleType.APPLICANT);
 
     i1.setRoles(List.of(r1, r2, r3));
-  }
-
-  @Test
-  void removeRoleInvalidParams() {
-    assertThrows(
-        ConstraintViolationException.class, () -> manageInterestService.removeRole(null, null));
-    assertThrows(
-        ConstraintViolationException.class, () -> manageInterestService.removeRole(null, 1L));
-    assertThrows(
-        ConstraintViolationException.class, () -> manageInterestService.removeRole(1L, null));
-  }
-
-  @Test
-  void removeRoleRemoveCreatorRoleThrowsException() {
-    Role roleToDelete = new Role(u1, i1, Role.RoleType.CREATOR);
-    when(roleService.findById(any())).thenReturn(Optional.of(roleToDelete));
-
-    Exception e1 =
-        assertThrows(
-            InvalidRoleDetailsException.class, () -> manageInterestService.removeRole(1L, 1L));
-    assertEquals("Cannot remove creator role", e1.getMessage());
-  }
-
-  @Test
-  void removeRoleNonExistentRoleForUser() {
-    when(roleService.findById(any())).thenReturn(Optional.empty());
-    Exception e4 =
-        assertThrows(
-            InvalidRoleDetailsException.class, () -> manageInterestService.removeRole(1L, 1L));
-
-    assertEquals("Role with given details not found", e4.getMessage());
-  }
-
-  @Test
-  void removeRole() {
-    Role roleToDelete = new Role(u1, i1, Role.RoleType.VOTER);
-    when(roleService.findById(any())).thenReturn(Optional.of(roleToDelete));
-    ArgumentCaptor<RoleId> argumentCaptor = ArgumentCaptor.forClass(RoleId.class);
-
-    manageInterestService.removeRole(1L, 1L);
-    roleRepository.deleteById(roleToDelete.getId());
-
-    verify(roleService, times(1)).deleteByRoleId(roleToDelete.getId());
-    verify(roleRepository).deleteById(argumentCaptor.capture());
-    verify(roleRepository, times(1)).deleteById(same(roleToDelete.getId()));
-
-    RoleId deletedRole = argumentCaptor.getValue();
-    assertSame(roleToDelete.getId(), deletedRole);
   }
 
   @Test
