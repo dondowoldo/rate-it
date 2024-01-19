@@ -1,9 +1,7 @@
 package it.rate.webapp.services;
 
 import it.rate.webapp.BaseTest;
-import it.rate.webapp.exceptions.badrequest.BadRequestException;
 import it.rate.webapp.exceptions.badrequest.InvalidInterestDetailsException;
-import it.rate.webapp.exceptions.badrequest.InvalidRoleDetailsException;
 import it.rate.webapp.exceptions.badrequest.InvalidUserDetailsException;
 import it.rate.webapp.models.AppUser;
 import it.rate.webapp.models.Interest;
@@ -49,50 +47,7 @@ class ManageInterestServiceTest extends BaseTest {
     i1.setRoles(List.of(r1, r2, r3));
   }
 
-  @Test
-  void adjustRoleInvalidParameters() throws BadRequestException {
-    assertThrows(
-        ConstraintViolationException.class,
-        () -> manageInterestService.adjustRole(null, null, null));
-    assertThrows(
-        ConstraintViolationException.class, () -> manageInterestService.adjustRole(1L, null, null));
-    assertThrows(
-        ConstraintViolationException.class, () -> manageInterestService.adjustRole(null, 1L, null));
-    assertThrows(
-        ConstraintViolationException.class,
-        () -> manageInterestService.adjustRole(null, null, Role.RoleType.APPLICANT));
-    assertThrows(
-        ConstraintViolationException.class, () -> manageInterestService.adjustRole(1L, 1L, null));
-    assertThrows(
-        ConstraintViolationException.class,
-        () -> manageInterestService.adjustRole(null, 1L, Role.RoleType.APPLICANT));
-    assertThrows(
-        ConstraintViolationException.class,
-        () -> manageInterestService.adjustRole(1L, null, Role.RoleType.APPLICANT));
-  }
 
-  @Test
-  void adjustRoleNonExistentRoleForUser() {
-    when(roleService.findById(any())).thenReturn(Optional.empty());
-    Exception e =
-        assertThrows(
-            InvalidRoleDetailsException.class,
-            () -> manageInterestService.adjustRole(1L, 1L, Role.RoleType.APPLICANT));
-
-    assertEquals("Role with given details not found", e.getMessage());
-  }
-
-  @Test
-  void adjustRole() throws BadRequestException {
-    Role roleToAdjust = new Role(u1, i1, Role.RoleType.APPLICANT);
-    Role.RoleType roleToApply = Role.RoleType.VOTER;
-    when(roleService.findById(any())).thenReturn(Optional.of(roleToAdjust));
-
-    manageInterestService.adjustRole(1L, 1L, roleToApply);
-
-    verify(roleService, times(1)).save(same(roleToAdjust));
-    assertEquals(roleToApply, roleToAdjust.getRoleType());
-  }
 
   @Test
   void inviteUserInvalidParameters() {

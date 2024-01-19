@@ -43,6 +43,10 @@ public class UserService {
     return userRepository.getByEmail(email);
   }
 
+  public AppUser getById(Long id) {
+    return userRepository.getReferenceById(id);
+  }
+
   public Optional<AppUser> findByUsernameIgnoreCase(String username) {
     return userRepository.findByUsernameIgnoreCase(username);
   }

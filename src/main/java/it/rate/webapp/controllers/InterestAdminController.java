@@ -1,6 +1,7 @@
 package it.rate.webapp.controllers;
 
 import it.rate.webapp.exceptions.badrequest.BadRequestException;
+import it.rate.webapp.models.AppUser;
 import it.rate.webapp.models.Interest;
 import it.rate.webapp.models.Role;
 import it.rate.webapp.services.*;
@@ -69,7 +70,10 @@ public class InterestAdminController {
   @PutMapping("/users/{userId}")
   @PreAuthorize("@permissionService.manageCommunity(#interestId)")
   public String acceptUser(@PathVariable Long interestId, @PathVariable Long userId) {
-    manageInterestService.adjustRole(interestId, userId, Role.RoleType.VOTER);
+    AppUser loggedUser = userService.getById(userId);
+    Interest interest = interestService.getById(interestId);
+
+    roleService.setRole(interest, loggedUser, Role.RoleType.VOTER);
 
     return "redirect:/interests/{interestId}/admin/users";
   }
