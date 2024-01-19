@@ -21,7 +21,7 @@ public class MainPageController {
     if (principal != null) {
       AppUser loggedUser = userService.getByEmail(principal.getName());
       model.addAttribute("loggedUser", loggedUser);
-      model.addAttribute("likedInterests", interestService.getLikedInterests(loggedUser));
+      model.addAttribute("likedInterests", interestService.findAllLikedByAppUser(loggedUser));
     }
 
     return "main/index";

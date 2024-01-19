@@ -27,16 +27,23 @@ public class InterestService {
     return interestRepository.getReferenceById(interestId);
   }
 
+  public Interest save(@Valid Interest interest) {
+    return interestRepository.save(interest);
+  }
+
   public List<Interest> findAllSortByLikes() {
     return interestRepository.findAllSortByLikes();
   }
 
-  public List<Interest> getLikedInterests(AppUser appUser) {
+  public List<Interest> findAllLikedByAppUser(AppUser appUser) {
     return interestRepository.findAllByLikes_AppUser(appUser);
   }
 
-  public Interest save(@Valid Interest interest) {
-    return interestRepository.save(interest);
+  public List<LikedInterestsDTO> getLikedInterestsDTOS(AppUser loggedUser) {
+    return interestRepository.findAllByLikes_AppUser(loggedUser).stream()
+        .sorted(Comparator.comparing(i -> i.getName().toLowerCase()))
+        .map(LikedInterestsDTO::new)
+        .collect(Collectors.toList());
   }
 
   public List<InterestSuggestionDTO> getAllSuggestionDTOS() {
@@ -52,13 +59,6 @@ public class InterestService {
                 new InterestSuggestionDTO(
                     interest, getDistanceToNearestPlace(usersCoords, interest.getPlaces())))
         .sorted(Comparator.comparingDouble(InterestSuggestionDTO::distanceKm))
-        .collect(Collectors.toList());
-  }
-
-  public List<LikedInterestsDTO> getLikedInterestsDTOS(AppUser loggedUser) {
-    return interestRepository.findAllByLikes_AppUser(loggedUser).stream()
-        .sorted(Comparator.comparing(i -> i.getName().toLowerCase()))
-        .map(LikedInterestsDTO::new)
         .collect(Collectors.toList());
   }
 
