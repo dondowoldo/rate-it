@@ -18,7 +18,6 @@ import org.springframework.validation.annotation.Validated;
 public class InterestService {
 
   private final InterestRepository interestRepository;
-  private final RoleRepository roleRepository;
 
   public Optional<Interest> findById(Long interestId) {
     return interestRepository.findById(interestId);
@@ -38,16 +37,6 @@ public class InterestService {
 
   public Interest save(@Valid Interest interest) {
     return interestRepository.save(interest);
-  }
-
-  public Interest saveNew(@Valid Interest interest, AppUser appUser) {
-    interestRepository.save(interest);
-
-    Role creator = new Role(appUser, interest, Role.RoleType.CREATOR);
-    interest.getRoles().add(creator);
-    roleRepository.save(creator);
-
-    return interest;
   }
 
   public List<InterestSuggestionDTO> getAllSuggestionDTOS() {

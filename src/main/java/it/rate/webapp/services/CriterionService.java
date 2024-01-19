@@ -27,8 +27,8 @@ public class CriterionService {
   }
 
   public void updateExisting(
-      Interest interest, @NotEmpty List<@NotBlank String> criteriaNames) {
-    Set<Criterion> oldCriteria = criterionRepository.findAllByInterest(interest);
+      Interest editedInterest, @NotEmpty List<@NotBlank String> criteriaNames) {
+    Set<Criterion> oldCriteria = criterionRepository.findAllByInterestId(editedInterest.getId());
     List<String> oldCriteriaNames = oldCriteria.stream().map(Criterion::getName).toList();
 
     List<Criterion> newCriteria =
@@ -39,10 +39,10 @@ public class CriterionService {
 
     for (String name : oldCriteriaNames) {
       if (!criteriaNames.contains(name)) {
-        criterionRepository.deleteByNameAndInterest(name, interest);
+        criterionRepository.deleteByNameAndInterest(name, editedInterest);
       }
     }
-    newCriteria.forEach(c -> c.setInterest(interest));
+    newCriteria.forEach(c -> c.setInterest(editedInterest));
 
     criterionRepository.saveAll(newCriteria);
   }

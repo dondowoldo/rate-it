@@ -49,8 +49,9 @@ public class InterestController {
       RedirectAttributes ra,
       Principal principal) {
     AppUser loggedUser = userService.getByEmail(principal.getName());
-    Interest savedInterest = interestService.saveNew(interest, loggedUser);
+    Interest savedInterest = interestService.save(interest);
     criterionService.createNew(savedInterest, criteriaNames);
+    roleService.setRole(savedInterest, loggedUser, Role.RoleType.CREATOR);
     likeService.createLike(loggedUser, savedInterest);
 
     ra.addAttribute("id", savedInterest.getId());

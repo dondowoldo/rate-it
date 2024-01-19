@@ -41,13 +41,11 @@ public class InterestAdminController {
   @PreAuthorize("@permissionService.manageCommunity(#interestId)")
   public String editInterest(
       @PathVariable Long interestId,
-      @ModelAttribute Interest interest,
+      @ModelAttribute Interest editedInterest,
       @RequestParam List<String> criteriaNames,
-      Principal principal,
       RedirectAttributes ra) {
-    interest.setId(interestId);
-    criterionService.updateExisting(interest, criteriaNames);
-    interestService.save(interest);
+    editedInterest.setId(interestId);
+    criterionService.updateExisting(interestService.save(editedInterest), criteriaNames);
 
     ra.addAttribute("id", interestId);
     return "redirect:/interests/{id}";
