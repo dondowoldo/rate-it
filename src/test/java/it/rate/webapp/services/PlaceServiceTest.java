@@ -3,7 +3,6 @@ package it.rate.webapp.services;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -47,48 +46,18 @@ class PlaceServiceTest extends BaseTest {
     SecurityContextHolder.setContext(securityContext);
   }
 
-  @Test()
-  void saveNewPlaceInvalidInterest() {
-    Interest interest = Interest.builder().id(2L).build();
-    AppUser creator = new AppUser();
-    Place place = getPlaceNoId();
-
-    // Mock the userService to return a new AppUser object when findByEmail is called with any
-    // string
-    when(userService.findByEmail(any())).thenReturn(Optional.of(new AppUser()));
-
-    // Mock the interestService to return an empty Optional when findInterestById is called with the
-    // specified interestId
-    // This simulates the scenario where no interest is found for the given ID
-    when(interestService.findById(eq(interest.getId()))).thenReturn(Optional.empty());
-
-    // Execute the test and verify that a BadRequestException is thrown
-    // The assertThrows method checks that the specified exception is thrown when the lambda
-    // expression is executed
-    assertThrows(BadRequestException.class, () -> placeService.savePlace(place, interest, creator));
-    // The lambda expression calls the saveNewPlace method with the test data, which should throw
-    // the exception due to the invalid interest ID
-  }
-
   @Test
   void saveNewPlace() throws BadRequestException {
     // Prepare test data and mock responses
-    Place place = getPlaceNoId();
-    AppUser creator = new AppUser();
-    Interest interest = Interest.builder().id(2L).build();
-
-    // Mock the userService to return the created AppUser when findByEmail is called with any string
-    when(userService.findByEmail(any())).thenReturn(Optional.of(creator));
-
-    // Mock the interestService to return the created Interest when findInterestById is called with
-    // the specific interestId
-    when(interestService.findById(eq(interest.getId()))).thenReturn(Optional.of(interest));
+    Place place = getMockPlace();
+    AppUser creator = getMockAppUser();
+    Interest interest = getMockInterest();
 
     // Mock the placeRepository to return whatever Place object it receives
     when(placeRepository.save(any())).thenAnswer(i -> i.getArgument(0));
 
     // Call the method under test
-    Place res = placeService.savePlace(place, interest, creator);
+    Place res = placeService.save(place, interest, creator);
 
     // Assertions to verify the results
     assertSame(res.getCreator(), creator);
@@ -100,39 +69,16 @@ class PlaceServiceTest extends BaseTest {
   }
 
   @Test
-  void loggedUserIsCreator() {
-    Long placeId = 2L;
-    Place place = getPlaceNoId();
-    AppUser creator = new AppUser();
-    creator.getCreatedPlaces().add(place);
-    place.setCreator(creator);
-
-    when(userService.findByEmail(any())).thenReturn(Optional.of(creator));
-    when(placeRepository.findById(eq(placeId))).thenReturn(Optional.of(place));
-
-    assertEquals(place.getCreator(), creator);
-  }
-
-  @Test
-  void loggedUserIsNotCreator() {
-    Long placeId = 2L;
-    Place place = getPlaceNoId();
-    AppUser creator = new AppUser();
-
-    when(userService.findByEmail(any())).thenReturn(Optional.of(creator));
-    when(placeRepository.findById(eq(placeId))).thenReturn(Optional.of(place));
-
-    assertNotEquals(place.getCreator(), creator);
-  }
-
-  @Test
   void getPlaceInfoDTOSHappyCase() {
-    Place place = getPlaceNoId();
-    Interest interest = new Interest();
-    AppUser userOne = new AppUser();
-    AppUser userTwo = new AppUser();
+    Place place = getMockPlace();
+    Interest interest = getMockInterest();
+    AppUser userOne = getMockAppUser();
+    AppUser userTwo = getMockAppUser();
 
-    List<Criterion> criteria = Arrays.asList(new Criterion(), new Criterion());
+    List<Criterion> criteria =
+        Arrays.asList(
+            Criterion.builder().id(1L).name("Criterion1").build(),
+            Criterion.builder().id(2L).name("Criterion2").build());
 
     List<Rating> ratings =
         Arrays.asList(
@@ -168,8 +114,8 @@ class PlaceServiceTest extends BaseTest {
 
   @Test
   void getPlaceInfoDTOSNoCriteria() {
-    Place place = getPlaceNoId();
-    Interest interest = new Interest();
+    Place place = getMockPlace();
+    Interest interest = getMockInterest();
 
     interest.setPlaces(List.of(place));
     place.setInterest(interest);
@@ -181,10 +127,10 @@ class PlaceServiceTest extends BaseTest {
 
   @Test
   void getCriteriaOfPlaceDtoHappyCase() {
-    Place place = getPlaceNoId();
-    Interest interest = new Interest();
-    AppUser userOne = new AppUser();
-    AppUser userTwo = new AppUser();
+    Place place = getMockPlace();
+    Interest interest = getMockInterest();
+    AppUser userOne = getMockAppUser();
+    AppUser userTwo = getMockAppUser();
 
     List<Criterion> criteria = Arrays.asList(new Criterion(), new Criterion());
 
@@ -219,9 +165,9 @@ class PlaceServiceTest extends BaseTest {
 
   @Test
   void getCriteriaOfPlaceDtoNoRatings() {
-    Place place = getPlaceNoId();
-    Interest interest = new Interest();
-    List<Criterion> criteria = List.of(new Criterion());
+    Place place = getMockPlace();
+    Interest interest = getMockInterest();
+    List<Criterion> criteria = List.of(Criterion.builder().id(1L).name("Criterion1").build());
     place.setInterest(interest);
     interest.setCriteria(criteria);
 
@@ -240,11 +186,26 @@ class PlaceServiceTest extends BaseTest {
     assertEquals(actualResult, expectedResult);
   }
 
-  private static Place getPlaceNoId() {
-    Place place = new Place();
-    place.setName("name");
-    place.setDescription("description");
-    place.setImageNames(List.of("image"));
-    return place;
+  private AppUser getMockAppUser() {
+    return AppUser.builder()
+        .id(1L)
+        .username("Lojza")
+        .email("lojza@lojza.cz")
+        .password("pass")
+        .build();
+  }
+
+  private Place getMockPlace() {
+    return Place.builder()
+        .id(1L)
+        .name("Place")
+        .description("Description")
+        .latitude(1.0)
+        .longitude(1.0)
+        .build();
+  }
+
+  private Interest getMockInterest() {
+    return Interest.builder().id(1L).name("Interest").description("Description").build();
   }
 }

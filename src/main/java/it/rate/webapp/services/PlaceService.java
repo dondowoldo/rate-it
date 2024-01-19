@@ -33,7 +33,7 @@ public class PlaceService {
     return placeRepository.getReferenceById(placeId);
   }
 
-  public Place savePlace(Place place, @Valid Interest interest, @Valid AppUser appUser) {
+  public Place save(Place place, @Valid Interest interest, @Valid AppUser appUser) {
     place.setCreator(appUser);
     place.setInterest(interest);
 

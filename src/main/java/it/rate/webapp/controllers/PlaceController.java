@@ -44,7 +44,7 @@ public class PlaceController {
   public String createNewPlace(@PathVariable Long interestId, @ModelAttribute Place place, Principal principal) {
     AppUser loggedUser = userService.getByEmail(principal.getName());
     Interest interest = interestService.getById(interestId);
-    Place createdPlace = placeService.savePlace(place, interest, loggedUser);
+    Place createdPlace = placeService.save(place, interest, loggedUser);
     return String.format("redirect:/interests/%d/places/%d", interestId, createdPlace.getId());
   }
 
@@ -114,7 +114,7 @@ public class PlaceController {
     }
     Interest interest = interestService.getById(interestId);
     AppUser loggedUser = userService.getByEmail(principal.getName());
-    placeService.savePlace(place, interest, loggedUser);
+    placeService.save(place, interest, loggedUser);
 
     return String.format("redirect:/interests/%d/places/%d", interestId, place.getId());
   }
