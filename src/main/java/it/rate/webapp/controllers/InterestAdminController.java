@@ -94,7 +94,7 @@ public class InterestAdminController {
     Interest interest = interestService.getById(interestId);
     try {
       manageInterestService.inviteUser(interest, invitedBy, user, Role.RoleType.VOTER);
-      ra.addFlashAttribute("status", "Invite successfully sent");
+      ra.addFlashAttribute("status", "Invitation successfully sent");
       ra.addFlashAttribute("statusClass", "successful");
       ra.addFlashAttribute("isChecked", invitedBy.equals("username"));
     } catch (BadRequestException e) {
