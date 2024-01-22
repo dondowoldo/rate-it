@@ -20,7 +20,7 @@ window.addEventListener('load', async () => {
 document.addEventListener('DOMContentLoaded', () => {
     var splide = new Splide('.splide', {
         fixedWidth: '10rem',
-        fixedHeight: '12rem',
+        fixedHeight: '11rem',
         gap: '1rem',
         type: 'slide',
         drag: 'free',
