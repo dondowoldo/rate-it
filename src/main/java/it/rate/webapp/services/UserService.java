@@ -1,6 +1,6 @@
 package it.rate.webapp.services;
 
-import it.rate.webapp.config.security.ServerRole;
+import it.rate.webapp.config.ServerRole;
 import it.rate.webapp.dtos.InterestUserDTO;
 import it.rate.webapp.dtos.SignupUserInDTO;
 import it.rate.webapp.exceptions.badrequest.InvalidUserDetailsException;
@@ -13,10 +13,7 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Valid;
 import jakarta.validation.Validator;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import jakarta.validation.constraints.NotNull;
@@ -64,7 +61,7 @@ public class UserService {
         .collect(Collectors.toList());
   }
 
-  public AppUser registerUser(SignupUserInDTO userDTO) {
+  public void registerUser(SignupUserInDTO userDTO) {
     Set<ConstraintViolation<SignupUserInDTO>> violations = validator.validate(userDTO);
     if (!violations.isEmpty()) {
       throw new InvalidUserDetailsException(violations.stream().findFirst().get().getMessage());
@@ -86,7 +83,7 @@ public class UserService {
             .password(hashPassword)
             .serverRole(ServerRole.USER)
             .build();
-    return userRepository.save(user);
+    userRepository.save(user);
   }
 
   public AppUser getAuthenticatedUser() {

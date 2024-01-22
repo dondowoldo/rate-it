@@ -1,6 +1,7 @@
 package it.rate.webapp.services;
 
 import it.rate.webapp.BaseTest;
+import it.rate.webapp.config.ServerRole;
 import it.rate.webapp.dtos.LikedInterestsDTO;
 import it.rate.webapp.models.AppUser;
 import it.rate.webapp.models.Interest;
@@ -24,7 +25,13 @@ class InterestServiceTest extends BaseTest {
   void getLikedInterestsDTOS() {
     // checking alphabetical order
     AppUser u1 =
-        AppUser.builder().id(1L).username("Lojza").email("lojza@lojza.cz").password("pass").build();
+        AppUser.builder()
+            .id(1L)
+            .username("Lojza")
+            .email("lojza@lojza.cz")
+            .password("pass")
+            .serverRole(ServerRole.USER)
+            .build();
     Interest i1 = Interest.builder().id(1L).name("zTest").description("desc").build();
     Interest i2 = Interest.builder().id(2L).name("BTest").description("desc").build();
     Interest i3 = Interest.builder().id(3L).name("aTest").description("desc").build();

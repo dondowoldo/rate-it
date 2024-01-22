@@ -20,7 +20,6 @@ import java.util.OptionalDouble;
 public class Place {
   @Id @GeneratedValue @NotNull private Long id;
 
-  @NotNull
   @NotBlank
   @Column(nullable = false)
   private String name;
@@ -29,9 +28,9 @@ public class Place {
   private String address;
 
   @NotNull
-  @Range(min = -90, max = 90)
   @Column(nullable = false)
-  private double latitude;
+  @Range(min = -90, max = 90)
+  private Double latitude;
 
   @NotNull
   @Column(nullable = false)

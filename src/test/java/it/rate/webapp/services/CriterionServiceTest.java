@@ -4,6 +4,7 @@ import it.rate.webapp.BaseTest;
 import it.rate.webapp.models.Criterion;
 import it.rate.webapp.models.Interest;
 import it.rate.webapp.repositories.CriterionRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -18,19 +19,25 @@ class CriterionServiceTest extends BaseTest {
   @MockBean CriterionRepository criterionRepository;
 
   @Autowired CriterionService criterionService;
+  Criterion cr1;
+  Criterion cr2;
+  Criterion cr3;
+  Interest interest;
+  List<Criterion> criteria;
 
-  @Test
-  void createNew() {}
+  @BeforeEach
+  void setUp() {
+    cr1 = Criterion.builder().name("Křupavost").build();
+    cr2 = Criterion.builder().name("Kvalita").build();
+    cr3 = Criterion.builder().name("Velikost").build();
+    criteria = List.of(cr1, cr2, cr3);
+    interest =
+        Interest.builder().id(1L).name("test").description("desc").criteria(criteria).build();
+  }
 
   @Test
   void updateExistingAddCriteria() {
-    Criterion cr1 = Criterion.builder().name("Křupavost").build();
-    Criterion cr2 = Criterion.builder().name("Kvalita").build();
-    List<Criterion> criteria = List.of(cr1, cr2);
-    Interest interest =
-        Interest.builder().id(1L).name("test").description("desc").criteria(criteria).build();
-
-    Set<String> newCriteriaNames = Set.of("Křupavost", "Kvalita", "Velikost", "Užitek");
+    Set<String> newCriteriaNames = Set.of("Křupavost", "Kvalita", "Velikost", "Užitek", "Sladkost");
 
     when(criterionRepository.findAllByInterest(any())).thenReturn(criteria);
 
@@ -42,13 +49,6 @@ class CriterionServiceTest extends BaseTest {
 
   @Test
   void updateExistingDeleteCriterion() {
-    Criterion cr1 = Criterion.builder().name("Křupavost").build();
-    Criterion cr2 = Criterion.builder().name("Kvalita").build();
-    Criterion cr3 = Criterion.builder().name("Velikost").build();
-    List<Criterion> criteria = List.of(cr1, cr2, cr3);
-    Interest interest =
-        Interest.builder().id(1L).name("test").description("desc").criteria(criteria).build();
-
     Set<String> newCriteriaNames = Set.of("Křupavost", "Kvalita");
 
     when(criterionRepository.findAllByInterest(any())).thenReturn(criteria);
@@ -61,13 +61,6 @@ class CriterionServiceTest extends BaseTest {
 
   @Test
   void updateExistingDeleteAndAddCriteria() {
-    Criterion cr1 = Criterion.builder().name("Křupavost").build();
-    Criterion cr2 = Criterion.builder().name("Kvalita").build();
-    Criterion cr3 = Criterion.builder().name("Velikost").build();
-    List<Criterion> criteria = List.of(cr1, cr2, cr3);
-    Interest interest =
-        Interest.builder().id(1L).name("test").description("desc").criteria(criteria).build();
-
     Set<String> newCriteriaNames = Set.of("Křupavost", "Kvalita", "Užitek");
 
     when(criterionRepository.findAllByInterest(any())).thenReturn(criteria);

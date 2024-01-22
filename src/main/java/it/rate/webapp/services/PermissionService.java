@@ -1,6 +1,6 @@
 package it.rate.webapp.services;
 
-import it.rate.webapp.config.security.ServerRole;
+import it.rate.webapp.config.ServerRole;
 import it.rate.webapp.exceptions.notfound.InterestNotFoundException;
 import it.rate.webapp.exceptions.notfound.PlaceNotFoundException;
 import it.rate.webapp.models.*;

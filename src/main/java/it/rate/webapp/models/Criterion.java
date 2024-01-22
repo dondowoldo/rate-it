@@ -17,7 +17,7 @@ import java.util.List;
 @Table(name = "criteria")
 public class Criterion {
   @Id @GeneratedValue @NotNull private Long id;
-  @NotNull @NotBlank private String name;
+  @NotBlank private String name;
   @Builder.Default private boolean deleted = false;
 
   @ManyToOne private Interest interest;

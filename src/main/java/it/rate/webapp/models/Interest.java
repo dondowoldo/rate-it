@@ -18,12 +18,10 @@ import java.util.List;
 public class Interest {
   @Id @GeneratedValue @NotNull private Long id;
 
-  @NotNull
   @NotBlank
   @Column(nullable = false)
   private String name;
 
-  @NotNull
   @NotBlank
   @Column(nullable = false)
   private String description;

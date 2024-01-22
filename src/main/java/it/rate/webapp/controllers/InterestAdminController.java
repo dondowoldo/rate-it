@@ -28,6 +28,7 @@ public class InterestAdminController {
   @GetMapping("/edit")
   @PreAuthorize("@permissionService.manageCommunity(#interestId)")
   public String editInterestPage(@PathVariable Long interestId, Model model, Principal principal) {
+
     model.addAttribute("interest", interestService.getById(interestId));
     model.addAttribute("action", "/interests/" + interestId + "/admin/edit");
     model.addAttribute("method", "put");
@@ -40,19 +41,19 @@ public class InterestAdminController {
   @PreAuthorize("@permissionService.manageCommunity(#interestId)")
   public String editInterest(
       @PathVariable Long interestId,
-      @ModelAttribute Interest editedInterest,
-      @RequestParam Set<String> criteriaNames,
-      RedirectAttributes ra) {
-    editedInterest.setId(interestId);
-    criterionService.updateExisting(interestService.save(editedInterest), criteriaNames);
+      Interest interest,
+      Set<String> criteriaNames) {
 
-    ra.addAttribute("id", interestId);
-    return "redirect:/interests/{id}";
+    interest.setId(interestId);
+    criterionService.updateExisting(interestService.save(interest), criteriaNames);
+
+    return String.format("redirect:/interests/%d", interestId);
   }
 
   @GetMapping("/users")
   @PreAuthorize("@permissionService.manageCommunity(#interestId)")
   public String editUsersPage(@PathVariable Long interestId, Model model, Principal principal) {
+
     model.addAttribute("loggedUser", userService.getByEmail(principal.getName()));
     model.addAttribute("interest", interestService.getById(interestId));
 
@@ -62,6 +63,7 @@ public class InterestAdminController {
   @DeleteMapping("/users/{userId}")
   @PreAuthorize("@permissionService.manageCommunity(#interestId)")
   public String removeUser(@PathVariable Long interestId, @PathVariable Long userId) {
+
     roleService.removeRole(interestId, userId);
 
     return "redirect:/interests/{interestId}/admin/users";
@@ -70,6 +72,7 @@ public class InterestAdminController {
   @PutMapping("/users/{userId}")
   @PreAuthorize("@permissionService.manageCommunity(#interestId)")
   public String acceptUser(@PathVariable Long interestId, @PathVariable Long userId) {
+
     AppUser loggedUser = userService.getById(userId);
     Interest interest = interestService.getById(interestId);
 
@@ -81,6 +84,7 @@ public class InterestAdminController {
   @GetMapping("/invite")
   @PreAuthorize("@permissionService.manageCommunity(#interestId)")
   public String inviteUsers(@PathVariable Long interestId, Model model, Principal principal) {
+
     model.addAttribute("loggedUser", userService.getByEmail(principal.getName()));
     model.addAttribute("interest", interestService.getById(interestId));
 
@@ -91,6 +95,7 @@ public class InterestAdminController {
   @PreAuthorize("@permissionService.manageCommunity(#interestId)")
   public String inviteUser(
       @PathVariable Long interestId, String inviteBy, String user, RedirectAttributes ra) {
+
     Interest interest = interestService.getById(interestId);
     try {
       manageInterestService.inviteUser(interest, inviteBy, user, Role.RoleType.VOTER);

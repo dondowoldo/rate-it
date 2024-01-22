@@ -1,6 +1,7 @@
 package it.rate.webapp.services;
 
 import it.rate.webapp.BaseTest;
+import it.rate.webapp.config.ServerRole;
 import it.rate.webapp.exceptions.badrequest.InvalidInterestDetailsException;
 import it.rate.webapp.exceptions.badrequest.InvalidRoleDetailsException;
 import it.rate.webapp.models.AppUser;
@@ -31,7 +32,14 @@ class RoleServiceTest extends BaseTest {
 
   @BeforeEach
   void setUp() {
-    u1 = AppUser.builder().username("Lojza").id(1L).password("password").email("l@l.com").build();
+    u1 =
+        AppUser.builder()
+            .username("Lojza")
+            .id(1L)
+            .password("password")
+            .email("l@l.com")
+            .serverRole(ServerRole.USER)
+            .build();
 
     i1 = Interest.builder().id(1L).name("IT").description("IT").exclusive(true).build();
 

@@ -1,6 +1,6 @@
 package it.rate.webapp.models;
 
-import it.rate.webapp.config.security.ServerRole;
+import it.rate.webapp.config.ServerRole;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -20,22 +20,20 @@ import java.util.List;
 public class AppUser {
   @Id @GeneratedValue @NotNull private Long id;
 
-  @NotNull
   @NotBlank
   @Column(nullable = false, unique = true)
   private String username;
 
-  @NotNull
   @NotBlank
   @Email
   @Column(nullable = false, unique = true)
   private String email;
 
-  @NotNull
   @NotBlank
   @Column(nullable = false)
   private String password;
 
+  @NotNull
   @Column(nullable = false)
   @Enumerated(EnumType.STRING)
   private ServerRole serverRole;

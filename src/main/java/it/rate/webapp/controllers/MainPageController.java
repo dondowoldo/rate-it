@@ -18,6 +18,7 @@ public class MainPageController {
 
   @GetMapping({"/", "/index"})
   public String index(Model model, Principal principal) {
+
     if (principal != null) {
       AppUser loggedUser = userService.getByEmail(principal.getName());
       model.addAttribute("loggedUser", loggedUser);
