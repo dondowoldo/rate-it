@@ -642,6 +642,7 @@ h4 {
     border-radius: 1.5rem;
     border: none;
     margin: 0.2rem 0 0.2rem 0;
+    width: 100%;
 }
 
 .new-place-map {
@@ -850,28 +851,43 @@ h4 {
 
 .user-form {
     position: relative;
-    padding: 1.5rem
+    padding: 1rem
 }
 
-.login-container-front,
-.signup-container-back {
+.left-container,
+.right-container {
     position: absolute;
     border: 2px solid black;
     border-radius: 2rem;
     width: 87%;
+    height: 400px;
     box-sizing: border-box;
 }
 
-.login-container-front {
+.right-container {
     left: 8%;
     z-index: 2;
     background: #BED9CC;
+    display: flex;
+    flex-direction: column;
+}
+
+.right-container h1 {
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
 }
 
 .credentials {
     display: flex;
     flex-direction: column;
     padding: 0.5rem 1rem;
+}
+
+.credentials h5 {
+    margin-bottom: 0.4rem;
+    margin-left: 1rem;
 }
 
 .credentials-input {
@@ -886,27 +902,43 @@ h4 {
     padding-right: 2rem
 }
 
+.user-form-button {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .sign-button {
-
+    border: 1px solid black;
+    border-radius: 2rem;
+    width: 80%;
+    height: 30%;
 }
 
-.signup-container-front {
-
-}
-
-.signup-container-back {
+.left-container {
     height: 400px;
-    top: 150%;
+    top: 200%;
     z-index: 1;
     background: rgba(86, 141, 115, 0.1);
 }
 
-.bottom-link {
+.left-container a {
     position: absolute;
     bottom: 0;
     left: 50%;
     transform: translateX(-50%);
     text-align: center;
     vertical-align: bottom;
-    padding-bottom: 1rem
+    padding-bottom: 0.5rem;
+    color: black;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: x-large;
+}
+
+.rs-logo {
+    display: flex;
+    justify-content: center;
+    padding-top: 1rem;
 }

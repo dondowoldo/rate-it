@@ -11,36 +11,33 @@
 
 </head>
 <body>
-<div class="container-fluid">
-    <header class="header">
-        <div th:replace="~{fragments.html :: logo}"></div>
-    </header>
-    <div>
-        <img src="/icons/R-logo.png" alt="Logo">
-    </div>
-    <div class="user-form">
-        <form class="login-container-front" th:action="@{/users/signup}" method="post">
-            <h1>SIGN IN</h1>
-            <section class="credentials">
-                <h5>Username</h5>
-                <label>
-                    <input class="credentials-input" type="email" placeholder="Enter your username here...">
-                </label>
-            </section>
-            <section class="credentials">
-                <h5>Password</h5>
-                <label>
-                    <input class="credentials-input" type="email" placeholder="Enter your password here...">
-                </label>
-            </section>
-            <a class="forgot-password">Forgot password?</a>
-
-            <button class="sign-button">Login</button>
-        </form>
-        <div class="signup-container-back">
-            <a class="bottom-link">REGISTER</a>
+    <div class="container-fluid">
+        <header class="header">
+            <div th:replace="~{fragments.html :: logo}"></div>
+        </header>
+        <div class="rs-logo">
+            <img src="/icons/R-logo.png" alt="Logo">
+        </div>
+        <div class="user-form">
+            <form class="right-container" th:action="@{/users/login}" method="post">
+                <h1>SIGN IN</h1>
+                <section class="credentials">
+                    <h5>Username</h5>
+                    <input class="credentials-input" type="email" name="username" placeholder="Enter your username here..."></input>
+                </section>
+                <section class="credentials">
+                    <h5>Password</h5>
+                    <input class="credentials-input" type="password" name="password" placeholder="Enter your password here..."></input>
+                </section>
+                <a class="forgot-password">Forgot password?</a>
+                <div class="user-form-button">
+                    <button class="sign-button">Login</button>
+                </div>
+            </form>
+            <div class="left-container">
+                <a th:href="@{/users/signup}">REGISTER</a>
+            </div>
         </div>
     </div>
-</div>
 </body>
 </html>
