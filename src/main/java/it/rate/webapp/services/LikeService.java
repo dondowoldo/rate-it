@@ -21,7 +21,7 @@ public class LikeService {
     return likeRepository.existsById(likeId);
   }
 
-  public void createLike(@Valid AppUser user, @Valid Interest interest) {
+  public void save(@Valid AppUser user, @Valid Interest interest) {
     likeRepository.save(new Like(user, interest));
   }
 
@@ -31,7 +31,7 @@ public class LikeService {
 
   public void setLike(@Valid AppUser user, @Valid Interest interest, boolean like) {
     if (like) {
-      this.createLike(user, interest);
+      this.save(user, interest);
     } else {
       this.deleteById(new LikeId(user.getId(), interest.getId()));
     }

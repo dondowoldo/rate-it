@@ -90,18 +90,18 @@ public class InterestAdminController {
   @PostMapping("/invite")
   @PreAuthorize("@permissionService.manageCommunity(#interestId)")
   public String inviteUser(
-      @PathVariable Long interestId, String invitedBy, String user, RedirectAttributes ra) {
+      @PathVariable Long interestId, String inviteBy, String user, RedirectAttributes ra) {
     Interest interest = interestService.getById(interestId);
     try {
-      manageInterestService.inviteUser(interest, invitedBy, user, Role.RoleType.VOTER);
+      manageInterestService.inviteUser(interest, inviteBy, user, Role.RoleType.VOTER);
       ra.addFlashAttribute("status", "Invitation successfully sent");
       ra.addFlashAttribute("statusClass", "successful");
-      ra.addFlashAttribute("isChecked", invitedBy.equals("username"));
+      ra.addFlashAttribute("isChecked", inviteBy.equals("username"));
     } catch (BadRequestException e) {
       ra.addFlashAttribute("status", e.getMessage());
       ra.addFlashAttribute("statusClass", "error");
       ra.addFlashAttribute("user", user);
-      ra.addFlashAttribute("isChecked", invitedBy.equals("username"));
+      ra.addFlashAttribute("isChecked", inviteBy.equals("username"));
     }
     return "redirect:/interests/{interestId}/admin/invite";
   }

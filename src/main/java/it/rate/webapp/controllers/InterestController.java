@@ -54,7 +54,7 @@ public class InterestController {
     Interest savedInterest = interestService.save(interest);
     criterionService.createNew(savedInterest, criteriaNames);
     roleService.setRole(savedInterest, loggedUser, Role.RoleType.CREATOR);
-    likeService.createLike(loggedUser, savedInterest);
+    likeService.save(loggedUser, savedInterest);
 
     ra.addAttribute("id", savedInterest.getId());
     return "redirect:/interests/{id}";

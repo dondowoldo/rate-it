@@ -32,22 +32,22 @@ public class RatingService {
     ratings
         .ratings()
         .forEach(
-            (key, value) -> {
+            (criterionId, rating) -> {
               Criterion criterion =
                   ratedCriteria.stream()
-                      .filter(c -> Objects.equals(c.getId(), key))
+                      .filter(c -> Objects.equals(c.getId(), criterionId))
                       .findAny()
                       .orElseThrow(InvalidCriterionDetailsException::new);
-              updateOrCreateRating(appUser, place, criterion, value);
+              updateOrCreateRating(appUser, place, criterion, rating);
             });
   }
 
   private void updateOrCreateRating(
-      AppUser appUser, Place place, Criterion criterion, Integer value) {
+      AppUser appUser, Place place, Criterion criterion, Integer rating) {
     RatingId ratingId = new RatingId(appUser.getId(), place.getId(), criterion.getId());
     Optional<Rating> optRating = ratingRepository.findById(ratingId);
 
-    if (value == null) {
+    if (rating == null) {
       if (optRating.isPresent()) {
         ratingRepository.deleteById(ratingId);
       }
@@ -56,10 +56,10 @@ public class RatingService {
 
     if (optRating.isPresent()) {
       Rating existingRating = optRating.get();
-      existingRating.setRating(value);
+      existingRating.setRating(rating);
       ratingRepository.save(existingRating);
     } else {
-      Rating newRating = new Rating(appUser, place, criterion, value);
+      Rating newRating = new Rating(appUser, place, criterion, rating);
       ratingRepository.save(newRating);
     }
   }
@@ -71,8 +71,8 @@ public class RatingService {
     ratings
         .ratings()
         .forEach(
-            (key, value) -> {
-              Criterion criterion = getCriterion(key);
+            (criterionId, rating) -> {
+              Criterion criterion = getCriterion(criterionId);
               ratedCriteria.add(criterion);
             });
     if (!ratedCriteria.containsAll(placeCriteria)) {
