@@ -22,8 +22,11 @@ document.addEventListener('DOMContentLoaded', () => {
         fixedWidth: '10rem',
         fixedHeight: '12rem',
         gap: '1rem',
-        type: 'loop',
+        type: 'slide',
         drag: 'free',
+        arrows: false,
+        loop: false
+
     });
     splide.mount();
 
