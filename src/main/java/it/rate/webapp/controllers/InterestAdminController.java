@@ -40,9 +40,7 @@ public class InterestAdminController {
   @PutMapping("/edit")
   @PreAuthorize("@permissionService.manageCommunity(#interestId)")
   public String editInterest(
-      @PathVariable Long interestId,
-      Interest interest,
-      Set<String> criteriaNames) {
+      @PathVariable Long interestId, Interest interest, @RequestParam Set<String> criteriaNames) {
 
     interest.setId(interestId);
     criterionService.updateExisting(interestService.save(interest), criteriaNames);

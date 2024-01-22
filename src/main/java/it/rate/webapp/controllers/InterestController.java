@@ -42,7 +42,8 @@ public class InterestController {
 
   @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
   @PostMapping("/create")
-  public String createInterest(Interest interest, Set<String> criteriaNames, Principal principal) {
+  public String createInterest(
+      Interest interest, @RequestParam Set<String> criteriaNames, Principal principal) {
 
     AppUser loggedUser = userService.getByEmail(principal.getName());
     Interest savedInterest = interestService.save(interest);
