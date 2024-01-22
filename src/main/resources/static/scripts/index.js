@@ -1,34 +1,68 @@
 let data = [];
+let latitude = null;
+let longitude = null;
 
-window.addEventListener('load', async () => {
+document.addEventListener('DOMContentLoaded', async () => {
     try {
-        const response = await fetch(`/api/v1/interests/suggestions`);
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(success, error);
+        } else {
+            console.log("Geolocation is not supported");
+            await fetchData();
+        }
+    } catch (error) {
+        console.error('Error fetching suggestions:', error);
+    }
+});
+
+async function success(position) {
+    latitude = position.coords.latitude;
+    longitude = position.coords.longitude;
+
+    try {
+        await fetchData();
+    } catch (error) {
+        console.error('Error fetching suggestions:', error);
+    }
+}
+
+async function error() {
+    console.log("Unable to retrieve your location");
+    await fetchData();
+}
+
+async function fetchData() {
+    try {
+        let url = '/api/v1/interests/suggestions';
+
+        // Append query parameters if latitude and longitude are provided
+        if (latitude !== null && longitude !== null) {
+            url += `?latitude=${latitude}&longitude=${longitude}`;
+        }
+
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}, Message: ${response.statusText}`);
+        }
+
         const jsonData = await response.json();
-        data = jsonData;
 
         data = await Promise.all(jsonData.map(async (interest) => {
             interest.imageUrl = await fetchInterestImageUrl(interest);
             return interest;
         }));
 
-        loadInterests()
+        loadInterests();
     } catch (error) {
         console.error('Error fetching suggestions:', error);
     }
-})
-
-document.addEventListener('DOMContentLoaded', () => {
-    var splide = new Splide('.splide', {
-        fixedWidth: '10rem',
-        fixedHeight: '12rem',
-        gap: '1rem',
-        type: 'loop',
-        drag: 'free',
-    });
-    splide.mount();
-
-    loadInterests();
-});
+}
 
 function loadInterests(query) {
     const container = document.querySelector('#suggestionList');
@@ -52,4 +86,3 @@ function loadInterests(query) {
 function isEmptyOrSpaces(str) {
     return str === null || str.match(/^ *$/) !== null;
 }
-
