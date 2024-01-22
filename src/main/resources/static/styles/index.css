@@ -837,18 +837,6 @@ h4 {
     margin-top: 3rem;
 }
 
-.gallery {
-    display: grid;
-    grid-template-columns: repeat(10, 80vw);
-    grid-template-rows: 1fr;
-    grid-column-gap: 1rem;
-    grid-row-gap: 1rem;
-    overflow-x: auto; /* Enable horizontal scrolling */
-    height: 90vh;
-    scroll-snap-type: x mandatory;
-    scroll-padding: 1rem;
-}
-
 .user-form {
     position: relative;
     padding: 1rem
@@ -892,7 +880,7 @@ h4 {
 .credentials {
     display: flex;
     flex-direction: column;
-    padding: 0.5rem 1rem;
+    padding: 0.2rem 1rem;
 }
 
 .credentials h5 {
@@ -923,7 +911,6 @@ h4 {
     border: 1px solid black;
     border-radius: 2rem;
     width: 80%;
-    height: 30%;
     font-weight: bold;
     font-size: xx-large;
     font-family: 'Montserrat', sans-serif;
@@ -933,6 +920,13 @@ h4 {
     height: 400px;
     top: 200%;
 }
+.left-container h1 {
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+}
+
 
 .left-container .login-signup-redirect {
     position: absolute;

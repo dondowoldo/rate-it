@@ -21,17 +21,22 @@
         <div class="user-form">
             <form class="right-container top-container" th:action="@{/users/login}" method="post">
                 <h1>SIGN IN</h1>
+                <div th:if="${param.error}">
+                    <div class="alert alert-danger">Invalid Username or Password</div>
+                </div>
                 <section class="credentials">
                     <h5>Username</h5>
-                    <input class="credentials-input" type="email" name="username" placeholder="Enter your username here..."></input>
+                    <input class="credentials-input" type="text" name="username"
+                           placeholder="Enter your username here...">
                 </section>
                 <section class="credentials">
                     <h5>Password</h5>
-                    <input class="credentials-input" type="password" name="password" placeholder="Enter your password here..."></input>
+                    <input class="credentials-input" type="password" name="password"
+                           placeholder="Enter your password here...">
                 </section>
                 <a class="forgot-password">Forgot password?</a>
                 <div class="user-form-button">
-                    <button class="sign-button">Login</button>
+                    <button type="submit" class="sign-button">Login</button>
                 </div>
             </form>
             <div class="left-container back-container">
