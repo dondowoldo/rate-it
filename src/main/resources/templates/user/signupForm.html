@@ -11,48 +11,50 @@
 
 </head>
 <body>
-
-<header class="header">
-    <div th:replace="~{fragments.html :: logo}"></div>
-</header>
-
 <div class="container-fluid">
-    <form class="register" th:action="@{/users/signup}" method="post">
-        <p th:if="${error}" th:text="${error}"></p>
-        <h3>REGISTER</h3>
-
-        <label for="username" class="icon-label">Username</label>
-        <div class="input-with-icon-user">
-            <input type="text" name="username" id="username" class="username" th:value="${userDTO?.username}"
-                   placeholder="Enter your username here.." required autocomplete="off">
+    <header class="header">
+        <div th:replace="~{fragments.html :: logo}"></div>
+    </header>
+    <div class="user-form">
+        <div class="right-container back-container">
+            <a th:href="@{/users/login}">SIGN IN</a>
         </div>
+        <form class="left-container top-container" th:action="@{/users/signup}" method="post">
+            <p th:if="${error}" th:text="${error}"></p>
+            <h3>REGISTER</h3>
 
-        <label for="email" class="icon-label">Email</label>
-        <div class="input-with-icon-email">
-            <input id="email" name="email" th:value="${userDTO?.email}"
-                   class="email" type="email" placeholder="Enter your email here.." required>
-        </div>
+            <label for="username" class="icon-label">Username</label>
+            <div class="input-with-icon-user">
+                <input type="text" name="username" id="username" class="username" th:value="${userDTO?.username}"
+                       placeholder="Enter your username here.." required autocomplete="off">
+            </div>
 
-        <label for="password" class="icon-label">Password</label>
-        <div class="input-with-icon-password">
-            <input name="password" id="password" class="password" type="password"
-                   placeholder="Enter your password here.." required>
-        </div>
+            <label for="email" class="icon-label">Email</label>
+            <div class="input-with-icon-email">
+                <input id="email" name="email" th:value="${userDTO?.email}"
+                       class="email" type="email" placeholder="Enter your email here.." required>
+            </div>
 
-        <label for="confirmPassword" class="icon-label">Confirmpassword</label>
-        <div class="input-with-icon-password">
-            <input name="confirmPassword" id="confirmPassword" class="password" type="password"
-                   placeholder="Enter your password here.."
-                   required>
-        </div>
+            <label for="password" class="icon-label">Password</label>
+            <div class="input-with-icon-password">
+                <input name="password" id="password" class="password" type="password"
+                       placeholder="Enter your password here.." required>
+            </div>
 
-        <button class="form-btn dx" type="submit">Sign up</button>
-        <div class="buttons-login">
-            <p class="account-login">Already have an account?</p>
-            <a href="#" class="form-btn-log-in dx" type="button">LOGIN</a>
-        </div>
+            <label for="confirmPassword" class="icon-label">Confirmpassword</label>
+            <div class="input-with-icon-password">
+                <input name="confirmPassword" id="confirmPassword" class="password" type="password"
+                       placeholder="Enter your password here.."
+                       required>
+            </div>
 
-    </form>
+            <button class="form-btn dx" type="submit">Sign up</button>
+            <div class="buttons-login">
+                <p class="account-login">Already have an account?</p>
+                <a href="#" class="form-btn-log-in dx" type="button">LOGIN</a>
+            </div>
+        </form>
+    </div>
 </div>
 
 </body>

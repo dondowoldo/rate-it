@@ -19,7 +19,7 @@
             <img src="/icons/R-logo.png" alt="Logo">
         </div>
         <div class="user-form">
-            <form class="right-container" th:action="@{/users/login}" method="post">
+            <form class="right-container top-container" th:action="@{/users/login}" method="post">
                 <h1>SIGN IN</h1>
                 <section class="credentials">
                     <h5>Username</h5>
@@ -34,7 +34,7 @@
                     <button class="sign-button">Login</button>
                 </div>
             </form>
-            <div class="left-container">
+            <div class="left-container back-container">
                 <a th:href="@{/users/signup}">REGISTER</a>
             </div>
         </div>
