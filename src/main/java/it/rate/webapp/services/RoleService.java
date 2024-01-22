@@ -48,7 +48,7 @@ public class RoleService {
     if (role.getRoleType().equals(Role.RoleType.CREATOR)) {
       throw new InvalidRoleDetailsException("Cannot remove creator role");
     }
-    RoleId roleId = new RoleId(role.getId().getUserId(), role.getId().getInterestId());
-    roleRepository.deleteById(roleId);
+
+    roleRepository.deleteById(role.getId());
   }
 }
