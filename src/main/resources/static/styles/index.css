@@ -603,7 +603,7 @@ h4 {
 }
 
 .toggle-container span {
-    padding: 6px;
+    padding: 6px 10px;
     text-align: center;
     z-index: 1;
     transition: color 0.3s;

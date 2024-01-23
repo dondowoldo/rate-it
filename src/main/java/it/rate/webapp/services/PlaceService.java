@@ -3,9 +3,6 @@ package it.rate.webapp.services;
 import it.rate.webapp.dtos.CriteriaOfPlaceDTO;
 import it.rate.webapp.dtos.CriterionAvgRatingDTO;
 import it.rate.webapp.dtos.PlaceInfoDTO;
-import it.rate.webapp.exceptions.badrequest.BadRequestException;
-import it.rate.webapp.exceptions.badrequest.InvalidInterestDetailsException;
-import it.rate.webapp.exceptions.badrequest.InvalidUserDetailsException;
 import it.rate.webapp.models.*;
 import it.rate.webapp.models.AppUser;
 import it.rate.webapp.models.Interest;
@@ -14,34 +11,19 @@ import it.rate.webapp.repositories.PlaceRepository;
 import it.rate.webapp.repositories.RatingRepository;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 @Service
+@Validated
 @AllArgsConstructor
 public class PlaceService {
 
-  private PlaceRepository placeRepository;
-  private UserService userService;
-  private InterestService interestService;
-  private RatingRepository ratingRepository;
-
-  public Place savePlace(Place place, Long interestId) throws BadRequestException {
-    String loggedInUserName = SecurityContextHolder.getContext().getAuthentication().getName();
-
-    AppUser loggedUser =
-        userService.findByEmail(loggedInUserName).orElseThrow(InvalidUserDetailsException::new);
-    Interest interest =
-        interestService.findById(interestId).orElseThrow(InvalidInterestDetailsException::new);
-
-    loggedUser.getCreatedPlaces().add(place);
-    interest.getPlaces().add(place);
-    place.setCreator(loggedUser);
-    place.setInterest(interest);
-
-    return placeRepository.save(place);
-  }
+  private final PlaceRepository placeRepository;
+  private final RatingRepository ratingRepository;
 
   public Optional<Place> findById(Long id) {
     return placeRepository.findById(id);
@@ -51,7 +33,23 @@ public class PlaceService {
     return placeRepository.getReferenceById(placeId);
   }
 
-  public CriteriaOfPlaceDTO getCriteriaOfPlaceDTO(Place place) {
+  public Place save(Place place, @Valid Interest interest, @Valid AppUser appUser) {
+    place.setCreator(appUser);
+    place.setInterest(interest);
+
+    return placeRepository.save(place);
+  }
+
+  public void addImage(@Valid Place place, String imageId) {
+    place.getImageNames().add(imageId);
+    placeRepository.save(place);
+  }
+
+  public List<PlaceInfoDTO> getPlaceInfoDTOS(@Valid Interest interest) {
+    return interest.getPlaces().stream().map(this::getPlaceInfoDTO).collect(Collectors.toList());
+  }
+
+  public CriteriaOfPlaceDTO getCriteriaOfPlaceDTO(@Valid Place place) {
     List<CriterionAvgRatingDTO> criteriaAvgRatingDTOs = new ArrayList<>();
 
     place
@@ -61,10 +59,6 @@ public class PlaceService {
             criterion -> criteriaAvgRatingDTOs.add(getCriterionAvgRatingDTO(criterion, place)));
 
     return new CriteriaOfPlaceDTO(criteriaAvgRatingDTOs);
-  }
-
-  public List<PlaceInfoDTO> getPlaceInfoDTOS(Interest interest) {
-    return interest.getPlaces().stream().map(this::getPlaceInfoDTO).collect(Collectors.toList());
   }
 
   private PlaceInfoDTO getPlaceInfoDTO(Place place) {
@@ -90,10 +84,5 @@ public class PlaceService {
     }
 
     return new CriterionAvgRatingDTO(criterion.getId(), criterion.getName(), avgRating);
-  }
-
-  public void addImage(Place place, String imageId) {
-    place.getImageNames().add(imageId);
-    placeRepository.save(place);
   }
 }

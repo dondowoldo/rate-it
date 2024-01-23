@@ -284,16 +284,15 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
     String interestDescription = "Very gud vetr";
     String criterion1 = "Test criterion";
 
-    MvcResult res =
-        mockMvc
-            .perform(
-                put("/interests/" + interestId + "/admin/edit")
-                    .param("name", interestName)
-                    .param("description", interestDescription)
-                    .param("criteriaNames", criterion1))
-            .andExpect(status().isForbidden())
-            .andExpect(view().name("error/page"))
-            .andReturn();
+    mockMvc
+        .perform(
+            put("/interests/" + interestId + "/admin/edit")
+                .param("name", interestName)
+                .param("description", interestDescription)
+                .param("criteriaNames", criterion1))
+        .andExpect(status().isForbidden())
+        .andExpect(view().name("error/page"))
+        .andReturn();
   }
 
   @Test
@@ -308,16 +307,15 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
     String interestDescription = "Very gud vetr";
     String criterion1 = "Test criterion";
 
-    MvcResult res =
-        mockMvc
-            .perform(
-                put("/interests/" + interestId + "/admin/edit")
-                    .param("name", interestName)
-                    .param("description", interestDescription)
-                    .param("criteriaNames", criterion1))
-            .andExpect(view().name("error/page"))
-            .andExpect(status().isNotFound())
-            .andReturn();
+    mockMvc
+        .perform(
+            put("/interests/" + interestId + "/admin/edit")
+                .param("name", interestName)
+                .param("description", interestDescription)
+                .param("criteriaNames", criterion1))
+        .andExpect(view().name("error/page"))
+        .andExpect(status().isNotFound())
+        .andReturn();
   }
 
   @Test
