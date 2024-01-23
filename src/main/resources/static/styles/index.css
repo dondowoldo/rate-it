@@ -308,6 +308,27 @@ h3 {
     border-radius: 1rem 1rem 0 0;
 }
 
+.like-count {
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background-color: white;
+    border-radius: 1rem;
+    width: fit-content;
+    min-width: 3rem;
+    height: 1.5rem;
+}
+
+.like-count p {
+    margin: 0 0.3rem 0 0;
+}
+
+.like-count i {
+    margin: 0.3rem;
+}
+
 .interest-card-link {
     all: unset;
     cursor: pointer;
