@@ -343,6 +343,12 @@ h3 {
     line-height: 1;
 }
 
+.interest-title p {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 .interest-places {
     display: flex;
     flex-direction: column;
