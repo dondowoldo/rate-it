@@ -17,33 +17,19 @@ import java.security.Principal;
 @AllArgsConstructor
 @RequestMapping("/api/v1/places")
 public class PlaceRestController {
-    private final PlaceService placeService;
-    private final UserService userService;
-    private final RatingService ratingService;
+  private final PlaceService placeService;
+  private final UserService userService;
+  private final RatingService ratingService;
 
-    @GetMapping("/{placeId}/ratings")
-    @PreAuthorize("@permissionService.ratePlace(#placeId)")
-    public ResponseEntity<?> getUsersRatings(
-            @PathVariable Long placeId,
-            Principal principal) {
+  @PostMapping("/{placeId}/rate")
+  @PreAuthorize("@permissionService.ratePlace(#placeId)")
+  public ResponseEntity<?> ratePlace(
+      @PathVariable Long placeId, @RequestBody RatingsDTO rating, Principal principal) {
 
-        AppUser loggedUser = userService.getByEmail(principal.getName());
-        Place place = placeService.getById(placeId);
+    AppUser loggedUser = userService.getByEmail(principal.getName());
+    Place place = placeService.getById(placeId);
+    ratingService.updateRating(rating, place, loggedUser);
 
-        return ResponseEntity.ok().body(ratingService.getUsersRatingsDto(loggedUser, place));
-    }
-
-    @PostMapping("/{placeId}/rate")
-    @PreAuthorize("@permissionService.ratePlace(#placeId)")
-    public ResponseEntity<?> ratePlace(
-            @PathVariable Long placeId,
-            @RequestBody RatingsDTO rating,
-            Principal principal) {
-
-        AppUser loggedUser = userService.getByEmail(principal.getName());
-        Place place = placeService.getById(placeId);
-        ratingService.updateRating(rating, place, loggedUser);
-
-        return ResponseEntity.ok().build();
-    }
+    return ResponseEntity.ok().build();
+  }
 }
