@@ -31,9 +31,12 @@ public class InterestRestController {
   private final LikeService likeService;
 
   @GetMapping("/suggestions")
-  public ResponseEntity<?> getAllSuggestions(@RequestBody Optional<CoordinatesDTO> usersCoords) {
-    if (usersCoords.isPresent()) {
-      return handleCoordinates(usersCoords.get());
+  public ResponseEntity<?> getAllSuggestions(
+      Optional<Double> latitude, Optional<Double> longitude) {
+    if (latitude.isPresent() || longitude.isPresent()) {
+      CoordinatesDTO usersCoords =
+          new CoordinatesDTO(latitude.orElse(null), longitude.orElse(null));
+      return handleCoordinates(usersCoords);
     }
     return ResponseEntity.ok().body(interestService.getAllSuggestionDTOS());
   }
