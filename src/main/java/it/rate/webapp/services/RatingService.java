@@ -6,47 +6,48 @@ import it.rate.webapp.exceptions.badrequest.InvalidRatingException;
 import it.rate.webapp.models.*;
 import it.rate.webapp.repositories.CriterionRepository;
 import it.rate.webapp.repositories.RatingRepository;
-import jakarta.validation.Validator;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.*;
 
 @Service
+@Validated
 @AllArgsConstructor
 public class RatingService {
 
-  private final Validator validator;
   private final RatingRepository ratingRepository;
   private final CriterionRepository criterionRepository;
 
-  public RatingsDTO getUsersRatingsDto(AppUser appUser, Place place) {
+  public RatingsDTO getUsersRatingsDto(@Valid AppUser appUser, @Valid Place place) {
     List<Rating> ratings = ratingRepository.findAllByAppUserAndPlace(appUser, place);
     return new RatingsDTO(ratings);
   }
 
-  public void updateRating(RatingsDTO ratings, Place place, AppUser appUser) {
+  public void updateRating(@Valid RatingsDTO ratings, @Valid Place place, @Valid AppUser appUser) {
     Set<Criterion> ratedCriteria = validateRatings(ratings, place);
 
     ratings
         .ratings()
         .forEach(
-            (key, value) -> {
+            (criterionId, rating) -> {
               Criterion criterion =
                   ratedCriteria.stream()
-                      .filter(c -> Objects.equals(c.getId(), key))
+                      .filter(c -> Objects.equals(c.getId(), criterionId))
                       .findAny()
                       .orElseThrow(InvalidCriterionDetailsException::new);
-              updateOrCreateRating(appUser, place, criterion, value);
+              updateOrCreateRating(appUser, place, criterion, rating);
             });
   }
 
   private void updateOrCreateRating(
-      AppUser appUser, Place place, Criterion criterion, Integer value) {
+      AppUser appUser, Place place, Criterion criterion, Integer rating) {
     RatingId ratingId = new RatingId(appUser.getId(), place.getId(), criterion.getId());
     Optional<Rating> optRating = ratingRepository.findById(ratingId);
 
-    if (value == null) {
+    if (rating == null) {
       if (optRating.isPresent()) {
         ratingRepository.deleteById(ratingId);
       }
@@ -55,10 +56,10 @@ public class RatingService {
 
     if (optRating.isPresent()) {
       Rating existingRating = optRating.get();
-      existingRating.setRating(value);
+      existingRating.setRating(rating);
       ratingRepository.save(existingRating);
     } else {
-      Rating newRating = new Rating(appUser, place, criterion, value);
+      Rating newRating = new Rating(appUser, place, criterion, rating);
       ratingRepository.save(newRating);
     }
   }
@@ -70,12 +71,9 @@ public class RatingService {
     ratings
         .ratings()
         .forEach(
-            (key, value) -> {
-              Criterion criterion = getCriterion(key);
+            (criterionId, rating) -> {
+              Criterion criterion = getCriterion(criterionId);
               ratedCriteria.add(criterion);
-              if (!validator.validate(ratings).isEmpty()) {
-                throw new InvalidRatingException();
-              }
             });
     if (!ratedCriteria.containsAll(placeCriteria)) {
       throw new InvalidRatingException();

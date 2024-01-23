@@ -1,6 +1,8 @@
 package it.rate.webapp.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.validator.constraints.Range;
 
@@ -16,18 +18,21 @@ import java.util.OptionalDouble;
 @Entity
 @Table(name = "places")
 public class Place {
-  @Id @GeneratedValue private Long id;
+  @Id @GeneratedValue @NotNull private Long id;
 
+  @NotBlank
   @Column(nullable = false)
   private String name;
 
   private String description;
   private String address;
 
+  @NotNull
   @Column(nullable = false)
   @Range(min = -90, max = 90)
-  private double latitude;
+  private Double latitude;
 
+  @NotNull
   @Column(nullable = false)
   @Range(min = -180, max = 180)
   private Double longitude;
