@@ -899,9 +899,10 @@ h4 {
     position: relative;
 }
 
-.credentials h5 {
-    margin-bottom: 0.4rem;
+.credentials h6 {
     margin-left: 1rem;
+    display: flex;
+    align-self: flex-start;
 }
 
 .credentials-input {
@@ -970,16 +971,16 @@ h4 {
 
 .left-container .login-signup-redirect {
     bottom: 0;
-    padding-bottom: 0.5rem;
+    padding-bottom: 0.3rem;
 }
 
 .right-container .login-signup-redirect {
     top: 0;
-    padding-top: 0.5rem;
+    padding-top: 0.3rem;
 }
 
 .rs-logo {
     display: flex;
     justify-content: center;
-    padding-top: 1rem;
+    padding-top: 2rem;
 }
