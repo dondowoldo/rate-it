@@ -7,7 +7,7 @@
 <body th:object="${interest}">
 <div class="container-fluid">
     <header class="header">
-        <div th:replace="~{fragments.html :: hamburger-menu}"></div>
+        <div th:replace="~{fragments.html :: back-button}"></div>
         <div th:replace="~{fragments.html :: logo}"></div>
         <div th:replace="${loggedUser == null} ? ~{fragments.html :: login-menu} :
         (${role != null && role.equals(role.CREATOR)} ? ~{fragments.html :: interest-admin-menu} : ~{fragments.html :: like-button})"></div>

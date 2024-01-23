@@ -22,6 +22,13 @@ body {
     align-items: center;
 }
 
+.header-left,
+.header-right{
+    display: flex;
+    justify-content: center;
+    align-content: center;
+}
+
 .header-top {
     display: flex;
     color: white;
@@ -33,12 +40,6 @@ body {
 .header-top > a {
     all: unset;
     cursor: pointer;
-}
-
-.header-right {
-    display: flex;
-    justify-content: end;
-    align-content: center;
 }
 
 .content-header {
@@ -55,11 +56,9 @@ body {
 
 .top-bar-menu {
     display: flex;
-    align-items: center;
     justify-content: center;
     width: 2.5rem;
     height: 2.5rem;
-    margin-right: 0.5rem;
     background-color: #EED889;
     border-radius: 50%;
 }
@@ -86,6 +85,13 @@ body {
     background: transparent;
     font-size: 2.5rem;
     color: #e1e1e1;
+}
+
+.back-button {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
 }
 
 #top-hamburger {
