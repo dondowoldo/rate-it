@@ -38,30 +38,31 @@ public class InterestRestController {
           new CoordinatesDTO(latitude.orElse(null), longitude.orElse(null));
       return handleCoordinates(usersCoords);
     }
-    return ResponseEntity.ok().body(interestService.getAllSuggestionDtos());
+    return ResponseEntity.ok().body(interestService.getAllSuggestionDTOS());
   }
 
-  @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
   @GetMapping("/my")
+  @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
   public ResponseEntity<?> getMyInterestsSuggestions(Principal principal) {
     if (principal == null) {
       return ResponseEntity.badRequest().body("User not found");
     }
-    return ResponseEntity.ok().body(interestService.getLikedInterestsDTOS(principal.getName()));
+    AppUser loggedUser = userService.getByEmail(principal.getName());
+    return ResponseEntity.ok().body(interestService.getLikedInterestsDTOS(loggedUser));
   }
 
   @GetMapping("/{interestId}/users")
   @PreAuthorize("@permissionService.manageCommunity(#interestId)")
   public ResponseEntity<?> getVotersByInterestId(@PathVariable Long interestId) {
     Interest interest = interestService.getById(interestId);
-    return ResponseEntity.ok(interestService.getUsersDTO(interest, Role.RoleType.VOTER));
+    return ResponseEntity.ok(userService.getUsersDTO(interest, Role.RoleType.VOTER));
   }
 
   @GetMapping("/{interestId}/applications")
   @PreAuthorize("@permissionService.manageCommunity(#interestId)")
   public ResponseEntity<?> getApplicantsByInterestId(@PathVariable Long interestId) {
     Interest interest = interestService.getById(interestId);
-    return ResponseEntity.ok(interestService.getUsersDTO(interest, Role.RoleType.APPLICANT));
+    return ResponseEntity.ok(userService.getUsersDTO(interest, Role.RoleType.APPLICANT));
   }
 
   @GetMapping("/{interestId}/places")
@@ -73,26 +74,26 @@ public class InterestRestController {
     return ResponseEntity.badRequest().body("This interest doesn't exist");
   }
 
-  private ResponseEntity<?> handleCoordinates(CoordinatesDTO coordinates) {
-    Set<ConstraintViolation<CoordinatesDTO>> validationErrors = validator.validate(coordinates);
-    if (validationErrors.isEmpty()) {
-      return ResponseEntity.ok().body(interestService.getAllSuggestionDtos(coordinates));
-    }
-    return ResponseEntity.badRequest()
-        .body(
-            new ErrorMessagesDTO(
-                validationErrors.stream().map(ConstraintViolation::getMessage).toList()));
-  }
-
-  @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
   @PostMapping("/{interestId}/like")
+  @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
   public ResponseEntity<?> like(
       @PathVariable Long interestId, @RequestBody LikeDTO like, Principal principal) {
     if (principal != null) {
       AppUser loggedUser = userService.getByEmail(principal.getName());
       Interest interest = interestService.getById(interestId);
-      likeService.changeLike(loggedUser, interest, like.liked());
+      likeService.setLike(loggedUser, interest, like.liked());
     }
     return ResponseEntity.ok().body(like);
+  }
+
+  private ResponseEntity<?> handleCoordinates(CoordinatesDTO coordinates) {
+    Set<ConstraintViolation<CoordinatesDTO>> validationErrors = validator.validate(coordinates);
+    if (validationErrors.isEmpty()) {
+      return ResponseEntity.ok().body(interestService.getAllSuggestionDTOS(coordinates));
+    }
+    return ResponseEntity.badRequest()
+        .body(
+            new ErrorMessagesDTO(
+                validationErrors.stream().map(ConstraintViolation::getMessage).toList()));
   }
 }

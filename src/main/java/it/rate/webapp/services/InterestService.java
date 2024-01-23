@@ -2,20 +2,13 @@ package it.rate.webapp.services;
 
 import it.rate.webapp.dtos.CoordinatesDTO;
 import it.rate.webapp.dtos.InterestSuggestionDTO;
-import it.rate.webapp.dtos.InterestUserDTO;
 import it.rate.webapp.dtos.LikedInterestsDTO;
-import it.rate.webapp.exceptions.badrequest.InvalidInterestDetailsException;
 import it.rate.webapp.models.*;
 import it.rate.webapp.repositories.*;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import java.util.*;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -24,97 +17,48 @@ import org.springframework.validation.annotation.Validated;
 @AllArgsConstructor
 public class InterestService {
 
-  private InterestRepository interestRepository;
-  private RoleRepository roleRepository;
-  private CriterionRepository criterionRepository;
-  private UserRepository userRepository;
+  private final InterestRepository interestRepository;
 
-  public Optional<Interest> findById(Long id) {
-    return interestRepository.findById(id);
+  public Optional<Interest> findById(Long interestId) {
+    return interestRepository.findById(interestId);
   }
 
-  public Interest getById(Long id) {
-    return interestRepository.getReferenceById(id);
-  }
-
-  public void setApplicantRole(Long interestId) {
-    Interest interest =
-        interestRepository.findById(interestId).orElseThrow(InvalidInterestDetailsException::new);
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    AppUser currentUser = userRepository.getByEmail(authentication.getName());
-    if (interest.isExclusive()) {
-      roleRepository.save(new Role(currentUser, interest, Role.RoleType.APPLICANT));
-    } else {
-      throw new InvalidInterestDetailsException("Cannot set role for non-exclusive interest");
-    }
-  }
-
-  public List<Interest> findAllSortByLikes() {
-    return interestRepository.findAllSortByLikes();
-  }
-
-  public List<InterestSuggestionDTO> getAllSuggestionDtos() {
-    return findAllSortByLikes().stream()
-        .map(interest -> new InterestSuggestionDTO(interest, null))
-        .collect(Collectors.toList());
-  }
-
-  public List<InterestSuggestionDTO> getAllSuggestionDtos(CoordinatesDTO usersCoords) {
-    return findAllSortByLikes().stream()
-        .map(
-            interest ->
-                new InterestSuggestionDTO(
-                    interest, getDistanceToNearestPlace(usersCoords, interest.getPlaces())))
-        .sorted(Comparator.comparingDouble(InterestSuggestionDTO::distanceKm))
-        .collect(Collectors.toList());
-  }
-
-  public List<Interest> getLikedInterests(String loggedUser) {
-    return interestRepository.findAllByLikes_AppUser_Email(loggedUser);
-  }
-
-  public Interest saveEditedInterest(
-      @Valid Interest interest, @NotEmpty List<@NotBlank String> criteriaNames) {
-    List<String> oldCriteriaNames =
-        interestRepository.getReferenceById(interest.getId()).getCriteria().stream()
-            .map(Criterion::getName)
-            .toList();
-
-    List<Criterion> newCriteria =
-        criteriaNames.stream()
-            .filter(name -> !oldCriteriaNames.contains(name))
-            .map(name -> Criterion.builder().name(name).build())
-            .toList();
-
-    for (String name : oldCriteriaNames) {
-      if (!criteriaNames.contains(name)) {
-        criterionRepository.deleteByNameAndInterestId(name, interest.getId());
-      }
-    }
-
-    criterionRepository.saveAll(newCriteria);
-    newCriteria.forEach(c -> c.setInterest(interest));
-
-    return interestRepository.save(interest);
-  }
-
-  public List<LikedInterestsDTO> getLikedInterestsDTOS(@NotBlank String loggedUser) {
-    return interestRepository.findAllByLikes_AppUser_Email(loggedUser).stream()
-        .sorted(Comparator.comparing(i -> i.getName().toLowerCase()))
-        .map(LikedInterestsDTO::new)
-        .collect(Collectors.toList());
+  public Interest getById(Long interestId) {
+    return interestRepository.getReferenceById(interestId);
   }
 
   public Interest save(Interest interest) {
     return interestRepository.save(interest);
   }
 
-  public List<InterestUserDTO> getUsersDTO(Interest interest, @NotNull Role.RoleType role) {
+  public List<Interest> findAllSortByLikes() {
+    return interestRepository.findAllSortByLikes();
+  }
 
-    return interest.getRoles().stream()
-        .filter(r -> r.getRole().equals(role))
-        .map(InterestUserDTO::new)
-        .sorted(Comparator.comparing(dto -> dto.userName().toLowerCase()))
+  public List<Interest> findAllLikedByAppUser(@Valid AppUser appUser) {
+    return interestRepository.findAllByLikes_AppUser(appUser);
+  }
+
+  public List<LikedInterestsDTO> getLikedInterestsDTOS(@Valid AppUser appUser) {
+    return interestRepository.findAllByLikes_AppUser(appUser).stream()
+        .sorted(Comparator.comparing(i -> i.getName().toLowerCase()))
+        .map(LikedInterestsDTO::new)
+        .collect(Collectors.toList());
+  }
+
+  public List<InterestSuggestionDTO> getAllSuggestionDTOS() {
+    return findAllSortByLikes().stream()
+        .map(interest -> new InterestSuggestionDTO(interest, null))
+        .collect(Collectors.toList());
+  }
+
+  public List<InterestSuggestionDTO> getAllSuggestionDTOS(@Valid CoordinatesDTO usersCoords) {
+    return findAllSortByLikes().stream()
+        .map(
+            interest ->
+                new InterestSuggestionDTO(
+                    interest, getDistanceToNearestPlace(usersCoords, interest.getPlaces())))
+        .sorted(Comparator.comparingDouble(InterestSuggestionDTO::distanceKm))
         .collect(Collectors.toList());
   }
 

@@ -1,6 +1,6 @@
 package it.rate.webapp;
 
-import it.rate.webapp.config.security.ServerRole;
+import it.rate.webapp.config.ServerRole;
 import it.rate.webapp.models.*;
 import it.rate.webapp.repositories.*;
 import org.springframework.beans.factory.annotation.Value;

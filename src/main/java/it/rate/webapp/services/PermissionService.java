@@ -1,6 +1,6 @@
 package it.rate.webapp.services;
 
-import it.rate.webapp.config.security.ServerRole;
+import it.rate.webapp.config.ServerRole;
 import it.rate.webapp.exceptions.notfound.InterestNotFoundException;
 import it.rate.webapp.exceptions.notfound.PlaceNotFoundException;
 import it.rate.webapp.models.*;
@@ -26,8 +26,8 @@ public class PermissionService {
     if (!interest.isExclusive()) {
       return true;
     } else if (optRole.isPresent()) {
-      return optRole.get().getRole().equals(Role.RoleType.VOTER)
-          || optRole.get().getRole().equals(Role.RoleType.CREATOR);
+      return optRole.get().getRoleType().equals(Role.RoleType.VOTER)
+          || optRole.get().getRoleType().equals(Role.RoleType.CREATOR);
     }
     return false;
   }
@@ -41,7 +41,7 @@ public class PermissionService {
     if (!interestRepository.existsById(interestId)) {
       throw new InterestNotFoundException();
     }
-    AppUser user = userService.authenticatedUser();
+    AppUser user = userService.getAuthenticatedUser();
     if (user == null) {
       return false;
     }
@@ -49,15 +49,15 @@ public class PermissionService {
       return true;
     }
     Optional<Role> optRole = roleRepository.findById(new RoleId(user.getId(), interestId));
-    return optRole.isPresent() && optRole.get().getRole().equals(Role.RoleType.CREATOR);
+    return optRole.isPresent() && optRole.get().getRoleType().equals(Role.RoleType.CREATOR);
   }
 
   public boolean canCreateInterest() {
-    return userService.authenticatedUser() != null;
+    return userService.getAuthenticatedUser() != null;
   }
 
   public boolean hasPlaceEditPermissions(Long placeId, Long interestId) {
-    AppUser user = userService.authenticatedUser();
+    AppUser user = userService.getAuthenticatedUser();
     if (user == null) {
       return false;
     }
@@ -74,7 +74,7 @@ public class PermissionService {
 
     // Check if user is Interest creator
     Optional<Role> optRole = roleRepository.findById(new RoleId(user.getId(), interestId));
-    return optRole.map(role -> role.getRole().equals(Role.RoleType.CREATOR)).orElse(false);
+    return optRole.map(role -> role.getRoleType().equals(Role.RoleType.CREATOR)).orElse(false);
   }
 
   public boolean createPlace(Long interestId) {
@@ -84,7 +84,7 @@ public class PermissionService {
   }
 
   private boolean canRateOrCreate(Interest i) {
-    AppUser user = userService.authenticatedUser();
+    AppUser user = userService.getAuthenticatedUser();
     if (user == null) {
       return false;
     }
@@ -96,7 +96,7 @@ public class PermissionService {
       return true;
     }
     return optRole.isPresent()
-        && (optRole.get().getRole().equals(Role.RoleType.VOTER)
-            || optRole.get().getRole().equals(Role.RoleType.CREATOR));
+        && (optRole.get().getRoleType().equals(Role.RoleType.VOTER)
+            || optRole.get().getRoleType().equals(Role.RoleType.CREATOR));
   }
 }

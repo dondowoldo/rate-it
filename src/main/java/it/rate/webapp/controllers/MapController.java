@@ -25,18 +25,20 @@ public class MapController {
 
   @GetMapping()
   public String mapView(Model model, @PathVariable Long interestId, Principal principal) {
+
     Interest interest =
         interestService.findById(interestId).orElseThrow(InterestNotFoundException::new);
     if (principal != null) {
       AppUser loggedUser = userService.getByEmail(principal.getName());
-
       model.addAttribute("loggedUser", loggedUser);
       Optional<Role> optRole = roleService.findById(new RoleId(loggedUser.getId(), interestId));
-      optRole.ifPresent(role -> model.addAttribute("role", role.getRole()));
-      model.addAttribute("liked", likeService.existsById(new LikeId(loggedUser.getId(), interestId)));
+      optRole.ifPresent(role -> model.addAttribute("role", role.getRoleType()));
+      model.addAttribute(
+          "liked", likeService.existsById(new LikeId(loggedUser.getId(), interestId)));
     }
     model.addAttribute("interest", interest);
     model.addAttribute("places", placeService.getPlaceInfoDTOS(interest));
+
     return "interest/map";
   }
 }
