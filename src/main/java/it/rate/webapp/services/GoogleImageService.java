@@ -1,10 +1,14 @@
 package it.rate.webapp.services;
 
+import static com.google.common.io.Files.getFileExtension;
+
 import com.google.api.client.http.FileContent;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.File;
 import it.rate.webapp.exceptions.api.ApiServiceUnavailableException;
 import it.rate.webapp.models.Interest;
+import it.rate.webapp.utils.ImageEditor;
+import jakarta.validation.constraints.NotNull;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -25,16 +29,27 @@ public class GoogleImageService implements ImageService {
   private String UPLOAD_DIRECTORY;
 
   private final Drive driveService;
+  private final ImageEditor imageEditor;
 
 
   @Override
-  public String saveImage(MultipartFile image) throws IOException {
+  public String saveImage(@NotNull MultipartFile image) throws IOException { //todo: get principal
 
     FileContent mediaContent;
+
     String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
 
-    Path tempFilePath = Files.createTempFile("temp_" + currentUser, null);
+    String originalFileName = image.getOriginalFilename();
+
+    String fileExtension = getFileExtension(originalFileName);
+
+    if (fileExtension.isEmpty()) {
+      fileExtension = ".jpg";
+    }
+    Path tempFilePath = Files.createTempFile("temp_" + currentUser, "." + fileExtension);
     image.transferTo(tempFilePath);
+    imageEditor.reduceImageSize(tempFilePath);
+
     mediaContent = new FileContent("image/*", tempFilePath.toFile());
 
     String fileName = currentUser + "_" + UUID.randomUUID();
@@ -77,6 +92,7 @@ public class GoogleImageService implements ImageService {
     }
   }
 
+  @Override
   public byte[] getImageById(String imageId) {
 
     try (InputStream imageStream = driveService.files().get(imageId).executeMediaAsInputStream()) {
@@ -86,8 +102,4 @@ public class GoogleImageService implements ImageService {
     }
   }
 
-  @Override
-  public List<String> getImages(String imageId) {
-    return null;
-  }
 }
