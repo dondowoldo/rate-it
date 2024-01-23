@@ -4,6 +4,7 @@ import it.rate.webapp.models.Place;
 import it.rate.webapp.services.GoogleImageService;
 import it.rate.webapp.services.PlaceService;
 import java.io.IOException;
+import java.security.Principal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -24,12 +25,13 @@ public class ImageController {
   public String uploadPlaceImage(
       @RequestParam("picture") MultipartFile file,
       @PathVariable Long interestId,
-      @PathVariable Long placeId)
+      @PathVariable Long placeId,
+      Principal principal)
       throws IOException {
 
+    String userName = principal.getName();
     Place place = placeService.getById(placeId);
-    placeService.addImage(place, googleImageService.saveImage(file));
-
+    placeService.addImage(place, googleImageService.saveImage(file, userName));
 
     return "redirect:/interests/" + interestId + "/places/" + placeId;
   }

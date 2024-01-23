@@ -52,6 +52,10 @@ dependencies {
         }
     }
     implementation 'net.coobird:thumbnailator:0.4.20' //Image editor
+    implementation 'org.springframework.boot:spring-boot-starter-cache'
+    implementation 'com.github.ben-manes.caffeine:caffeine:3.1.8'
+
+
 
 }
 

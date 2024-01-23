@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -31,13 +31,11 @@ public class GoogleImageService implements ImageService {
   private final Drive driveService;
   private final ImageEditor imageEditor;
 
-
   @Override
-  public String saveImage(@NotNull MultipartFile image) throws IOException { //todo: get principal
+  public String saveImage(@NotNull MultipartFile image, String userName)
+      throws IOException { // todo: get principal
 
     FileContent mediaContent;
-
-    String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
 
     String originalFileName = image.getOriginalFilename();
 
@@ -46,13 +44,13 @@ public class GoogleImageService implements ImageService {
     if (fileExtension.isEmpty()) {
       fileExtension = ".jpg";
     }
-    Path tempFilePath = Files.createTempFile("temp_" + currentUser, "." + fileExtension);
+    Path tempFilePath = Files.createTempFile("temp_" + userName, "." + fileExtension);
     image.transferTo(tempFilePath);
     imageEditor.reduceImageSize(tempFilePath);
 
     mediaContent = new FileContent("image/*", tempFilePath.toFile());
 
-    String fileName = currentUser + "_" + UUID.randomUUID();
+    String fileName = userName + "_" + UUID.randomUUID();
 
     File fileMeta = new File();
     fileMeta.setName(fileName);
@@ -65,12 +63,12 @@ public class GoogleImageService implements ImageService {
     }
   }
 
-  public String changeInterestImage(Interest interest, MultipartFile file) {
+  public String changeInterestImage(Interest interest, MultipartFile file, String userName) {
 
     String newImageId;
 
     try {
-      newImageId = saveImage(file);
+      newImageId = saveImage(file, userName);
     } catch (IOException | ApiServiceUnavailableException e) {
       throw new ApiServiceUnavailableException("Could not save image to the server");
     }
@@ -93,6 +91,7 @@ public class GoogleImageService implements ImageService {
   }
 
   @Override
+  @Cacheable("images")
   public byte[] getImageById(String imageId) {
 
     try (InputStream imageStream = driveService.files().get(imageId).executeMediaAsInputStream()) {
@@ -101,5 +100,4 @@ public class GoogleImageService implements ImageService {
       throw new ApiServiceUnavailableException("Could not retrieve image from server");
     }
   }
-
 }
