@@ -1,14 +1,9 @@
 package it.rate.webapp.controllers;
 
 import it.rate.webapp.dtos.RatingsDTO;
-import it.rate.webapp.exceptions.badrequest.InvalidPlaceDetailsException;
 import it.rate.webapp.exceptions.notfound.PlaceNotFoundException;
-import it.rate.webapp.models.AppUser;
-import it.rate.webapp.models.Place;
-import it.rate.webapp.models.Role;
-import it.rate.webapp.models.RoleId;
+import it.rate.webapp.models.*;
 import it.rate.webapp.services.*;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -27,34 +22,35 @@ public class PlaceController {
   private final RatingService ratingService;
   private final PermissionService permissionService;
   private final RoleService roleService;
+  private final InterestService interestService;
 
   @GetMapping("/new")
   @PreAuthorize("@permissionService.createPlace(#interestId)")
   public String newPlacePage(@PathVariable Long interestId, Model model, Principal principal) {
+
     model.addAttribute("place", new Place());
     model.addAttribute("method", "POST");
     model.addAttribute("action", "/interests/" + interestId + "/places/new");
     model.addAttribute("title", "New page");
-    if (principal != null) {
-      model.addAttribute("loggedUser", userService.getByEmail(principal.getName()));
-    }
+    model.addAttribute("loggedUser", userService.getByEmail(principal.getName()));
+
     return "place/form";
   }
 
   @PostMapping("/new")
   @PreAuthorize("@permissionService.createPlace(#interestId)")
-  public String createNewPlace(@PathVariable Long interestId, @ModelAttribute Place place) {
-    Place createdPlace = placeService.savePlace(place, interestId);
+  public String createNewPlace(@PathVariable Long interestId, Place place, Principal principal) {
+
+    AppUser loggedUser = userService.getByEmail(principal.getName());
+    Interest interest = interestService.getById(interestId);
+    Place createdPlace = placeService.save(place, interest, loggedUser);
+
     return String.format("redirect:/interests/%d/places/%d", interestId, createdPlace.getId());
   }
 
   @GetMapping("/{placeId}")
   public String placeDetails(
-      @PathVariable Long interestId,
-      @PathVariable Long placeId,
-      Model model,
-      Principal principal,
-      HttpServletResponse response) {
+      @PathVariable Long interestId, @PathVariable Long placeId, Model model, Principal principal) {
 
     Place place = placeService.findById(placeId).orElseThrow(PlaceNotFoundException::new);
     model.addAttribute("place", place);
@@ -67,7 +63,7 @@ public class PlaceController {
         model.addAttribute("usersRatings", ratingService.getUsersRatingsDto(loggedUser, place));
       }
       Optional<Role> optRole = roleService.findById(new RoleId(loggedUser.getId(), interestId));
-      if (optRole.isPresent() && optRole.get().getRole().equals(Role.RoleType.APPLICANT)) {
+      if (optRole.isPresent() && optRole.get().getRoleType().equals(Role.RoleType.APPLICANT)) {
         model.addAttribute("applicant", true);
       }
     }
@@ -79,7 +75,7 @@ public class PlaceController {
   public String ratePlace(
       @PathVariable Long interestId,
       @PathVariable Long placeId,
-      @ModelAttribute RatingsDTO rating,
+      RatingsDTO rating,
       Principal principal) {
 
     AppUser loggedUser = userService.getByEmail(principal.getName());
@@ -98,21 +94,21 @@ public class PlaceController {
     model.addAttribute("action", "/interests/" + interestId + "/places/" + placeId + "/edit");
     model.addAttribute("title", "Edit page");
     model.addAttribute("place", placeService.getById(placeId));
-    if (principal != null) {
-      model.addAttribute("loggedUser", userService.getByEmail(principal.getName()));
-    }
+    model.addAttribute("loggedUser", userService.getByEmail(principal.getName()));
+
     return "place/form";
   }
 
   @PutMapping("/{placeId}/edit")
   @PreAuthorize("@permissionService.hasPlaceEditPermissions(#placeId, #interestId)")
   public String editPlace(
-      @PathVariable Long interestId, @PathVariable Long placeId, @ModelAttribute Place place) {
+      @PathVariable Long interestId, @PathVariable Long placeId, Place place, Principal principal) {
 
-    if (!placeId.equals(place.getId())) {
-      throw new InvalidPlaceDetailsException("Invalid place id");
-    }
-    placeService.savePlace(place, interestId);
+    place.setId(placeId);
+    Interest interest = interestService.getById(interestId);
+    AppUser loggedUser = userService.getByEmail(principal.getName());
+    placeService.save(place, interest, loggedUser);
+
     return String.format("redirect:/interests/%d/places/%d", interestId, place.getId());
   }
 }

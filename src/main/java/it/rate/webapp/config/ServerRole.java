@@ -1,4 +1,4 @@
-package it.rate.webapp.config.security;
+package it.rate.webapp.config;
 
 public enum ServerRole {
   USER,

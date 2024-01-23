@@ -31,11 +31,11 @@
             </section>
 
             <section class="input-param">
-                <h4>Visibility</h4>
+                <h4>Rate access</h4>
                 <input type="checkbox" id="toggle" class="toggle-checkbox" name="exclusive" th:checked="*{exclusive}"/>
                 <label for="toggle" class="toggle-container">
-                    <span>Public</span>
-                    <span>Private</span>
+                    <span>Anyone can rate</span>
+                    <span>Invite only</span>
                 </label>
             </section>
 
@@ -63,8 +63,6 @@
                     </th:block>
                 </div>
 
-
-
                 <div class="add-criterion">
                     <span>Add criterion</span>
                     <button class="role-option-button accept-button" type="button" onclick="addCriteria()">
@@ -80,7 +78,6 @@
                     <textarea class="input-text-field" name="description" th:field="*{description}"></textarea>
                 </label>
             </section>
-
 
             <div id="uppy"></div>
 
