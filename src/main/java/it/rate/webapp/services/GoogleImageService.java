@@ -32,8 +32,7 @@ public class GoogleImageService implements ImageService {
   private final ImageEditor imageEditor;
 
   @Override
-  public String saveImage(@NotNull MultipartFile image, String userName)
-      throws IOException { // todo: get principal
+  public String saveImage(@NotNull MultipartFile image, String userEmail) throws IOException {
 
     FileContent mediaContent;
 
@@ -44,31 +43,33 @@ public class GoogleImageService implements ImageService {
     if (fileExtension.isEmpty()) {
       fileExtension = ".jpg";
     }
-    Path tempFilePath = Files.createTempFile("temp_" + userName, "." + fileExtension);
-    image.transferTo(tempFilePath);
-    imageEditor.reduceImageSize(tempFilePath);
-
-    mediaContent = new FileContent("image/*", tempFilePath.toFile());
-
-    String fileName = userName + "_" + UUID.randomUUID();
-
-    File fileMeta = new File();
-    fileMeta.setName(fileName);
-    fileMeta.setParents(List.of(UPLOAD_DIRECTORY));
-
+    Path tempFilePath = Files.createTempFile("temp_" + userEmail, "." + fileExtension);
     try {
+
+      image.transferTo(tempFilePath);
+      imageEditor.reduceImageSize(tempFilePath);
+
+      mediaContent = new FileContent("image/*", tempFilePath.toFile());
+
+      String fileName = userEmail + "_" + UUID.randomUUID();
+
+      File fileMeta = new File();
+      fileMeta.setName(fileName);
+      fileMeta.setParents(List.of(UPLOAD_DIRECTORY));
       return driveService.files().create(fileMeta, mediaContent).execute().getId();
     } catch (IOException e) {
       throw new ApiServiceUnavailableException("Could not save image to the server");
+    } finally {
+      Files.delete(tempFilePath);
     }
   }
 
-  public String changeInterestImage(Interest interest, MultipartFile file, String userName) {
+  public String changeInterestImage(Interest interest, MultipartFile file, String userEmail) {
 
     String newImageId;
 
     try {
-      newImageId = saveImage(file, userName);
+      newImageId = saveImage(file, userEmail);
     } catch (IOException | ApiServiceUnavailableException e) {
       throw new ApiServiceUnavailableException("Could not save image to the server");
     }

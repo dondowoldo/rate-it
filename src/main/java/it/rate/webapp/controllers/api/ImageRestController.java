@@ -33,12 +33,13 @@ public class ImageRestController {
 
   @PostMapping("/new-interest-image")
   @PreAuthorize("@permissionService.canCreateInterest()")
-  public ResponseEntity<?> uploadNewInterestImage(@RequestParam("picture") MultipartFile file, Principal principal) {
+  public ResponseEntity<?> uploadNewInterestImage(
+      @RequestParam("picture") MultipartFile file, Principal principal) {
 
-    String userName = principal.getName();
+    String userEmail = principal.getName();
     try {
       return ResponseEntity.ok()
-          .body(new ImageUploadResponseDTO(googleImageService.saveImage(file, userName)));
+          .body(new ImageUploadResponseDTO(googleImageService.saveImage(file, userEmail)));
     } catch (IOException e) {
       return ResponseEntity.internalServerError().build();
     }
@@ -47,15 +48,18 @@ public class ImageRestController {
   @PutMapping("/interests/{interestId}/edit")
   @PreAuthorize("@permissionService.manageCommunity(#interestId)")
   public ResponseEntity<?> changeInterestImage(
-      @RequestParam("picture") MultipartFile file, @PathVariable Long interestId, Principal principal) {
+      @RequestParam("picture") MultipartFile file,
+      @PathVariable Long interestId,
+      Principal principal) {
 
     Interest interest = interestService.getById(interestId);
-    String userName = principal.getName();
+    String userEmail = principal.getName();
 
     try {
       return ResponseEntity.ok()
           .body(
-              new ImageUploadResponseDTO(googleImageService.changeInterestImage(interest, file, userName)));
+              new ImageUploadResponseDTO(
+                  googleImageService.changeInterestImage(interest, file, userEmail)));
     } catch (ApiServiceUnavailableException e) {
       return ResponseEntity.internalServerError().build();
     }

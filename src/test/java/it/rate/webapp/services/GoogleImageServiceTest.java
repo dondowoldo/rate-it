@@ -25,7 +25,7 @@ class GoogleImageServiceTest extends BaseTest {
   void saveImageHappyCase() throws IOException {
     Long mockPlaceId = 1L;
     String mockDiskId = "id";
-    String userName = "Joe";
+    String userEmail = "Joe";
     MockMultipartFile imageMock =
         new MockMultipartFile("data", "image.jpeg", "image/jpeg", "picture.jpeg".getBytes());
     
@@ -39,7 +39,7 @@ class GoogleImageServiceTest extends BaseTest {
     when(drive.files()).thenReturn(files);
     when(files.create(any(), any())).thenReturn(create);
 
-    String id = googleImageService.saveImage(imageMock, userName);
+    String id = googleImageService.saveImage(imageMock, userEmail);
     assertEquals(mockDiskId, id);
   }
 }

@@ -28,7 +28,7 @@ public class ImageEditor {
             .toFile(imagePath.toFile());
   }
 
-  public double calculateReductionRate(long fileSizeByte) {
+  private double calculateReductionRate(long fileSizeByte) {
 
     if (fileSizeByte < 2 * MEGABYTE) {
       return 0.5;

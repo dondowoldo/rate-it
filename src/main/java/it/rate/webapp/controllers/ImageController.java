@@ -29,9 +29,9 @@ public class ImageController {
       Principal principal)
       throws IOException {
 
-    String userName = principal.getName();
+    String userEmail = principal.getName();
     Place place = placeService.getById(placeId);
-    placeService.addImage(place, googleImageService.saveImage(file, userName));
+    placeService.addImage(place, googleImageService.saveImage(file, userEmail));
 
     return "redirect:/interests/" + interestId + "/places/" + placeId;
   }
