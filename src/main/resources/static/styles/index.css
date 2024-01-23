@@ -952,6 +952,8 @@ h4 {
 .left-container .error {
     display: flex;
     justify-content: center;
+    font-size: small;
+    margin: 0;
 }
 
 
