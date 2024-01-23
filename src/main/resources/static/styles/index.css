@@ -949,6 +949,11 @@ h4 {
     text-align: center;
 }
 
+.left-container .error {
+    display: flex;
+    justify-content: center;
+}
+
 
 .login-signup-redirect {
     position: absolute;
