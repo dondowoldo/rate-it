@@ -8,7 +8,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&family=Montserrat:wght@200;400;600&family=Righteous&family=Ubuntu:wght@400;500;700&display=swap"
           rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-
 </head>
 <body>
 <div class="container-fluid">
@@ -19,40 +18,45 @@
         <img src="/icons/R-logo.png" alt="Logo">
     </div>
     <div class="user-form">
-        <div class="right-container back-container">
-            <a class="login-signup-redirect" th:href="@{/users/login}">SIGN IN</a>
-        </div>
-        <form class="left-container top-container" th:action="@{/users/signup}" method="post">
-            <p th:if="${error}" th:text="${error}"></p>
-            <h1>REGISTER</h1>
-            <section class="credentials">
-                <h5>Username</h5>
-                <input type="text" name="username" class="credentials-input" th:value="${userDTO?.username}"
-                       placeholder="Enter your username here..." required autocomplete="off">
-            </section>
-            <section class="credentials">
-                <h5>Email address</h5>
-                <input class="credentials-input" type="email" name="email" th:value="${userDTO?.email}"
-                       placeholder="Enter your email here.." required>
-            </section>
-            <section class="credentials">
-                <h5>Password</h5>
-                <input class="credentials-input" type="password" name="password"
-                       placeholder="Enter your password here.." required>
-            </section>
-            <section class="credentials">
-                <h5>Confirm password</h5>
-                <input class="credentials-input" type="password" name="password"
-                       placeholder="Enter your password here.." required>
-            </section>
-
-            <div class="user-form-button">
-                <button type="submit" class="sign-button">Sign Up</button>
+        <div class="form-container">
+            <div class="right-container back-container">
+                <a class="login-signup-redirect" th:href="@{/users/login}">SIGN IN</a>
             </div>
-        </form>
+            <form class="left-container top-container" th:action="@{/users/signup}" method="post" onsubmit="return validateForm()">
+                <p th:if="${error}" th:text="${error}"></p>
+                <h1>REGISTER</h1>
+                <section class="credentials">
+                    <h5>Username</h5>
+                    <input type="text" name="username" class="credentials-input" th:value="${userDTO?.username}"
+                           placeholder="Enter your username here..." required autocomplete="off">
+                    <img class="user-icon" src="/icons/user.svg" alt="user-icon">
+                </section>
+                <section class="credentials">
+                    <h5>Email address</h5>
+                    <input class="credentials-input" type="email" name="email" th:value="${userDTO?.email}"
+                           placeholder="Enter your email here.." required>
+                    <img class="user-icon" src="/icons/email-icon.png" alt="email-icon">
+                </section>
+                <section class="credentials">
+                    <h5>Password</h5>
+                    <input class="credentials-input" type="password" name="password"
+                           placeholder="Enter your password here.." required>
+                    <img class="user-icon" src="/icons/lock.png" alt="user-lock">
+                </section>
+                <section class="credentials">
+                    <h5>Confirm password</h5>
+                    <input class="credentials-input" type="password" name="confirmPassword"
+                           placeholder="Enter your password here.." required>
+                    <img class="user-icon" src="/icons/lock.png" alt="user-lock">
+                </section>
+
+                <div class="user-form-button">
+                    <button type="submit" class="sign-button">Sign Up</button>
+                </div>
+
+            </form>
+        </div>
     </div>
 </div>
-
 </body>
-
 </html>
