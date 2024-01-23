@@ -47,6 +47,13 @@ public class Interest {
   @Builder.Default
   private List<Role> roles = new ArrayList<>();
 
+  @ManyToMany
+  @JoinTable(
+      name = "interest_category",
+      joinColumns = @JoinColumn(name = "interest_id"),
+      inverseJoinColumns = @JoinColumn(name = "category_id"))
+  private List<Category> categories = new ArrayList<>();
+
   public int countLikes() {
     return likes.size();
   }

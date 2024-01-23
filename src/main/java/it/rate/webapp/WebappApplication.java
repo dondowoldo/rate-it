@@ -8,7 +8,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import java.util.List;
+import java.util.*;
 
 @SpringBootApplication
 public class WebappApplication implements CommandLineRunner {
@@ -19,7 +19,8 @@ public class WebappApplication implements CommandLineRunner {
       RatingRepository ratingRepository,
       RoleRepository roleRepository,
       UserRepository userRepository,
-      LikeRepository likeRepository) {
+      LikeRepository likeRepository,
+      CategoryRepository categoryRepository) {
     this.criterionRepository = criterionRepository;
     this.interestRepository = interestRepository;
     this.placeRepository = placeRepository;
@@ -27,6 +28,7 @@ public class WebappApplication implements CommandLineRunner {
     this.roleRepository = roleRepository;
     this.userRepository = userRepository;
     this.likeRepository = likeRepository;
+    this.categoryRepository = categoryRepository;
   }
 
   private CriterionRepository criterionRepository;
@@ -36,6 +38,7 @@ public class WebappApplication implements CommandLineRunner {
   private RoleRepository roleRepository;
   private UserRepository userRepository;
   private LikeRepository likeRepository;
+  private CategoryRepository categoryRepository;
 
   // check the application.properties file for app.preload-data, default value is true
   @Value("${app.preload-data:true}")
@@ -82,6 +85,26 @@ public class WebappApplication implements CommandLineRunner {
             .serverRole(ServerRole.USER)
             .build();
     userRepository.saveAll(List.of(u1, u2, u3, u4));
+
+    List<String> categoryNames =
+        Arrays.asList(
+            "Food",
+            "Drink",
+            "Outdoor",
+            "Entertainment",
+            "Sport",
+            "Art & Culture",
+            "Relaxation",
+            "Adventure",
+            "Social",
+            "Educational",
+            "Technology");
+    List<Category> categories = new ArrayList<>();
+    categoryNames.forEach(
+        name -> {
+          categories.add(new Category(name));
+        });
+    categoryRepository.saveAll(categories);
 
     Interest i1 =
         Interest.builder()
@@ -148,26 +171,26 @@ public class WebappApplication implements CommandLineRunner {
             .build();
 
     Place p4 =
-            Place.builder()
-                    .name("Pekařství Pana Koláčka")
-                    .latitude(50.130587)
-                    .longitude(14.505279)
-                    .description("Super koláčky")
-                    .address("Kytlická 756, 190 00 Praha 9-Prosek")
-                    .creator(u2)
-                    .interest(i1)
-                    .build();
+        Place.builder()
+            .name("Pekařství Pana Koláčka")
+            .latitude(50.130587)
+            .longitude(14.505279)
+            .description("Super koláčky")
+            .address("Kytlická 756, 190 00 Praha 9-Prosek")
+            .creator(u2)
+            .interest(i1)
+            .build();
 
     Place p5 =
-            Place.builder()
-                    .name("Merhautovo pekařství")
-                    .latitude(50.425784)
-                    .longitude(14.909763)
-                    .description("Super pekařství")
-                    .address("U Stadionu 1231, 293 01 Mladá Boleslav II")
-                    .creator(u2)
-                    .interest(i1)
-                    .build();
+        Place.builder()
+            .name("Merhautovo pekařství")
+            .latitude(50.425784)
+            .longitude(14.909763)
+            .description("Super pekařství")
+            .address("U Stadionu 1231, 293 01 Mladá Boleslav II")
+            .creator(u2)
+            .interest(i1)
+            .build();
 
     placeRepository.saveAll(List.of(p1, p2, p3, p4, p5));
 
@@ -202,9 +225,9 @@ public class WebappApplication implements CommandLineRunner {
     Rating rat7 = new Rating(u2, p3, c3, 8);
     Rating rat8 = new Rating(u3, p3, c3, 9);
 
-
-
-    ratingRepository.saveAll(List.of(rat1, rat2, rat3, rat4, rat5, rat6, rat7, rat8, rat9, rat10,
-            rat11, rat12, rat13, rat14, rat15, rat16, rat17));
+    ratingRepository.saveAll(
+        List.of(
+            rat1, rat2, rat3, rat4, rat5, rat6, rat7, rat8, rat9, rat10, rat11, rat12, rat13, rat14,
+            rat15, rat16, rat17));
   }
 }
