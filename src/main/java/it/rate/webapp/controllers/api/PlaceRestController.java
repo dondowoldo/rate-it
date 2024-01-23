@@ -37,7 +37,7 @@ public class PlaceRestController {
     @PreAuthorize("@permissionService.ratePlace(#placeId)")
     public ResponseEntity<?> ratePlace(
             @PathVariable Long placeId,
-            RatingsDTO rating,
+            @RequestBody RatingsDTO rating,
             Principal principal) {
 
         AppUser loggedUser = userService.getByEmail(principal.getName());
