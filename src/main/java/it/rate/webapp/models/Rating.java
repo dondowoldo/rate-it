@@ -1,6 +1,7 @@
 package it.rate.webapp.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,7 +13,7 @@ import org.hibernate.validator.constraints.Range;
 @Entity
 @Table(name = "ratings")
 public class Rating {
-  @EmbeddedId private RatingId id;
+  @EmbeddedId @NotNull private RatingId id;
 
   @Range(min = 1, max = 10)
   @Column(nullable = false)

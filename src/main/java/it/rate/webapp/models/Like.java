@@ -1,6 +1,7 @@
 package it.rate.webapp.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Getter
@@ -9,7 +10,7 @@ import lombok.*;
 @Entity
 @Table(name = "likes")
 public class Like {
-  @EmbeddedId private LikeId id;
+  @EmbeddedId @NotNull private LikeId id;
 
   @ManyToOne
   @MapsId("userId")
