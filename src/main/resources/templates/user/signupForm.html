@@ -13,8 +13,9 @@
     </div>
     <div class="user-form">
         <div class="form-container">
-            <div class="right-container back-container">
-                <a class="login-signup-redirect" th:href="@{/users/login}">SIGN IN</a>
+            <div class="right-container back-container" th:onclick="|location.href='@{/users/login}';|"
+                 style="cursor: pointer;">
+                <p class="login-signup-redirect">SIGN IN</p>
             </div>
             <form class="left-container top-container" th:action="@{/users/signup}" method="post">
                 <h1>REGISTER</h1>

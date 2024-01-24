@@ -36,8 +36,9 @@
                     <button type="submit" class="sign-button">Login</button>
                 </div>
             </form>
-            <div class="left-container back-container">
-                <a class="login-signup-redirect" th:href="@{/users/signup}">REGISTER</a>
+            <div class="left-container back-container" th:onclick="|location.href='@{/users/signup}';|"
+                 style="cursor: pointer;">
+                <p class="login-signup-redirect">REGISTER</p>
             </div>
         </div>
     </div>
