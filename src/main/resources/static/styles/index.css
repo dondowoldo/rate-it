@@ -95,6 +95,10 @@ body {
     filter:  brightness(0) invert(1);
 }
 
+.back-button img{
+    width: 35px;
+}
+
 #top-hamburger {
     margin-left: 0.5rem;
 }
@@ -204,7 +208,7 @@ h3 {
 }
 
 .place-rating-stars {
-    margin-left: 1rem;
+    margin-left: 0.2rem;
     color: #bebebe;
     display: flex;
 }
@@ -266,7 +270,7 @@ h3 {
 
 .place-rating-criterion .rating {
     display: block;
-    width: 2rem;
+    width: 1.5rem;
 }
 
 .place-rating-button-bar {
@@ -305,28 +309,54 @@ h3 {
 .img-wrapper {
     border-radius: 1rem 1rem 0 0;
     height: 7rem;
-    width: 10rem;
-    background-image: linear-gradient(to bottom right, #568c72, #b0d289);
+    width: auto;
 }
 
 .img-wrapper img {
     height: 100%;
     width: 100%;
-    border-radius: 1rem 1rem 0 0;
+    border-radius: 1rem;
+}
+
+.like-count {
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background-color: white;
+    border-radius: 1rem;
+    width: fit-content;
+    min-width: 3rem;
+    height: 1.5rem;
+}
+
+.like-count p {
+    margin: 0 0.3rem 0 0;
+}
+
+.like-count i {
+    margin: 0.3rem;
 }
 
 .interest-card-link {
     all: unset;
     cursor: pointer;
+    margin: 0.2rem;
 }
 
 .interest-title {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 0.5rem;
+    margin-top: 0.2rem;
     font-family: 'Ubuntu', sans-serif;
-    line-height: 1;
+}
+
+.interest-title p {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .interest-places {
@@ -360,7 +390,7 @@ h3 {
 
 .interest-place-title h3 {
     color: #000000;
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     margin-bottom: 0.2rem;
 }
 
@@ -403,6 +433,8 @@ h3 {
 }
 
 .interest-place-img {
+    display: flex;
+    flex-shrink: 0;
     width: 100%;
 }
 
@@ -411,6 +443,12 @@ h3 {
     height: 100%;
     border-radius: 1rem;
     object-fit: cover;
+}
+
+.interest-place-distance {
+    white-space: nowrap;
+    text-align: right;
+    font-size: 0.8rem;
 }
 
 @media only screen and (min-width: 475px) {
