@@ -885,10 +885,14 @@ h4 {
     padding: 2vh 2rem
 }
 
+:root {
+    --form-container-height: 65vh;
+}
+
 .form-container {
     position: relative;
     margin: auto;
-    height: 65vh;
+    height: var(--form-container-height);
     width: 100%;
 }
 
@@ -897,7 +901,7 @@ h4 {
     position: absolute;
     border: 2px solid black;
     border-radius: 2rem;
-    height: 58vh;
+    height: calc(0.9 * var(--form-container-height));
     width: 90%;
     box-sizing: border-box;
 }
@@ -984,7 +988,7 @@ h4 {
     border-radius: 2rem;
     width: 80%;
     font-weight: bold;
-    font-size: xx-large;
+    font-size: 4vh;
     font-family: 'Montserrat', sans-serif;
 }
 
@@ -1004,13 +1008,13 @@ h4 {
 
 .login-signup-wrapper {
     display: flex;
-    height: 7vh;
+    height: calc(0.1 * var(--form-container-height));
     justify-content: center;
     align-items: center;
 }
 
 .left-container .login-signup-wrapper {
-    margin-top: 51vh;
+    margin-top: calc(0.8 * var(--form-container-height));
 }
 
 .login-signup-wrapper > p {
