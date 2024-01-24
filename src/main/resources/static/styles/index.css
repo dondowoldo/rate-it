@@ -94,6 +94,10 @@ body {
     cursor: pointer;
 }
 
+.back-button img{
+    width: 35px;
+}
+
 #top-hamburger {
     margin-left: 0.5rem;
 }
