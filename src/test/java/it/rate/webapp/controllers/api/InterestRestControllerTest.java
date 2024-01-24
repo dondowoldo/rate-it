@@ -38,19 +38,19 @@ class InterestRestControllerTest extends BaseIntegrationTest {
                 new InterestSuggestionDTO(
                     1L,
                     "Makove kolacky",
+                    "Makove kolacky jako od babicky",
                     4L,
-                    100.75592824812773,
-                    null,
                     2L,
-                    "Makove kolacky jako od babicky"),
+                    null,
+                    100.75592824812773),
                 new InterestSuggestionDTO(
                     2L,
                     "Quiet spots",
+                    "Vyjimecne klidna mista",
                     2L,
-                    180.09481290966787,
-                    null,
                     1L,
-                    "Vyjimecne klidna mista")));
+                    null,
+                    180.09481290966787)));
 
     // Hradec Králové
     double latitude = 50.209859;

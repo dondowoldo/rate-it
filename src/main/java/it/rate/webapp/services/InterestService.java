@@ -60,7 +60,7 @@ public class InterestService {
                     interest, getDistanceToNearestPlace(usersCoords, interest.getPlaces())))
         .sorted(
             Comparator.comparingDouble(
-                DTO -> DTO.distanceKm() != null ? DTO.distanceKm() : Double.MAX_VALUE))
+                dto -> dto.distanceKm() != null ? dto.distanceKm() : Double.MAX_VALUE))
         .collect(Collectors.toList());
   }
 
