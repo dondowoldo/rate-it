@@ -94,11 +94,9 @@ public class WebappApplication implements CommandLineRunner {
             "Entertainment",
             "Sport",
             "Art & Culture",
-            "Relaxation",
-            "Adventure",
-            "Social",
-            "Educational",
-            "Technology");
+            "Relax",
+            "Services",
+            "Educational",);
     List<Category> categories = new ArrayList<>();
     categoryNames.forEach(
         name -> {
