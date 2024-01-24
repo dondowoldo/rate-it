@@ -92,6 +92,7 @@ body {
     border: none;
     padding: 0;
     cursor: pointer;
+    filter:  brightness(0) invert(1);
 }
 
 #top-hamburger {
