@@ -10,7 +10,8 @@ public record InterestSuggestionDTO(
             interest.getId(),
             interest.getName(),
             (long) interest.countLikes(),
-            distanceKm, interest.getImageName(),
+            distanceKm,
+            interest.getImageName(),
             (long) interest.countPlaces(),
             interest.getDescription()
     );

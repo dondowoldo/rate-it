@@ -1,5 +1,4 @@
 let data = [];
-let usersCoords;
 let latitude = null;
 let longitude = null;
 
@@ -17,7 +16,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 async function success(position) {
-    usersCoords = [position.coords.latitude, position.coords.longitude];
+    latitude = position.coords.latitude;
+    longitude = position.coords.longitude;
     try {
         await fetchData();
     } catch (error) {
@@ -74,6 +74,7 @@ function loadInterests(query) {
     }
 
     dataSet.forEach(interest => {
+        console.log(interest);
         const clone = document.importNode(template.content, true);
 
         const elements = {
@@ -83,55 +84,20 @@ function loadInterests(query) {
             distanceSpan: clone.querySelector('.discover-interest-distance span'),
             interestLikes: clone.querySelector('.discover-interest-like-value'),
             placesAmount: clone.querySelector('.discover-interest-places-amount'),
-            interestDesc: clone.querySelector('.discover-interest-places p')
+            interestDescription: clone.querySelector('.discover-interest-content p')
         };
 
         elements.interestLink.href = `/interests/${interest.id}`;
         elements.interestImg.src = interest.imageUrl;
         elements.titleH3.textContent = interest.name;
-
-        if (usersCoords !== undefined) {
-            elements.distanceSpan.textContent = distance(usersCoords[0], usersCoords[1], interest.latitude, interest.longitude).toFixed(1) + ' km';
-        }
-
+        elements.distanceSpan.textContent = interest.distanceKm.toFixed(1) + ' km';
         elements.interestLikes.textContent = interest.likes;
         elements.placesAmount.textContent = interest.places;
-        elements.interestDesc.textContent = interest.description;
-
+        elements.interestDescription.textContent = interest.description;
         container.appendChild(clone);
     })
 }
 
-function createLike(iconClass, likeValue) {
-    const li = document.createElement('li');
-
-    const icon = document.createElement('i');
-    icon.className = iconClass;
-    li.appendChild(icon);
-
-    const likeSpan = document.createElement('span');
-    likeSpan.className = 'discover-interest-likes';
-    likeSpan.textContent = likeValue;
-    li.appendChild(likeSpan);
-
-    return li;
-}
-
 function isEmptyOrSpaces(str) {
     return str === null || str.match(/^ *$/) !== null;
-}
-
-function distance(lat1, lon1, lat2, lon2) {
-    let radlat1 = Math.PI * lat1 / 180;
-    let radlat2 = Math.PI * lat2 / 180;
-    let theta = lon1 - lon2;
-    let radtheta = Math.PI * theta / 180;
-    let dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
-    if (dist > 1) {
-        dist = 1;
-    }
-    dist = Math.acos(dist);
-    dist = dist * 180 / Math.PI;
-    dist = dist * 60 * 1.85316;
-    return dist;
 }
