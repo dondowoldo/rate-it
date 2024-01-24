@@ -1,5 +1,6 @@
 package it.rate.webapp.controllers.api;
 
+import it.rate.webapp.dtos.CriteriaOfPlaceDTO;
 import it.rate.webapp.dtos.RatingsDTO;
 import it.rate.webapp.models.AppUser;
 import it.rate.webapp.models.Place;
@@ -30,6 +31,8 @@ public class PlaceRestController {
     Place place = placeService.getById(placeId);
     ratingService.updateRating(rating, place, loggedUser);
 
-    return ResponseEntity.ok().build();
+    CriteriaOfPlaceDTO criteria = placeService.getCriteriaOfPlaceDTO(place);
+
+    return ResponseEntity.ok().body(criteria);
   }
 }
