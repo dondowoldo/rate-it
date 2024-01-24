@@ -315,6 +315,7 @@ h3 {
     height: 100%;
     width: 100%;
     border-radius: 1rem;
+    object-fit: cover;
 }
 
 .like-count {
@@ -1027,4 +1028,79 @@ h4 {
     display: flex;
     justify-content: center;
     padding-top: 2vh;
+}
+
+.discover-interests {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.discover-interest {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    background: #FFFFFF;
+    color: #000000;
+    border-radius: 1rem;
+    padding: 0.5rem;
+    text-decoration: none;
+}
+
+.discover-interest-content {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 2;
+}
+
+.discover-interest-header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.discover-interest-title h3 {
+    color: #000000;
+    font-size: 1.2rem;
+    margin-bottom: 0.2rem;
+}
+
+.discover-interest-title h4 {
+    color: #000000;
+    font-size: 0.8rem;
+}
+
+.discover-interest:hover .discover-interest-title > h3 {
+    text-decoration: underline;
+}
+
+.discover-interest-img {
+    display: flex;
+    flex-shrink: 0;
+    width: 10rem;
+    height: 7rem;
+}
+
+.discover-interest-img > img {
+    width: 100%;
+    height: 100%;
+    border-radius: 1rem;
+    object-fit: cover;
+}
+
+.discover-interest-distance {
+    white-space: nowrap;
+    text-align: right;
+    font-size: 0.8rem;
+}
+
+@media only screen and (min-width: 475px) {
+    .discover-interest {
+        flex-direction: row;
+    }
+
+    /*.discover-interest-img {*/
+    /*    width: 20vw;*/
+    /*    height: 15vh;*/
+    /*}*/
 }

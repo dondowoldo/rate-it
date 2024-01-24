@@ -76,9 +76,9 @@ function loadInterests(query) {
 
     dataSet.forEach(record => {
         const clone = template.content.cloneNode(true);
-        clone.querySelector('.interest-card-link').href = `/interests/${record.id}`;
-        clone.querySelector('p').textContent = `${record.name} (${record.likes})`;
-        clone.querySelector('.img-wrapper img').src = record.imageUrl;
+        clone.querySelector('.discover-interest').href = `/interests/${record.id}`;
+        clone.querySelector('h3').textContent = `${record.name}`;
+        clone.querySelector('.discover-interest img').src = record.imageUrl;
         container.appendChild(clone);
     })
 }
