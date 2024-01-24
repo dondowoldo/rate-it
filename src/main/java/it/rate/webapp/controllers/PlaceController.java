@@ -1,6 +1,5 @@
 package it.rate.webapp.controllers;
 
-import it.rate.webapp.dtos.RatingsDTO;
 import it.rate.webapp.exceptions.notfound.PlaceNotFoundException;
 import it.rate.webapp.models.*;
 import it.rate.webapp.services.*;
@@ -68,21 +67,6 @@ public class PlaceController {
       }
     }
     return "place/page";
-  }
-
-  @PostMapping("/{placeId}/rate")
-  @PreAuthorize("@permissionService.ratePlace(#placeId)")
-  public String ratePlace(
-      @PathVariable Long interestId,
-      @PathVariable Long placeId,
-      RatingsDTO rating,
-      Principal principal) {
-
-    AppUser loggedUser = userService.getByEmail(principal.getName());
-    Place place = placeService.getById(placeId);
-    ratingService.updateRating(rating, place, loggedUser);
-
-    return String.format("redirect:/interests/%d/places/%d", interestId, placeId);
   }
 
   @GetMapping("/{placeId}/edit")

@@ -33,6 +33,6 @@
     /*]]>*/
 </script>
 <script src="/scripts/interestMap.js"></script>
-<script src="/scripts/interestLike.js"></script>
+<script th:unless="${loggedUser == null || role != null && role.equals(role.CREATOR)}" src="/scripts/interestLike.js"></script>
 </body>
 </html>

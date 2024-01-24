@@ -21,7 +21,8 @@
 
         <div class="place-image">
             <img th:if="*{imageNames.isEmpty()}" src="https://picsum.photos/500/300" alt="Generic image"/>
-            <img th:unless="*{imageNames.isEmpty()}" id="picture-container" th:attr="data-image-id=*{imageNames.get(getImageNames().size() - 1)}" alt="Place image"/>
+            <img th:unless="*{imageNames.isEmpty()}" id="picture-container"
+                 th:attr="data-image-id=*{imageNames.get(getImageNames().size() - 1)}" alt="Place image"/>
 
         </div>
 
@@ -29,7 +30,8 @@
             <h1 th:text="*{name}"></h1>
             <div class="rating">
                 <i class="fas fa-star"></i>
-                <span th:unless="${place.getAverageRating() == null}" th:text="${#numbers.formatDecimal(place.getAverageRating() / 2, 1, 'DEFAULT', 1, 'DEFAULT')}"></span>
+                <span th:unless="${place.getAverageRating() == null}"
+                      th:text="${#numbers.formatDecimal(place.getAverageRating() / 2, 1, 'DEFAULT', 1, 'DEFAULT')}"></span>
                 <span th:if="${place.getAverageRating() == null}">N/A</span>
             </div>
         </header>
@@ -40,7 +42,9 @@
             <form th:action="@{/interests/{intId}/places/{placeId}/rate(intId=${place.interest.id}, placeId=${place.id})}"
                   th:method="post"
                   th:object="${usersRatings}"
-                  name="rating">
+                  name="rating"
+                  id="form"
+            >
                 <div class="place-rating-criteria">
                     <div class="place-rating-criterion" th:each="criterionDTO : ${placeCriteria.criteria()}">
                         <div th:text="${criterionDTO.name()}"/>
@@ -72,10 +76,11 @@
                 <div th:if="${usersRatings}" class="place-rating-button-bar">
                     <a id="uppy-modal" href="#" type="button" class="button" style="text-decoration: none">
                         Upload photo</a>
-                    <div id="uppy"></div>
                     <button class="button" type="submit">Rate</button>
                 </div>
             </form>
+
+            <div id="uppy"></div>
 
             <div class="place-rating-button-bar">
                 <span class="button pending"
@@ -101,9 +106,10 @@
 <script th:inline="javascript">
     /*<![CDATA[*/
 
+    let placeId = [[${place.id}]];
+    let name = [[${place.name}]];
     let latitude = [[${place.latitude}]];
     let longitude = [[${place.longitude}]];
-    let name = [[${place.name}]];
     let rating = [[${place.getAverageRating()}]];
 
     /*]]>*/
