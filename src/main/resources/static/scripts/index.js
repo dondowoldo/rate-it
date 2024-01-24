@@ -82,7 +82,8 @@ function loadInterests(query) {
             titleH3: clone.querySelector('.discover-interest-title h3'),
             distanceSpan: clone.querySelector('.discover-interest-distance span'),
             interestLikes: clone.querySelector('.discover-interest-like-value'),
-            placesAmount: clone.querySelector('.discover-interest-places-amount')
+            placesAmount: clone.querySelector('.discover-interest-places-amount'),
+            interestDesc: clone.querySelector('.discover-interest-places p')
         };
 
         elements.interestLink.href = `/interests/${interest.id}`;
@@ -95,7 +96,7 @@ function loadInterests(query) {
 
         elements.interestLikes.textContent = interest.likes;
         elements.placesAmount.textContent = interest.places;
-
+        elements.interestDesc.textContent = interest.description;
 
         container.appendChild(clone);
     })

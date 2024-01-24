@@ -76,14 +76,14 @@ public class BaseIntegrationTest extends BaseTest {
     Interest i1 =
         Interest.builder()
             .name("Makove kolacky")
-            .description("Makové koláčky jako od babičky")
+            .description("Makove kolacky jako od babicky")
             .exclusive(true)
             .build();
 
     Interest i2 =
         Interest.builder()
             .name("Quiet spots")
-            .description("Výjimečně klidná místa")
+            .description("Vyjimecne klidna mista")
             .exclusive(false)
             .build();
     interestRepository.saveAll(List.of(i1, i2));
