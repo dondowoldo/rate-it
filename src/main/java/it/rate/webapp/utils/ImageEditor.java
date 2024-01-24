@@ -16,10 +16,6 @@ public class ImageEditor {
     
     long fileSizeBytes = Files.size(imagePath);
 
-    if (fileSizeBytes <= MEGABYTE) {
-      return;
-    }
-    
     double reductionRate = calculateReductionRate(fileSizeBytes);
 
     Thumbnails.of(imagePath.toFile())
@@ -30,14 +26,10 @@ public class ImageEditor {
 
   private double calculateReductionRate(long fileSizeByte) {
 
-    if (fileSizeByte < 2 * MEGABYTE) {
-      return 0.5;
-    } else if (fileSizeByte < 3 * MEGABYTE) {
-      return 0.3;
-    } else if (fileSizeByte < 4 * MEGABYTE) {
-      return 0.25;
+    if(fileSizeByte < MEGABYTE) {
+      return 1.0;
     } else {
-      return 0.2;
+      return (double) MEGABYTE /fileSizeByte;
     }
   }
 }
