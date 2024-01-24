@@ -298,28 +298,54 @@ h3 {
 .img-wrapper {
     border-radius: 1rem 1rem 0 0;
     height: 7rem;
-    width: 10rem;
-    background-image: linear-gradient(to bottom right, #568c72, #b0d289);
+    width: auto;
 }
 
 .img-wrapper img {
     height: 100%;
     width: 100%;
-    border-radius: 1rem 1rem 0 0;
+    border-radius: 1rem;
+}
+
+.like-count {
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background-color: white;
+    border-radius: 1rem;
+    width: fit-content;
+    min-width: 3rem;
+    height: 1.5rem;
+}
+
+.like-count p {
+    margin: 0 0.3rem 0 0;
+}
+
+.like-count i {
+    margin: 0.3rem;
 }
 
 .interest-card-link {
     all: unset;
     cursor: pointer;
+    margin: 0.2rem;
 }
 
 .interest-title {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 0.5rem;
+    margin-top: 0.2rem;
     font-family: 'Ubuntu', sans-serif;
-    line-height: 1;
+}
+
+.interest-title p {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .interest-places {

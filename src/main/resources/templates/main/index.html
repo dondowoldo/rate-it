@@ -32,9 +32,13 @@
                                         <img th:unless="${interest.imageName == null || interest.imageName.isEmpty()}"
                                              th:src="@{|/api/v1/images/${interest.imageName}}"
                                              alt="Interest image"/>
+                                        <div class="like-count">
+                                            <i class="fa-regular fa-heart"></i>
+                                            <p th:text="${interest.countLikes()}"></p>
+                                        </div>
                                     </div>
                                     <div class="interest-title">
-                                        <p th:text="${interest.name} + ' ' + '(' + ${interest.countLikes()} + ')'"></p>
+                                        <p th:text="${interest.name}"></p>
                                     </div>
                                 </a>
                             </div>
