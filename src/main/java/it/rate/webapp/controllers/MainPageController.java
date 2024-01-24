@@ -26,6 +26,7 @@ public class MainPageController {
       model.addAttribute("loggedUser", loggedUser);
       model.addAttribute("likedInterests", interestService.findAllLikedByAppUser(loggedUser));
     }
+    model.addAttribute("categories", categoryService.findAll());
 
     return "main/index";
   }
