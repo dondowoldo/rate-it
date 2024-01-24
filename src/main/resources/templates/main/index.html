@@ -57,14 +57,14 @@
             <div class="filters">
                 <div class="sort-buttons">
                     <label class="sort-container" th:each="category : ${categories}">
-                        <input th:value="${category.id}" oninput="filterInterests()" type="checkbox"
+                        <input th:value="${category.id}" oninput="filterInterests(this)" type="checkbox"
                                class="sort-checkbox"/>
                         <span th:text="${category.name}"></span>
                     </label>
                 </div>
             </div>
             <div class="search-container">
-                <input type="text" class="search" name="query" oninput="loadInterests(this.value)" autocomplete="off"
+                <input type="text" class="search" name="query" oninput="filterInterests()" autocomplete="off"
                        placeholder="Find interests…">
                 <img class="search-icon" th:src="@{/icons/search.svg}" alt="Search">
             </div>
