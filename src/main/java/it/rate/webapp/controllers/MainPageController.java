@@ -1,6 +1,7 @@
 package it.rate.webapp.controllers;
 
 import it.rate.webapp.models.AppUser;
+import it.rate.webapp.services.CategoryService;
 import it.rate.webapp.services.InterestService;
 import it.rate.webapp.services.UserService;
 import java.security.Principal;
@@ -15,6 +16,7 @@ public class MainPageController {
 
   private final InterestService interestService;
   private final UserService userService;
+  private final CategoryService categoryService;
 
   @GetMapping({"/", "/index"})
   public String index(Model model, Principal principal) {

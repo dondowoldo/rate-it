@@ -108,6 +108,7 @@ public class WebappApplication implements CommandLineRunner {
         Interest.builder()
             .name("Makové koláčky")
             .description("Makové koláčky jako od babičky")
+            .categories(List.of(categories.get(0)))
             .exclusive(true)
             .build();
 
@@ -115,6 +116,7 @@ public class WebappApplication implements CommandLineRunner {
         Interest.builder()
             .name("Quiet spots")
             .description("Výjimečně klidná místa")
+            .categories(List.of(categories.get(2), categories.get(6)))
             .exclusive(false)
             .build();
     interestRepository.saveAll(List.of(i1, i2));
