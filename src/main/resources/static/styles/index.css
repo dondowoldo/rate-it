@@ -838,13 +838,13 @@ h4 {
 }
 
 .user-form {
-    padding: 2rem
+    padding: 2vh 2rem
 }
 
 .form-container {
     position: relative;
     margin: auto;
-    height: 57vh;
+    height: 65vh;
     width: 100%;
 }
 
@@ -853,7 +853,7 @@ h4 {
     position: absolute;
     border: 2px solid black;
     border-radius: 2rem;
-    height: 51vh;
+    height: 58vh;
     width: 90%;
     box-sizing: border-box;
 }
@@ -877,6 +877,7 @@ h4 {
 .top-container {
     background: #BED9CC;
     z-index: 2;
+    padding: 1rem 0;
 
 }
 
@@ -970,16 +971,16 @@ h4 {
 
 .left-container .login-signup-redirect {
     bottom: 0;
-    padding-bottom: 0.3rem;
+    padding-bottom: 1vh;
 }
 
 .right-container .login-signup-redirect {
     top: 0;
-    padding-top: 0.3rem;
+    padding-top: 2vh;
 }
 
 .rs-logo {
     display: flex;
     justify-content: center;
-    padding-top: 2rem;
+    padding-top: 2vh;
 }
