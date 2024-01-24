@@ -1,6 +1,5 @@
 package it.rate.webapp.controllers.api;
 
-import it.rate.webapp.dtos.CriteriaOfPlaceDTO;
 import it.rate.webapp.dtos.PlaceInfoDTO;
 import it.rate.webapp.dtos.RatingsDTO;
 import it.rate.webapp.models.AppUser;
