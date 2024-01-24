@@ -1016,12 +1016,10 @@ h4 {
 
 .left-container .login-signup-redirect {
     bottom: 0;
-    /*padding-bottom: 1vh;*/
 }
 
 .right-container .login-signup-redirect {
     top: 0;
-    /*padding-top: 2vh;*/
 }
 
 .rs-logo {
@@ -1108,16 +1106,3 @@ h4 {
     white-space: nowrap;
     font-size: small;
 }
-
-/*@media only screen and (min-width: 475px) {*/
-/*    .discover-interest {*/
-/*        flex-direction: row;*/
-/*    }*/
-
-/*    !*.discover-interest-img {*!*/
-/*    !*    width: 20vw;*!*/
-/*    !*    height: 15vh;*!*/
-/*    !*}*!*/
-/*}*/
-
-

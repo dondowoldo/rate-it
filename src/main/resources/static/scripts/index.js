@@ -97,6 +97,7 @@ function loadInterests(query) {
         elements.interestLikes.textContent = interest.likes;
         elements.placesAmount.textContent = interest.places;
         elements.interestDescription.textContent = interest.description;
+
         container.appendChild(clone);
     })
 }
