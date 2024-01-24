@@ -89,7 +89,7 @@ function loadInterests(query) {
         elements.interestLink.href = `/interests/${interest.id}`;
         elements.interestImg.src = interest.imageUrl;
         elements.titleH3.textContent = interest.name;
-        if (interest.distanceKm == Number.MAX_VALUE) {
+        if (interest.distanceKm === null) {
             elements.distanceSpan.textContent = 'N/A';
         } else {
             elements.distanceSpan.textContent = interest.distanceKm.toFixed(1) + ' km';

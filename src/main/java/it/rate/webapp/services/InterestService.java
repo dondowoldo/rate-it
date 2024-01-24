@@ -58,15 +58,17 @@ public class InterestService {
             interest ->
                 new InterestSuggestionDTO(
                     interest, getDistanceToNearestPlace(usersCoords, interest.getPlaces())))
-        .sorted(Comparator.comparingDouble(InterestSuggestionDTO::distanceKm))
+        .sorted(
+            Comparator.comparingDouble(
+                DTO -> DTO.distanceKm() != null ? DTO.distanceKm() : Double.MAX_VALUE))
         .collect(Collectors.toList());
   }
 
-  private double getDistanceToNearestPlace(CoordinatesDTO usersCoords, List<Place> places) {
-    double minDistance = Double.MAX_VALUE;
+  private Double getDistanceToNearestPlace(CoordinatesDTO usersCoords, List<Place> places) {
     if (places.isEmpty()) {
-      return minDistance;
+      return null;
     }
+    double minDistance = Double.MAX_VALUE;
     for (Place place : places) {
       double distance =
           haversine(
