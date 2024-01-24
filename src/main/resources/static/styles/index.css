@@ -480,11 +480,14 @@ h3 {
     display: none;
 }
 
+.sort-container {
+    display: flex;
+}
+
 .sort-container > .sort-checkbox + span {
     padding: 0.3em 0.5em;
     text-align: justify;
     border-radius: 1rem;
-    font-family: 'Andika', sans-serif;
     font-weight: 400;
     color: #888585;
     background: transparent;
@@ -879,4 +882,8 @@ h4 {
 #error-homepage-button {
     align-self: center;
     margin-top: 3rem;
+}
+
+#splide-category {
+    margin-bottom: 1rem;
 }
