@@ -1002,25 +1002,23 @@ h4 {
     margin: 0;
 }
 
-.login-signup-redirect {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    text-align: center;
+.login-signup-wrapper {
+    display: flex;
+    height: 7vh;
+    justify-content: center;
+    align-items: center;
+}
+
+.left-container .login-signup-wrapper {
+    margin-top: 51vh;
+}
+
+.login-signup-wrapper > p {
     color: black;
     text-decoration: none;
     font-weight: bold;
     font-size: x-large;
-}
-
-.left-container .login-signup-redirect {
-    bottom: 0;
-    /*padding-bottom: 1vh;*/
-}
-
-.right-container .login-signup-redirect {
-    top: 0;
-    /*padding-top: 2vh;*/
+    margin-bottom: 0;
 }
 
 .rs-logo {
