@@ -1,10 +1,14 @@
 package it.rate.webapp.services;
 
+import static com.google.common.io.Files.getFileExtension;
+
 import com.google.api.client.http.FileContent;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.File;
 import it.rate.webapp.exceptions.api.ApiServiceUnavailableException;
 import it.rate.webapp.models.Interest;
+import it.rate.webapp.utils.ImageEditor;
+import jakarta.validation.constraints.NotNull;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -13,7 +17,7 @@ import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,37 +29,47 @@ public class GoogleImageService implements ImageService {
   private String UPLOAD_DIRECTORY;
 
   private final Drive driveService;
-
+  private final ImageEditor imageEditor;
 
   @Override
-  public String saveImage(MultipartFile image) throws IOException {
+  public String saveImage(@NotNull MultipartFile image, String userEmail) throws IOException {
 
     FileContent mediaContent;
-    String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
 
-    Path tempFilePath = Files.createTempFile("temp_" + currentUser, null);
-    image.transferTo(tempFilePath);
-    mediaContent = new FileContent("image/*", tempFilePath.toFile());
+    String originalFileName = image.getOriginalFilename();
 
-    String fileName = currentUser + "_" + UUID.randomUUID();
+    String fileExtension = getFileExtension(originalFileName);
 
-    File fileMeta = new File();
-    fileMeta.setName(fileName);
-    fileMeta.setParents(List.of(UPLOAD_DIRECTORY));
-
+    if (fileExtension.isEmpty()) {
+      fileExtension = ".jpg";
+    }
+    Path tempFilePath = Files.createTempFile("temp_" + userEmail, "." + fileExtension);
     try {
+
+      image.transferTo(tempFilePath);
+      imageEditor.reduceImageSize(tempFilePath);
+
+      mediaContent = new FileContent("image/*", tempFilePath.toFile());
+
+      String fileName = userEmail + "_" + UUID.randomUUID();
+
+      File fileMeta = new File();
+      fileMeta.setName(fileName);
+      fileMeta.setParents(List.of(UPLOAD_DIRECTORY));
       return driveService.files().create(fileMeta, mediaContent).execute().getId();
     } catch (IOException e) {
       throw new ApiServiceUnavailableException("Could not save image to the server");
+    } finally {
+      Files.delete(tempFilePath);
     }
   }
 
-  public String changeInterestImage(Interest interest, MultipartFile file) {
+  public String changeInterestImage(Interest interest, MultipartFile file, String userEmail) {
 
     String newImageId;
 
     try {
-      newImageId = saveImage(file);
+      newImageId = saveImage(file, userEmail);
     } catch (IOException | ApiServiceUnavailableException e) {
       throw new ApiServiceUnavailableException("Could not save image to the server");
     }
@@ -77,6 +91,8 @@ public class GoogleImageService implements ImageService {
     }
   }
 
+  @Override
+  @Cacheable("images")
   public byte[] getImageById(String imageId) {
 
     try (InputStream imageStream = driveService.files().get(imageId).executeMediaAsInputStream()) {
@@ -84,10 +100,5 @@ public class GoogleImageService implements ImageService {
     } catch (IOException e) {
       throw new ApiServiceUnavailableException("Could not retrieve image from server");
     }
-  }
-
-  @Override
-  public List<String> getImages(String imageId) {
-    return null;
   }
 }

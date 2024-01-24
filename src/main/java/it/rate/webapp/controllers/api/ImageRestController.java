@@ -5,13 +5,13 @@ import it.rate.webapp.exceptions.api.ApiServiceUnavailableException;
 import it.rate.webapp.models.Interest;
 import it.rate.webapp.services.GoogleImageService;
 import it.rate.webapp.services.InterestService;
+import java.io.IOException;
+import java.security.Principal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/v1/images")
@@ -33,11 +33,13 @@ public class ImageRestController {
 
   @PostMapping("/new-interest-image")
   @PreAuthorize("@permissionService.canCreateInterest()")
-  public ResponseEntity<?> uploadNewInterestImage(@RequestParam("picture") MultipartFile file) {
+  public ResponseEntity<?> uploadNewInterestImage(
+      @RequestParam("picture") MultipartFile file, Principal principal) {
 
+    String userEmail = principal.getName();
     try {
       return ResponseEntity.ok()
-          .body(new ImageUploadResponseDTO(googleImageService.saveImage(file)));
+          .body(new ImageUploadResponseDTO(googleImageService.saveImage(file, userEmail)));
     } catch (IOException e) {
       return ResponseEntity.internalServerError().build();
     }
@@ -46,14 +48,18 @@ public class ImageRestController {
   @PutMapping("/interests/{interestId}/edit")
   @PreAuthorize("@permissionService.manageCommunity(#interestId)")
   public ResponseEntity<?> changeInterestImage(
-      @RequestParam("picture") MultipartFile file, @PathVariable Long interestId) {
+      @RequestParam("picture") MultipartFile file,
+      @PathVariable Long interestId,
+      Principal principal) {
 
     Interest interest = interestService.getById(interestId);
+    String userEmail = principal.getName();
 
     try {
       return ResponseEntity.ok()
           .body(
-              new ImageUploadResponseDTO(googleImageService.changeInterestImage(interest, file)));
+              new ImageUploadResponseDTO(
+                  googleImageService.changeInterestImage(interest, file, userEmail)));
     } catch (ApiServiceUnavailableException e) {
       return ResponseEntity.internalServerError().build();
     }
