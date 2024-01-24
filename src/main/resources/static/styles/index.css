@@ -1039,47 +1039,18 @@ h4 {
 
 .discover-interest {
     display: flex;
-    flex-wrap: wrap;
     gap: 1rem;
     background: #FFFFFF;
     color: #000000;
     border-radius: 1rem;
     padding: 0.5rem;
     text-decoration: none;
-}
-
-.discover-interest-content {
-    display: flex;
-    flex-direction: column;
-    flex-grow: 2;
-}
-
-.discover-interest-header {
-    display: flex;
-    justify-content: space-between;
-}
-
-.discover-interest-title h3 {
-    color: #000000;
-    font-size: 1.2rem;
-    margin-top: 0;
-    margin-bottom: 0.2rem;
-}
-
-.discover-interest-title h4 {
-    color: #000000;
-    font-size: 0.8rem;
-}
-
-.discover-interest:hover .discover-interest-title > h3 {
-    text-decoration: underline;
+    height: 8rem;
 }
 
 .discover-interest-img {
-    display: flex;
     flex-shrink: 0;
-    width: 10rem;
-    height: 7rem;
+    width: 35%;
 }
 
 .discover-interest-img > img {
@@ -1089,21 +1060,40 @@ h4 {
     object-fit: cover;
 }
 
+.discover-interest-content {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 2;
+    overflow: hidden;
+}
+
+.discover-interest-header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.discover-interest-title h3 {
+    color: #000000;
+    font-size: 1rem;
+    margin-top: 0;
+    margin-bottom: 0;
+    max-height: 2.5rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+
+}
+
+.discover-interest:hover .discover-interest-title > h3 {
+    text-decoration: underline;
+}
+
 .discover-interest-distance {
     white-space: nowrap;
     text-align: right;
     font-size: 0.8rem;
-}
-
-@media only screen and (min-width: 475px) {
-    .discover-interest {
-        flex-direction: row;
-    }
-
-    /*.discover-interest-img {*/
-    /*    width: 20vw;*/
-    /*    height: 15vh;*/
-    /*}*/
 }
 
 .discover-interest-values {
@@ -1111,3 +1101,23 @@ h4 {
     flex-direction: row;
     gap: 1rem;
 }
+
+.discover-interest-values > p {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: small;
+}
+
+/*@media only screen and (min-width: 475px) {*/
+/*    .discover-interest {*/
+/*        flex-direction: row;*/
+/*    }*/
+
+/*    !*.discover-interest-img {*!*/
+/*    !*    width: 20vw;*!*/
+/*    !*    height: 15vh;*!*/
+/*    !*}*!*/
+/*}*/
+
+

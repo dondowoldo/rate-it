@@ -74,7 +74,6 @@ function loadInterests(query) {
     }
 
     dataSet.forEach(interest => {
-        console.log(interest);
         const clone = document.importNode(template.content, true);
 
         const elements = {
@@ -90,7 +89,11 @@ function loadInterests(query) {
         elements.interestLink.href = `/interests/${interest.id}`;
         elements.interestImg.src = interest.imageUrl;
         elements.titleH3.textContent = interest.name;
-        elements.distanceSpan.textContent = interest.distanceKm.toFixed(1) + ' km';
+        if (interest.distanceKm == Number.MAX_VALUE) {
+            elements.distanceSpan.textContent = 'N/A';
+        } else {
+            elements.distanceSpan.textContent = interest.distanceKm.toFixed(1) + ' km';
+        }
         elements.interestLikes.textContent = interest.likes;
         elements.placesAmount.textContent = interest.places;
         elements.interestDescription.textContent = interest.description;
