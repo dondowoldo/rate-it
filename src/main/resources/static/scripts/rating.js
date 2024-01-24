@@ -57,25 +57,23 @@ document.addEventListener('DOMContentLoaded', initializeRating);
 document.addEventListener('DOMContentLoaded', function () {
 
     async function handleSubmit(event) {
-        // Prevent the form from submitting
         try {
-            // Prevent the form from submitting
             event.preventDefault();
             const formData = new FormData(event.target);
-
             const ratings = {};
+
             for (const rating of formData) {
                 let id = rating[0];
                 const value = rating[1];
-                // extract id from 'ratings[id]' string
                 const idMatch = id.match(/ratings\[(\d+)\]/);
+
                 if (idMatch) {
                     id = idMatch[1];
                 }
 
                 ratings[id] = value;
             }
-            // Send rating to backend
+
             const response = await fetch(`/api/v1/places/${placeId}/rate`, {
                 method: 'POST',
                 body: JSON.stringify({ratings}),
@@ -83,17 +81,24 @@ document.addEventListener('DOMContentLoaded', function () {
                     'Content-Type': 'application/json'
                 },
             });
+
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
+
             const responseData = await response.json();
 
+            const updateElement = (elementId, value) => {
+                const element = document.getElementById(elementId);
+                element.textContent = (value / 2).toFixed(1);
+
+            };
+
             responseData.criteria.forEach(criteria => {
-                const spanElement = document.getElementById(criteria.id);
-                if (spanElement && spanElement.classList.contains('rating')) {
-                    spanElement.textContent = (criteria.avgRating / 2).toFixed(1);
-                }
+                updateElement(criteria.id, criteria.avgRating);
             });
+
+            updateElement('place-rating', responseData.avgRating);
 
         } catch (error) {
             console.error(error);
