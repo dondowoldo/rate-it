@@ -90,8 +90,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const updateElement = (elementId, value) => {
                 const element = document.getElementById(elementId);
-                element.textContent = (value / 2).toFixed(1);
-
+                if (value === null) {
+                    element.textContent = 'N/A';
+                } else {
+                    element.textContent = (value / 2).toFixed(1);
+                }
             };
 
             responseData.criteria.forEach(criteria => {
