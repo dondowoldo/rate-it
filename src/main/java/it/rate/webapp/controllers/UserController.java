@@ -26,7 +26,13 @@ public class UserController {
   }
 
   @PostMapping("/signup")
-  public String newUser(SignupUserInDTO userDTO, Model model) {
+  public String newUser(SignupUserInDTO userDTO, Model model, String confirmPassword) {
+    if (!confirmPassword.equals(userDTO.password())) {
+      model.addAttribute("error", "Passwords do not match. Please try again.");
+      model.addAttribute("userDTO", new SignupUserOutDTO(userDTO));
+      return "user/signupForm";
+    }
+
     try {
       userService.registerUser(userDTO);
     } catch (BadRequestException e) {

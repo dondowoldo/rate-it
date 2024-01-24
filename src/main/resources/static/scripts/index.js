@@ -123,4 +123,3 @@ function getCheckedFilter() {
     return checked;
 }
 
-
