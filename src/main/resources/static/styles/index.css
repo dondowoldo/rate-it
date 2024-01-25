@@ -265,6 +265,18 @@ h3 {
     margin-top: 1rem;
 }
 
+.fotorama__thumb-border {
+    border-radius: 1rem !important;
+}
+
+.fotorama__thumb {
+    border-radius: 1rem !important;
+}
+
+.fotorama__stage__shaft img {
+    border-radius: 1rem !important;
+}
+
 .place-rating-button-bar .pending {
     background-color: #575757;
 }
