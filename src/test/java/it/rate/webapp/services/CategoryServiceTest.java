@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -21,10 +22,12 @@ class CategoryServiceTest extends BaseTest {
 
   @Test
   void findMaxLimitByIdIn_TooManyCategoriesThrowsException() {
-    when(categoryRepository.findAllByIdIn(any()))
-        .thenReturn(
-            List.of(new Category("Test 1"), new Category("Test 2"), new Category("Test 3")));
-    Set<Long> categoryIds = Set.of(1L, 2L, 3L, 4L);
+    int maxLimit = categoryService.getMaxCategories();
+    Set<Long> categoryIds = new HashSet<>();
+    for (int i = 0; i < maxLimit + 1; i++) {
+      categoryIds.add((long) i + 1);
+    }
+    when(categoryRepository.findAllByIdIn(any())).thenReturn(List.of(new Category()));
 
     assertThrows(
         ConstraintViolationException.class, () -> categoryService.findMaxLimitByIdIn(categoryIds));
