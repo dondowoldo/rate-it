@@ -75,18 +75,37 @@
                 <img class="search-icon" th:src="@{/icons/search.svg}" alt="Search">
             </div>
         </section>
-        <div class="interest-cards" id="suggestionList"></div>
+        <div class="discover-interests" id="suggestionList"></div>
         <template>
-            <div class="interest-card">
-                <a class="interest-card-link">
-                    <div class="img-wrapper">
-                        <img alt="Place image"/>
+            <a class="discover-interest">
+                <div class="discover-interest-img">
+                    <img alt="Interest image"/>
+                </div>
+
+                <div class="discover-interest-content">
+                    <header class="discover-interest-header">
+                        <div class="discover-interest-title">
+                            <h3></h3>
+                        </div>
+                        <div class="discover-interest-distance">
+                            <span></span>
+                        </div>
+                    </header>
+                    <div class="discover-interest-values">
+                        <div class="discover-interest-likes">
+                            <i class="fa-regular fa-heart"></i>
+                            <span class="discover-interest-like-value"></span>
+                        </div>
+                        <div class="discover-interest-places">
+                            <i class="fa-solid fa-location-dot"></i>
+                            <span class="discover-interest-places-amount"></span>
+                        </div>
                     </div>
-                    <div class="interest-title">
-                        <p></p>
-                    </div>
-                </a>
-            </div>
+                    <p></p>
+                </div>
+
+
+            </a>
         </template>
     </div>
 </div>

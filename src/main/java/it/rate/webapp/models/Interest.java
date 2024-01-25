@@ -49,6 +49,7 @@ public class Interest {
   private List<Role> roles = new ArrayList<>();
 
   @ManyToMany
+  @Builder.Default
   @JoinTable(
       name = "interest_category",
       joinColumns = @JoinColumn(name = "interest_id"),
@@ -61,5 +62,9 @@ public class Interest {
 
   public List<Long> getCategoryIds() {
     return categories.stream().map(Category::getId).collect(Collectors.toList());
+  }
+
+  public int countPlaces() {
+    return places.size();
   }
 }

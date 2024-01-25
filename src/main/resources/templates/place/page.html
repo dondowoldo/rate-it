@@ -33,9 +33,11 @@
             <h1 th:text="*{name}"></h1>
             <div class="rating">
                 <i class="fas fa-star"></i>
-                <span th:unless="${place.getAverageRating() == null}"
-                      th:text="${#numbers.formatDecimal(place.getAverageRating() / 2, 1, 'DEFAULT', 1, 'DEFAULT')}"></span>
-                <span th:if="${place.getAverageRating() == null}">N/A</span>
+                <span th:id="place-rating"
+                      th:unless="${place.getAverageRating() == null}"
+                      th:text="${#numbers.formatDecimal(place.getAverageRating() / 2, 1, 'DEFAULT', 1, 'POINT')}"></span>
+                <span th:id="place-rating"
+                      th:if="${place.getAverageRating() == null}">N/A</span>
             </div>
         </header>
 
@@ -49,14 +51,17 @@
                   id="form"
             >
                 <div class="place-rating-criteria">
-                    <div class="place-rating-criterion" th:each="criterionDTO : ${placeCriteria.criteria()}">
-                        <div th:text="${criterionDTO.name()}"/>
+                    <div class="place-rating-criterion"
+                         th:each="criterionDTO : ${placeCriteria.criteria()}">
+                        <div th:text="${criterionDTO.name}"/>
 
                         <div th:class="${usersRatings} ? 'place-rating-average small' : 'place-rating-average'">
                             <i class="fas fa-star"></i>
-                            <span th:unless="${criterionDTO.avgRating == null}" class="rating"
-                                  th:text="${#numbers.formatDecimal(criterionDTO.avgRating / 2, 1, 'DEFAULT', 1, 'DEFAULT')}"></span>
-                            <span th:if="${criterionDTO.avgRating == null}" class="rating">N/A</span>
+                            <span th:id="${criterionDTO.id}"
+                                  th:unless="${criterionDTO.avgRating == null}" class="rating"
+                                  th:text="${#numbers.formatDecimal(criterionDTO.avgRating / 2, 1, 'DEFAULT', 1, 'POINT')}"></span>
+                            <span th:id="${criterionDTO.id}"
+                                  th:if="${criterionDTO.avgRating == null}" class="rating">N/A</span>
                         </div>
 
                         <div th:if="${usersRatings}">
@@ -79,7 +84,7 @@
                 <div th:if="${usersRatings}" class="place-rating-button-bar">
                     <a id="uppy-modal" href="#" type="button" class="button" style="text-decoration: none">
                         Upload photo</a>
-                    <button class="button" type="submit">Rate</button>
+                    <button id="submit-rating-button" class="button" type="submit">Rate</button>
                 </div>
             </form>
 
