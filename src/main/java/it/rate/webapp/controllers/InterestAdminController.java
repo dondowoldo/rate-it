@@ -37,17 +37,22 @@ public class InterestAdminController {
     model.addAttribute("action", "/interests/" + interestId + "/admin/edit");
     model.addAttribute("method", "put");
     model.addAttribute("loggedUser", userService.getByEmail(principal.getName()));
-    model.addAttribute("allCategories", categoryService.findAll());
-    model.addAttribute("selectedCategories", interest.getCategories());
+    model.addAttribute("categories", categoryService.findAll());
+    model.addAttribute("maxCategories", categoryService.getMaxCategories());
     return "interest/form";
   }
 
   @PutMapping("/edit")
   @PreAuthorize("@permissionService.manageCommunity(#interestId)")
   public String editInterest(
-      @PathVariable Long interestId, Interest interest, @RequestParam Set<String> criteriaNames) {
+      @PathVariable Long interestId,
+      Interest interest,
+      @RequestParam Set<String> criteriaNames,
+      @RequestParam(required = false) Set<Long> categoryIds) {
 
     interest.setId(interestId);
+    List<Category> categories = categoryService.findMaxLimitByIdIn(categoryIds);
+    interest.setCategories(categories);
     criterionService.updateExisting(interestService.save(interest), criteriaNames);
 
     return String.format("redirect:/interests/%d", interestId);

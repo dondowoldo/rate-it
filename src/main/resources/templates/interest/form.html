@@ -29,7 +29,7 @@
                 <h4>Category</h4>
                 <div class="sort-buttons">
                     <label class="sort-container" th:each="category : ${categories}">
-                        <input type="checkbox" name="categoryIds" th:value="${category.id}" class="sort-checkbox"/>
+                        <input th:checked="${interest.categoryIds.contains(category.id)}" type="checkbox" name="categoryIds" th:value="${category.id}" class="sort-checkbox"/>
                         <span th:text="${category.name}"></span>
                     </label>
                 </div>

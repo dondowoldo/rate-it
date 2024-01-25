@@ -8,5 +8,5 @@ import java.util.Set;
 
 public interface CategoryRepository extends JpaRepository<Category, Long> {
 
-    public List<Category> findAllByIdIn(Set<Long> ids);
+  public List<Category> findAllByIdIn(Set<Long> ids);
 }

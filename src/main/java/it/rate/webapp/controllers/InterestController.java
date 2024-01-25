@@ -52,7 +52,7 @@ public class InterestController {
       Principal principal) {
 
     AppUser loggedUser = userService.getByEmail(principal.getName());
-    List<Category> categories = categoryService.findAllByIdIn(categoryIds);
+    List<Category> categories = categoryService.findMaxLimitByIdIn(categoryIds);
     interest.setCategories(categories);
     Interest savedInterest = interestService.save(interest);
     criterionService.createNew(savedInterest, criteriaNames);

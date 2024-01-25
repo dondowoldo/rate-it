@@ -70,22 +70,28 @@ document.addEventListener('DOMContentLoaded', function () {
         };
     });
 
+    disableCategoryIfMax();
+
     const categoryBoxes = document.querySelectorAll(".sort-checkbox");
     categoryBoxes.forEach(checkbox => {
         checkbox.addEventListener('change', function () {
-            const checkedBoxes = document.querySelectorAll(".sort-checkbox:checked");
-            const uncheckedBoxes = document.querySelectorAll(".sort-checkbox:not(:checked)");
-
-            if (checkedBoxes.length >= MAX_CATEGORIES) {
-                uncheckedBoxes.forEach(checkbox => {
-                    checkbox.disabled = true;
-                });
-            } else {
-                uncheckedBoxes.forEach(checkbox => {
-                    checkbox.disabled = false;
-                });
-            }
+            disableCategoryIfMax();
         })
     })
-
 });
+
+
+function disableCategoryIfMax() {
+    const checkedBoxes = document.querySelectorAll(".sort-checkbox:checked");
+    const uncheckedBoxes = document.querySelectorAll(".sort-checkbox:not(:checked)");
+
+    if (checkedBoxes.length >= MAX_CATEGORIES) {
+        uncheckedBoxes.forEach(checkbox => {
+            checkbox.disabled = true;
+        });
+    } else {
+        uncheckedBoxes.forEach(checkbox => {
+            checkbox.disabled = false;
+        });
+    }
+}

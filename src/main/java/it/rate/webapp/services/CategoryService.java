@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -26,7 +25,11 @@ public class CategoryService {
     return this.MAX_CATEGORIES_PER_INTEREST;
   }
 
-  public List<Category> findAllByIdIn(@Size(max = MAX_CATEGORIES_PER_INTEREST) Set<Long> ids) {
+  public List<Category> findAllByIdIn(Set<Long> ids) {
     return categoryRepository.findAllByIdIn(ids);
+  }
+
+  public List<Category> findMaxLimitByIdIn(@Size(max = MAX_CATEGORIES_PER_INTEREST) Set<Long> ids) {
+    return findAllByIdIn(ids);
   }
 }
