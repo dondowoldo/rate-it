@@ -442,6 +442,7 @@ h3 {
     width: 2rem;
     text-align: center;
     margin-left: -0.3rem;
+    flex-shrink: 0;
 }
 
 .interest-place-ratings i.overall {
@@ -455,6 +456,8 @@ h3 {
 .interest-place-ratings .rating {
     display: block;
     width: 2rem;
+    flex-shrink: 0;
+
 }
 
 .interest-place-ratings .criterion {
@@ -485,11 +488,16 @@ h3 {
 
 @media only screen and (max-width: 475px) {
     .interest-place {
-        flex-direction: row;
+        flex-direction: column;
+        height: auto;
     }
 
     .interest-place-img {
-        width: 10rem;
+        width: 100%;
+    }
+
+    .interest-place-ratings {
+        position: relative;
     }
 }
 
