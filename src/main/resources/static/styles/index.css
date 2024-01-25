@@ -175,15 +175,6 @@ h3 {
     color: #EFBB00;
 }
 
-.place-image {
-    width: 100%;
-    aspect-ratio: 5/3;
-    border-radius: 1rem;
-    background: #FFFFFF;
-    object-fit: contain;
-    overflow: hidden;
-}
-
 .place-map {
     width: 100%;
     aspect-ratio: 16/10;
@@ -192,11 +183,6 @@ h3 {
     margin-bottom: 1.5rem;
     object-fit: contain;
     overflow: hidden;
-}
-
-.place-image > img {
-    width: 100%;
-    height: 100%;
 }
 
 .place-rating {
@@ -274,6 +260,18 @@ h3 {
     justify-content: flex-end;
     gap: 0.5rem;
     margin-top: 1rem;
+}
+
+.fotorama__thumb-border {
+    border-radius: 1rem !important;
+}
+
+.fotorama__thumb {
+    border-radius: 1rem !important;
+}
+
+.fotorama__stage__shaft img {
+    border-radius: 1rem !important;
 }
 
 .place-rating-button-bar .pending {

@@ -19,11 +19,14 @@
             <h2 th:text="*{getInterest.name}"></h2>
         </a>
 
-        <div class="place-image">
-            <img th:if="*{imageNames.isEmpty()}" src="https://picsum.photos/500/300" alt="Generic image"/>
-            <img th:unless="*{imageNames.isEmpty()}" id="picture-container"
-                 th:attr="data-image-id=*{imageNames.get(getImageNames().size() - 1)}" alt="Place image"/>
+        <div class="fotorama"
+             data-maxheight="50%"
+             data-nav="thumbs"
+             data-allowfullscreen="true">
 
+            <th:block th:each="imageId : *{getImageNames()}">
+                <img th:src="@{'/api/v1/images/' + ${imageId}}" th:attr="data-image-id=${imageId}" alt="Image"/>
+            </th:block>
         </div>
 
         <header class="content-header place-header">
