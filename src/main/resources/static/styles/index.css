@@ -433,6 +433,10 @@ h3 {
     align-items: baseline;
 }
 
+.interest-place-ratings li:first-child {
+    font-size: 110%;
+}
+
 .interest-place-ratings i {
     color: #bebebe;
     width: 2rem;
