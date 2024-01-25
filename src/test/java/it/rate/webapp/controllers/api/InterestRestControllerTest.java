@@ -35,8 +35,22 @@ class InterestRestControllerTest extends BaseIntegrationTest {
     String jsonExpectedResult =
         objectMapper.writeValueAsString(
             List.of(
-                new InterestSuggestionDTO(1L, "Makove kolacky", 4L, 100.75592824812773, null),
-                new InterestSuggestionDTO(2L, "Quiet spots", 2L, 180.09481290966787, null)));
+                new InterestSuggestionDTO(
+                    1L,
+                    "Makove kolacky",
+                    "Makove kolacky jako od babicky",
+                    4L,
+                    2L,
+                    null,
+                    100.75592824812773),
+                new InterestSuggestionDTO(
+                    2L,
+                    "Quiet spots",
+                    "Vyjimecne klidna mista",
+                    2L,
+                    1L,
+                    null,
+                    180.09481290966787)));
 
     // Hradec Králové
     double latitude = 50.209859;

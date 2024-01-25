@@ -58,4 +58,8 @@ public class Interest {
   public int countLikes() {
     return likes.size();
   }
+
+  public int countPlaces() {
+    return places.size();
+  }
 }
