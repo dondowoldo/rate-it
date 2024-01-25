@@ -1,19 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+
+<head th:replace="~{fragments.html :: head(title='Register')}">
 </head>
 <body>
-<form th:action="@{/users/signup}" method="post">
-    <p th:if="${error}" th:text="${error}"></p>
-    <label for="username">Username</label>
-    <input type="text" name="username" th:value="${userDTO?.username}" id="username"/>
-    <label for="email">Email</label>
-    <input type="text" name="email" th:value="${userDTO?.email}" id="email"/>
-    <label for="password">Password</label>
-    <input type="password" name="password" id="password"/>
-    <button type="submit">Submit</button>
-</form>
+<div class="container-fluid">
+    <header class="header">
+        <div th:replace="~{fragments.html :: logo}"></div>
+    </header>
+    <div class="rs-logo">
+        <img src="/icons/R-logo.png" alt="Logo">
+    </div>
+    <div class="user-form">
+        <div class="form-container">
+            <div class="right-container back-container" th:onclick="|location.href='@{/users/login}';|"
+                 style="cursor: pointer;">
+                <p class="login-signup-redirect">SIGN IN</p>
+            </div>
+            <form class="left-container top-container" th:action="@{/users/signup}" method="post">
+                <h1>REGISTER</h1>
+                <section class="credentials">
+                    <h6>Username</h6>
+                    <input type="text" name="username" class="credentials-input" th:value="${userDTO?.username}"
+                           placeholder="Enter your username here..." required autocomplete="off">
+                    <img class="user-icon" src="/icons/user.svg" alt="user-icon">
+                </section>
+                <section class="credentials">
+                    <h6>Email address</h6>
+                    <input class="credentials-input" type="email" name="email" th:value="${userDTO?.email}"
+                           placeholder="Enter your email here.." required>
+                    <img class="user-icon" src="/icons/email-icon.png" alt="email-icon">
+                </section>
+                <section class="credentials">
+                    <h6>Password</h6>
+                    <input class="credentials-input" type="password" name="password"
+                           placeholder="Enter your password here.." required>
+                    <img class="user-icon" src="/icons/lock.png" alt="user-lock">
+                </section>
+                <section class="credentials">
+                    <h6>Confirm password</h6>
+                    <input class="credentials-input" type="password" name="confirmPassword"
+                           placeholder="Enter your password here.." required>
+                    <img class="user-icon" src="/icons/lock.png" alt="user-lock">
+                </section>
+                <p th:if="${error}" th:text="${error}" class="error"></p>
+
+                <div class="user-form-button">
+                    <button type="submit" class="sign-button">Sign Up</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
 </body>
 </html>

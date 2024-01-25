@@ -1,12 +1,10 @@
 package it.rate.webapp.services;
 
 import java.io.IOException;
-import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface ImageService {
-  String saveImage(MultipartFile image) throws IOException;
+  String saveImage(MultipartFile image, String userEmail) throws IOException;
 
-
-  List<String> getImages(String imageId);
+  byte[] getImageById(String imageId);
 }
