@@ -19,8 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
         drag: 'free',
         arrows: false,
         loop: false,
-        pagination: false,
-        autoScroll: {pauseOnHover: true, speed: 0.1}
+        pagination: false
     });
-    categorySplide.mount(window.splide.Extensions);
+    categorySplide.mount();
 });
