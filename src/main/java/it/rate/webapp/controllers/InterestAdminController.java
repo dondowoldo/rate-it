@@ -32,8 +32,7 @@ public class InterestAdminController {
   @PreAuthorize("@permissionService.manageCommunity(#interestId)")
   public String editInterestPage(@PathVariable Long interestId, Model model, Principal principal) {
 
-    Interest interest = interestService.getById(interestId);
-    model.addAttribute("interest", interest);
+    model.addAttribute("interest", interestService.getById(interestId));
     model.addAttribute("action", "/interests/" + interestId + "/admin/edit");
     model.addAttribute("method", "put");
     model.addAttribute("loggedUser", userService.getByEmail(principal.getName()));
