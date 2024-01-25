@@ -43,7 +43,6 @@ function initializeRating() {
                     break;
 
                 case 'click':
-                case 'touchstart':
                     // Set the input value and add class based on the click rating
                     let inputClick = stars.parentElement.querySelector('input');
                     inputClick.value = rating;
@@ -81,8 +80,6 @@ function initializeRating() {
         star.addEventListener('mouseover', handleStarEvent);
         star.addEventListener('mouseout', handleStarEvent);
         star.addEventListener('click', handleStarEvent);
-
-        star.addEventListener('touchstart', handleStarEvent);
         star.addEventListener('touchmove', handleStarEvent);
     });
 }
