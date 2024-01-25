@@ -64,6 +64,9 @@ public class InterestService {
 
   private double getDistanceToNearestPlace(CoordinatesDTO usersCoords, List<Place> places) {
     double minDistance = Double.MAX_VALUE;
+    if (places.isEmpty()) {
+      return minDistance;
+    }
     for (Place place : places) {
       double distance =
           haversine(

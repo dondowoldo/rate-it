@@ -18,7 +18,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 async function success(position) {
     latitude = position.coords.latitude;
     longitude = position.coords.longitude;
-
     try {
         await fetchData();
     } catch (error) {
@@ -74,11 +73,31 @@ function loadInterests(query) {
         dataSet = data.filter(record => record.name.toLowerCase().includes(query.toLowerCase()));
     }
 
-    dataSet.forEach(record => {
-        const clone = template.content.cloneNode(true);
-        clone.querySelector('.interest-card-link').href = `/interests/${record.id}`;
-        clone.querySelector('p').textContent = `${record.name} (${record.likes})`;
-        clone.querySelector('.img-wrapper img').src = record.imageUrl;
+    dataSet.forEach(interest => {
+        const clone = document.importNode(template.content, true);
+
+        const elements = {
+            interestLink: clone.querySelector('.discover-interest'),
+            interestImg: clone.querySelector('.discover-interest img'),
+            titleH3: clone.querySelector('.discover-interest-title h3'),
+            distanceSpan: clone.querySelector('.discover-interest-distance span'),
+            interestLikes: clone.querySelector('.discover-interest-like-value'),
+            placesAmount: clone.querySelector('.discover-interest-places-amount'),
+            interestDescription: clone.querySelector('.discover-interest-content p')
+        };
+
+        elements.interestLink.href = `/interests/${interest.id}`;
+        elements.interestImg.src = interest.imageUrl;
+        elements.titleH3.textContent = interest.name;
+        if (interest.distanceKm == Number.MAX_VALUE) {
+            elements.distanceSpan.textContent = 'N/A';
+        } else {
+            elements.distanceSpan.textContent = interest.distanceKm.toFixed(1) + ' km';
+        }
+        elements.interestLikes.textContent = interest.likes;
+        elements.placesAmount.textContent = interest.places;
+        elements.interestDescription.textContent = interest.description;
+
         container.appendChild(clone);
     })
 }
