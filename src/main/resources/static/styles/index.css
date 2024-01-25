@@ -1153,4 +1153,5 @@ h4 {
     text-overflow: ellipsis;
     white-space: normal;
     font-size: small;
+    margin-bottom: 0;
 }
