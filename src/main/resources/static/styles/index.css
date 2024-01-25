@@ -495,20 +495,21 @@ h3 {
 
 .sort-container {
     display: flex;
+    cursor: pointer;
 }
 
 .sort-container > .sort-checkbox + span {
     padding: 0.3em 0.5em;
     text-align: justify;
     border-radius: 1rem;
-    font-weight: 400;
     color: #888585;
     background: transparent;
 }
 
 .sort-container > .sort-checkbox:checked + span {
     color: #478363;
-    font-weight: 700;
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: #478363;
     background-color: rgba(86, 141, 115, 0.1);
 }
 
