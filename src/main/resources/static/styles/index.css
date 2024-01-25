@@ -5,15 +5,20 @@ body {
     margin: 0;
 }
 
+footer {
+    margin-top: auto;
+}
+
 .container-fluid {
-    align-items: center;
+    display: flex;
+    flex-direction: column;
     max-width: 500px;
-    margin: 0 auto;
     background-color: #E2E2E2;
     padding: 0;
     min-height: 100vh;
 }
 
+.footer,
 .header {
     width: 100%;
     display: flex;
@@ -23,13 +28,13 @@ body {
 }
 
 .header-left,
-.header-right{
+.header-right {
     display: flex;
     justify-content: center;
     align-content: center;
 }
 
-.header-top {
+.header-middle {
     display: flex;
     color: white;
     font-family: 'Righteous', sans-serif;
@@ -37,7 +42,7 @@ body {
     justify-content: center;
 }
 
-.header-top > a {
+.header-middle > a {
     all: unset;
     cursor: pointer;
 }
@@ -92,7 +97,7 @@ body {
     border: none;
     padding: 0;
     cursor: pointer;
-    filter:  brightness(0) invert(1);
+    filter: brightness(0) invert(1);
 }
 
 #top-hamburger {
