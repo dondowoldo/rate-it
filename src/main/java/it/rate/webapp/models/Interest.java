@@ -48,6 +48,7 @@ public class Interest {
   private List<Role> roles = new ArrayList<>();
 
   @ManyToMany
+  @Builder.Default
   @JoinTable(
       name = "interest_category",
       joinColumns = @JoinColumn(name = "interest_id"),
