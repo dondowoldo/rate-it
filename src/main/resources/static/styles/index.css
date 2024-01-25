@@ -1121,9 +1121,13 @@ h4 {
     gap: 1rem;
 }
 
-.discover-interest-values > p {
+.discover-interest-content p {
     overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: calc(4 - var(--title-lines));
+    -webkit-box-orient: vertical;
+    max-height: 3.5rem;
     text-overflow: ellipsis;
-    white-space: nowrap;
+    white-space: normal;
     font-size: small;
 }
