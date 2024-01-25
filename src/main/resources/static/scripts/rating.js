@@ -23,34 +23,65 @@ function initializeRating() {
     let placeRatingStars = document.querySelectorAll('.place-rating-star');
 
     placeRatingStars.forEach(function (star) {
-        //attach click event
-        star.addEventListener('mouseover', function () {
-            let stars = this.parentElement;
-            stars.classList.add('hover');
+        function handleStarEvent(event) {
+            event.preventDefault(); // Prevent default behavior for touch events
 
-            // add hover class to all preceding stars
-            let rating = parseInt(this.getAttribute("data-star"));
-            addClassToStars(stars, rating, 'hover-active');
-        });
+            let stars = event.currentTarget.parentElement;
+            let rating = parseInt(event.currentTarget.getAttribute("data-star"));
 
-        star.addEventListener('mouseout', function () {
-            let stars = this.parentElement;
-            stars.classList.remove('hover');
-            for (let j = 1; j <= STARS; j++) {
-                stars.querySelector('.star-' + j).classList.remove('hover-active');
+            switch (event.type) {
+                case 'mouseover':
+                    stars.classList.add('hover');
+                    addClassToStars(stars, rating, 'hover-active');
+                    break;
+
+                case 'mouseout':
+                    stars.classList.remove('hover');
+                    for (let j = 1; j <= STARS; j++) {
+                        stars.querySelector('.star-' + j).classList.remove('hover-active');
+                    }
+                    break;
+
+                case 'click':
+                case 'touchstart':
+                case 'touchend':
+                    // Set the input value and add class based on the click rating
+                    let inputClick = stars.parentElement.querySelector('input');
+                    inputClick.value = rating;
+                    addClassToStars(stars, rating, 'is-active');
+                    break;
+
+                case 'touchmove':
+                    stars.classList.add('hover');
+
+                    // Get touch position
+                    let touchX = (event.type === 'touchmove') ? event.touches[0].clientX : event.clientX;
+
+                    // Calculate the relative position within the stars container
+                    let starsRect = stars.getBoundingClientRect();
+                    let relativeX = touchX - starsRect.left;
+
+                    // Calculate the star rating based on the relative position
+                    let starWidth = starsRect.width / STARS;
+                    let newRating = Math.ceil(relativeX / starWidth);
+
+                    // Set the input value and add class based on the touchmove rating
+                    let inputMove = stars.parentElement.querySelector('input');
+                    inputMove.value = newRating;
+                    addClassToStars(stars, newRating, 'hover-active');
+                    break;
             }
-        })
+        }
 
-        star.addEventListener('click', function () {
-            let stars = this.parentElement;
-            let input = stars.parentElement.querySelector('input');
-            let rating = parseInt(this.getAttribute("data-star"));
+        star.addEventListener('mouseover', handleStarEvent);
+        star.addEventListener('mouseout', handleStarEvent);
+        star.addEventListener('click', handleStarEvent);
 
-            input.value = rating;
-
-            addClassToStars(stars, rating, 'is-active');
-        })
-    })
+        // Touch events
+        star.addEventListener('touchstart', handleStarEvent);
+        star.addEventListener('touchmove', handleStarEvent);
+        star.addEventListener('touchend', handleStarEvent);
+    });
 }
 
 document.addEventListener('DOMContentLoaded', initializeRating);
