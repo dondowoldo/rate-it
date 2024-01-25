@@ -44,7 +44,6 @@ function initializeRating() {
 
                 case 'click':
                 case 'touchstart':
-                case 'touchend':
                     // Set the input value and add class based on the click rating
                     let inputClick = stars.parentElement.querySelector('input');
                     inputClick.value = rating;
@@ -65,6 +64,12 @@ function initializeRating() {
                     let starWidth = starsRect.width / STARS;
                     let newRating = Math.ceil(relativeX / starWidth);
 
+                    // Ensure the newRating is within the range of 0 to 10
+                    newRating = Math.max(0, Math.min(newRating, 10));
+
+                    // If newRating is 0, set it to null
+                    newRating = (newRating === 0) ? null : newRating;
+
                     // Set the input value and add class based on the touchmove rating
                     let inputMove = stars.parentElement.querySelector('input');
                     inputMove.value = newRating;
@@ -77,10 +82,8 @@ function initializeRating() {
         star.addEventListener('mouseout', handleStarEvent);
         star.addEventListener('click', handleStarEvent);
 
-        // Touch events
         star.addEventListener('touchstart', handleStarEvent);
         star.addEventListener('touchmove', handleStarEvent);
-        star.addEventListener('touchend', handleStarEvent);
     });
 }
 
