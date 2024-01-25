@@ -14,12 +14,12 @@
         <script th:replace="~{fragments.html :: topbar-script}"></script>
     </header>
 
-    <div class="interest-image">
+    <picture class="interest-image">
         <img th:if="*{imageName == null || imageName.isEmpty()}" src="https://picsum.photos/500/300" alt="Generic image"/>
         <img th:unless="*{imageName == null || imageName.isEmpty()}" id="picture-container" th:attr="data-image-id=*{imageName}" alt="Interest image"/>
-    </div>
+    </picture>
 
-    <div class="content content-interest">
+    <main class="content content-interest">
         <div class="d-flex justify-content-around interest-button-bar">
             <a class="button" th:href="@{/interests/{id}/map(id=*{id})}">Map</a>
             <span class="button pending"
@@ -112,7 +112,8 @@
                 </a>
             </template>
         </section>
-    </div>
+    </main>
+    <footer th:replace="~{fragments.html :: footer}"></footer>
 </div>
 
 <script th:inline="javascript">

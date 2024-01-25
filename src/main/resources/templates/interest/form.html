@@ -13,7 +13,7 @@
         <script th:replace="~{fragments.html :: topbar-script}"></script>
     </header>
 
-    <div class="content">
+    <main class="content">
         <form th:object="${interest}" th:data-interest-id="*{id}" name="myForm" th:action="${action}"
               th:method="${method}">
             <h2 th:if="${interest.id == null}">New Interest</h2>
@@ -55,7 +55,8 @@
                             <label class="list-record">
                                 <input class="input-text-field" type="text" name="criteriaNames"
                                        th:value="${criterion.name}" required/>
-                                <button class="role-option-button kick-button" type="button" onclick="removeCriteria(this, ${iterStat.index})">
+                                <button class="role-option-button kick-button" type="button"
+                                        onclick="removeCriteria(this, ${iterStat.index})">
                                     <img src="/icons/cross.svg" alt="Kick">
                                 </button>
                             </label>
@@ -88,14 +89,15 @@
                 <button class="button" type="submit">Save</button>
             </div>
 
-            <input type="hidden" id="uploadedImageId" name="uploadedImageId" th:field="*{imageName}" />
+            <input type="hidden" id="uploadedImageId" name="uploadedImageId" th:field="*{imageName}"/>
 
         </form>
-    </div>
+    </main>
+    <footer th:replace="~{fragments.html :: footer}"></footer>
 </div>
 
-    <script type="module" src="/scripts/interestImageUpload.js"></script>
-    <script src="/scripts/interestForm.js"></script>
+<script type="module" src="/scripts/interestImageUpload.js"></script>
+<script src="/scripts/interestForm.js"></script>
 
 </body>
 </html>

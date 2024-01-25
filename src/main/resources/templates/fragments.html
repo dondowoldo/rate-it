@@ -8,6 +8,9 @@
 
     <!--splide-->
     <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
+<!--    <script src="-->
+<!--https://cdn.jsdelivr.net/npm/@splidejs/splide-extension-auto-scroll@0.5.3/dist/js/splide-extension-auto-scroll.min.js">-->
+<!--    </script>-->
     <link href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css" rel="stylesheet">
 
     <!--    favicon-->
@@ -56,7 +59,7 @@
     </button>
 </div>
 
-<div th:fragment="logo" class="header-top col-8">
+<div th:fragment="logo" class="header-middle col-8">
     <a th:href="@{/}">RateSpot</a>
 </div>
 
@@ -117,6 +120,16 @@
     </div>
 </div>
 
+<footer th:fragment="page-footer">
+    <div class="footer-links">
+        <a>Contact</a>
+        <a>Developers</a>
+        <a>About</a>
+        <a>Terms</a>
+    </div>
+    <span>© 2024 RateSpot</span>
+</footer>
+
 <div th:fragment="like-button" class="header-right col-2">
     <button class="like-button"></button>
     <script th:inline="javascript">
@@ -132,7 +145,7 @@
         integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
         crossorigin="anonymous"></script>
 
-<script th:fragment="placeMap-script" src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+<script th:fragment="leaflet-script" src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
         crossorigin=""></script>
 

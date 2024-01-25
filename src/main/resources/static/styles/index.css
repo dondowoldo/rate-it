@@ -5,13 +5,30 @@ body {
     margin: 0;
 }
 
-.container-fluid {
+footer {
+    display: flex;
+    justify-content: center;
     align-items: center;
+    flex-direction: column;
+    margin-top: auto;
+    width: 100%;
+    background-color: #568D73;
+    color: white;
+}
+
+.container-fluid {
+    display: flex;
+    flex-direction: column;
     max-width: 500px;
-    margin: 0 auto;
     background-color: #E2E2E2;
     padding: 0;
     min-height: 100vh;
+}
+
+.footer-links {
+    width: 90%;
+    display: flex;
+    justify-content: space-around;
 }
 
 .header {
@@ -23,13 +40,13 @@ body {
 }
 
 .header-left,
-.header-right{
+.header-right {
     display: flex;
     justify-content: center;
     align-content: center;
 }
 
-.header-top {
+.header-middle {
     display: flex;
     color: white;
     font-family: 'Righteous', sans-serif;
@@ -37,7 +54,7 @@ body {
     justify-content: center;
 }
 
-.header-top > a {
+.header-middle > a {
     all: unset;
     cursor: pointer;
 }
@@ -92,7 +109,7 @@ body {
     border: none;
     padding: 0;
     cursor: pointer;
-    filter:  brightness(0) invert(1);
+    filter: brightness(0) invert(1);
 }
 
 #top-hamburger {
@@ -310,6 +327,7 @@ h3 {
     height: 100%;
     width: 100%;
     border-radius: 1rem;
+    object-fit: cover;
 }
 
 .like-count {
@@ -476,6 +494,7 @@ h3 {
 }
 
 .sort-container {
+    display: flex;
     cursor: pointer;
 }
 
@@ -879,12 +898,16 @@ h4 {
     margin-top: 3rem;
 }
 
+#splide-category {
+    margin-bottom: 1rem;
+}
+
 .user-form {
-    padding: 2vh 2rem
+    padding: 2rem 2rem;
 }
 
 :root {
-    --form-container-height: 65vh;
+    --form-container-height: 75vh;
 }
 
 .form-container {
@@ -923,8 +946,7 @@ h4 {
 .top-container {
     background: #BED9CC;
     z-index: 2;
-    padding: 1rem 0;
-
+    padding: 1rem 1rem 2rem;
 }
 
 .back-container {
@@ -942,7 +964,7 @@ h4 {
 .credentials {
     display: flex;
     flex-direction: column;
-    padding: 0.2rem 1rem;
+    padding: 0.2rem;
     position: relative;
 }
 
@@ -957,27 +979,29 @@ h4 {
     border-radius: 2rem;
     padding: 0.3rem 2rem;
     box-sizing: border-box;
+    font-size: 0.8rem;
 }
 
 .user-icon {
     position: absolute;
-    top: 65%;
-    transform: translateY(-50%);
-    left: 1.5rem;
+    top: 52%;
+    left: 1rem;
     width: 1rem;
     height: 1rem;
 }
 
 .forgot-password {
     display: flex;
-    flex-direction: row-reverse;
-    padding-right: 2rem
+    justify-content: flex-end;
+    text-decoration: none;
+    color: black;
+    padding: 0.2rem;
 }
 
 .user-form-button {
     flex: 1;
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     justify-content: center;
 }
 
@@ -986,7 +1010,7 @@ h4 {
     border-radius: 2rem;
     width: 80%;
     font-weight: bold;
-    font-size: 4vh;
+    font-size: 1.5rem;
     font-family: 'Montserrat', sans-serif;
 }
 
@@ -1026,6 +1050,88 @@ h4 {
 .rs-logo {
     display: flex;
     justify-content: center;
-    padding-top: 2vh;
+    margin-bottom: 0.5rem;
+}
+
+.rs-logo > img{
+    height: 4rem;
+    width: 4rem;
+}
+
+.discover-interests {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.discover-interest {
+    display: flex;
+    gap: 1rem;
+    background: #FFFFFF;
+    color: #000000;
+    border-radius: 1rem;
+    padding: 0.5rem;
+    text-decoration: none;
     height: 8rem;
+}
+
+.discover-interest-img {
+    flex-shrink: 0;
+    width: 35%;
+}
+
+.discover-interest-img > img {
+    width: 100%;
+    height: 100%;
+    border-radius: 1rem;
+    object-fit: cover;
+}
+
+.discover-interest-content {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 2;
+    overflow: hidden;
+}
+
+.discover-interest-header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.discover-interest-title h3 {
+    color: #000000;
+    font-size: 1rem;
+    margin-top: 0;
+    margin-bottom: 0;
+    max-height: 2.5rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+.discover-interest:hover .discover-interest-title > h3 {
+    text-decoration: underline;
+}
+
+.discover-interest-distance {
+    white-space: nowrap;
+    text-align: right;
+    font-size: 0.8rem;
+}
+
+.discover-interest-values {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+}
+
+.discover-interest-values > p {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: small;
 }

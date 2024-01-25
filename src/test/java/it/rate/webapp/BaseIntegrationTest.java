@@ -1,20 +1,11 @@
 package it.rate.webapp;
 
 import it.rate.webapp.config.ServerRole;
-import it.rate.webapp.models.AppUser;
-import it.rate.webapp.models.Criterion;
-import it.rate.webapp.models.Interest;
-import it.rate.webapp.models.Like;
-import it.rate.webapp.models.Place;
-import it.rate.webapp.models.Rating;
-import it.rate.webapp.models.Role;
-import it.rate.webapp.repositories.CriterionRepository;
-import it.rate.webapp.repositories.InterestRepository;
-import it.rate.webapp.repositories.LikeRepository;
-import it.rate.webapp.repositories.PlaceRepository;
-import it.rate.webapp.repositories.RatingRepository;
-import it.rate.webapp.repositories.RoleRepository;
-import it.rate.webapp.repositories.UserRepository;
+import it.rate.webapp.models.*;
+import it.rate.webapp.repositories.*;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.TestInstance;
@@ -30,6 +21,7 @@ public class BaseIntegrationTest extends BaseTest {
   @Autowired private RoleRepository roleRepository;
   @Autowired private UserRepository userRepository;
   @Autowired private LikeRepository likeRepository;
+  @Autowired private CategoryRepository categoryRepository;
 
   @BeforeAll
   void setupDatabase() {
@@ -73,17 +65,37 @@ public class BaseIntegrationTest extends BaseTest {
             .build();
     userRepository.saveAll(List.of(u1, u2, u3, u4, u5));
 
+    List<String> categoryNames =
+        Arrays.asList(
+            "Food",
+            "Drink",
+            "Outdoor",
+            "Entertainment",
+            "Sport",
+            "Art & Culture",
+            "Relax",
+            "Services",
+            "Educational");
+    List<Category> categories = new ArrayList<>();
+    categoryNames.forEach(
+        name -> {
+          categories.add(new Category(name));
+        });
+    categoryRepository.saveAll(categories);
+
     Interest i1 =
         Interest.builder()
             .name("Makove kolacky")
-            .description("Makové koláčky jako od babičky")
+            .description("Makove kolacky jako od babicky")
+            .categories(List.of(categories.get(0)))
             .exclusive(true)
             .build();
 
     Interest i2 =
         Interest.builder()
             .name("Quiet spots")
-            .description("Výjimečně klidná místa")
+            .description("Vyjimecne klidna mista")
+            .categories(List.of(categories.get(2), categories.get(6)))
             .exclusive(false)
             .build();
     interestRepository.saveAll(List.of(i1, i2));
