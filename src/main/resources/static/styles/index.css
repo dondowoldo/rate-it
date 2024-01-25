@@ -6,7 +6,14 @@ body {
 }
 
 footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
     margin-top: auto;
+    width: 100%;
+    background-color: #568D73;
+    color: white;
 }
 
 .container-fluid {
@@ -18,7 +25,12 @@ footer {
     min-height: 100vh;
 }
 
-.footer,
+.footer-links {
+    width: 90%;
+    display: flex;
+    justify-content: space-around;
+}
+
 .header {
     width: 100%;
     display: flex;
