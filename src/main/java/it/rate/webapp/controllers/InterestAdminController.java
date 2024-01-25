@@ -2,6 +2,7 @@ package it.rate.webapp.controllers;
 
 import it.rate.webapp.exceptions.badrequest.BadRequestException;
 import it.rate.webapp.models.AppUser;
+import it.rate.webapp.models.Category;
 import it.rate.webapp.models.Interest;
 import it.rate.webapp.models.Role;
 import it.rate.webapp.services.*;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
+import java.util.List;
 import java.util.Set;
 
 @Controller
@@ -24,16 +26,19 @@ public class InterestAdminController {
   private final RoleService roleService;
   private final UserService userService;
   private final CriterionService criterionService;
+  private final CategoryService categoryService;
 
   @GetMapping("/edit")
   @PreAuthorize("@permissionService.manageCommunity(#interestId)")
   public String editInterestPage(@PathVariable Long interestId, Model model, Principal principal) {
 
-    model.addAttribute("interest", interestService.getById(interestId));
+    Interest interest = interestService.getById(interestId);
+    model.addAttribute("interest", interest);
     model.addAttribute("action", "/interests/" + interestId + "/admin/edit");
     model.addAttribute("method", "put");
     model.addAttribute("loggedUser", userService.getByEmail(principal.getName()));
-
+    model.addAttribute("allCategories", categoryService.findAll());
+    model.addAttribute("selectedCategories", interest.getCategories());
     return "interest/form";
   }
 

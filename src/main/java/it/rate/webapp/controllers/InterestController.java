@@ -25,6 +25,7 @@ public class InterestController {
   private final PlaceService placeService;
   private final LikeService likeService;
   private final CriterionService criterionService;
+  private final CategoryService categoryService;
 
   @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
   @GetMapping("/create")
@@ -36,6 +37,8 @@ public class InterestController {
     model.addAttribute("action", "/interests/create");
     model.addAttribute("method", "post");
     model.addAttribute("loggedUser", userService.getByEmail(principal.getName()));
+    model.addAttribute("categories", categoryService.findAll());
+    model.addAttribute("maxCategories", categoryService.getMaxCategories());
 
     return "interest/form";
   }
@@ -43,9 +46,14 @@ public class InterestController {
   @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
   @PostMapping("/create")
   public String createInterest(
-      Interest interest, @RequestParam Set<String> criteriaNames, Principal principal) {
+      Interest interest,
+      @RequestParam Set<String> criteriaNames,
+      @RequestParam(required = false) Set<Long> categoryIds,
+      Principal principal) {
 
     AppUser loggedUser = userService.getByEmail(principal.getName());
+    List<Category> categories = categoryService.findAllByIdIn(categoryIds);
+    interest.setCategories(categories);
     Interest savedInterest = interestService.save(interest);
     criterionService.createNew(savedInterest, criteriaNames);
     roleService.setRole(savedInterest, loggedUser, Role.RoleType.CREATOR);

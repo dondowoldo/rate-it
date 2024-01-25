@@ -27,7 +27,12 @@
 
             <section class="input-param">
                 <h4>Category</h4>
-                <p>TBD</p>
+                <div class="sort-buttons">
+                    <label class="sort-container" th:each="category : ${categories}">
+                        <input type="checkbox" name="categoryIds" th:value="${category.id}" class="sort-checkbox"/>
+                        <span th:text="${category.name}"></span>
+                    </label>
+                </div>
             </section>
 
             <section class="input-param">
@@ -55,7 +60,8 @@
                             <label class="list-record">
                                 <input class="input-text-field" type="text" name="criteriaNames"
                                        th:value="${criterion.name}" required/>
-                                <button class="role-option-button kick-button" type="button" onclick="removeCriteria(this, ${iterStat.index})">
+                                <button class="role-option-button kick-button" type="button"
+                                        onclick="removeCriteria(this, ${iterStat.index})">
                                     <img src="/icons/cross.svg" alt="Kick">
                                 </button>
                             </label>
@@ -88,14 +94,17 @@
                 <button class="button" type="submit">Save</button>
             </div>
 
-            <input type="hidden" id="uploadedImageId" name="uploadedImageId" th:field="*{imageName}" />
+            <input type="hidden" id="uploadedImageId" name="uploadedImageId" th:field="*{imageName}"/>
 
         </form>
     </div>
 </div>
 
-    <script type="module" src="/scripts/interestImageUpload.js"></script>
-    <script src="/scripts/interestForm.js"></script>
+<script type="module" src="/scripts/interestImageUpload.js"></script>
+<script src="/scripts/interestForm.js"></script>
+<script th:inline="javascript">
+    const MAX_CATEGORIES = [[${maxCategories}]];
+</script>
 
 </body>
 </html>
