@@ -64,14 +64,17 @@ async function fetchData() {
     }
 }
 
-function loadInterests(query) {
+function loadInterests(query, category) {
     const container = document.querySelector('#suggestionList');
     container.innerHTML = '';
     const template = document.getElementsByTagName('template')[0];
     let dataSet = data;
 
-    if (typeof query !== 'undefined' && !isEmptyOrSpaces(query)) {
+    if (typeof query !== 'undefined' && query !== null && !isEmptyOrSpaces(query)) {
         dataSet = data.filter(record => record.name.toLowerCase().includes(query.toLowerCase()));
+    }
+    if (typeof category !== 'undefined' && category !== null) {
+        dataSet = dataSet.filter(record => record.categoryIds.includes(category));
     }
 
     dataSet.forEach(record => {
@@ -86,3 +89,37 @@ function loadInterests(query) {
 function isEmptyOrSpaces(str) {
     return str === null || str.match(/^ *$/) !== null;
 }
+
+function filterInterests(checkbox) {
+    let searchBar = document.querySelector('.search');
+    if (typeof checkbox === 'undefined' || checkbox === null) {
+        checkbox = getCheckedFilter();
+    }
+    if (checkbox !== null && checkbox.checked) {
+        uncheckOtherCheckboxes(checkbox)
+        loadInterests(searchBar.value, Number(checkbox.value));
+    } else {
+        loadInterests(searchBar.value, null);
+    }
+}
+
+function uncheckOtherCheckboxes(checkbox) {
+    let checkboxes = document.querySelectorAll('.sort-checkbox');
+    checkboxes.forEach(otherCheckbox => {
+        if (otherCheckbox !== checkbox) {
+            otherCheckbox.checked = false;
+        }
+    });
+}
+
+function getCheckedFilter() {
+    let checkboxes = document.querySelectorAll('.sort-checkbox');
+    let checked = null;
+    checkboxes.forEach(c => {
+        if (c.checked && checked === null) {
+            checked = c;
+        }
+    });
+    return checked;
+}
+

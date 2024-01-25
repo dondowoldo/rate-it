@@ -7,6 +7,7 @@ import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -56,5 +57,9 @@ public class Interest {
 
   public int countLikes() {
     return likes.size();
+  }
+
+  public List<Long> getCategoryIds() {
+    return categories.stream().map(Category::getId).collect(Collectors.toList());
   }
 }
