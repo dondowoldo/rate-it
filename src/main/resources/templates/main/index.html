@@ -12,7 +12,7 @@
         <div th:replace="~{fragments.html :: login-menu}"></div>
         <script th:replace="~{fragments.html :: topbar-script}"></script>
     </header>
-    <div class="content main-page-content">
+    <main class="content main-page-content">
         <section>
             <div class="section-label">
                 <h2>My Interests</h2>
@@ -55,23 +55,23 @@
                 <a th:if="${loggedUser}" th:href="@{/interests/create}"><h3>Create new</h3></a>
             </div>
 
-<!--            <div class="sort-buttons">-->
-                <section class="splide" id="splide-category" aria-label="Categories">
-                    <div class="splide__track">
-                        <div class="splide__list">
-                            <div class="splide__slide" th:each="category : ${categories}">
+            <!--            <div class="sort-buttons">-->
+            <section class="splide" id="splide-category" aria-label="Categories">
+                <div class="splide__track">
+                    <div class="splide__list">
+                        <div class="splide__slide" th:each="category : ${categories}">
 
-                                <label class="sort-container">
-                                    <input th:value="${category.id}" oninput="filterInterests(this)" type="checkbox"
-                                           class="sort-checkbox"/>
-                                    <span th:text="${category.name}"></span>
-                                </label>
+                            <label class="sort-container">
+                                <input th:value="${category.id}" oninput="filterInterests(this)" type="checkbox"
+                                       class="sort-checkbox"/>
+                                <span th:text="${category.name}"></span>
+                            </label>
 
-                            </div>
                         </div>
                     </div>
-                </section>
-<!--            </div>-->
+                </div>
+            </section>
+            <!--            </div>-->
 
             <div class="search-container">
                 <input type="text" class="search" name="query" oninput="filterInterests()" autocomplete="off"
@@ -107,11 +107,10 @@
                     </div>
                     <p></p>
                 </div>
-
-
             </a>
         </template>
-    </div>
+    </main>
+    <footer th:replace="~{fragments.html :: footer}"></footer>
 </div>
 <script src="/scripts/imageFetcher.js"></script>
 <script src="/scripts/index.js"></script>
