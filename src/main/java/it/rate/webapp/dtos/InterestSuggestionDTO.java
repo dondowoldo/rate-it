@@ -5,15 +5,24 @@ import it.rate.webapp.models.Interest;
 import java.util.List;
 
 public record InterestSuggestionDTO(
-    Long id, String name, Long likes, Double distanceKm, String imageName, List<Long> categoryIds) {
+    Long id,
+    String name,
+    String description,
+    Long likes,
+    Long places,
+    String imageName,
+    Double distanceKm,
+    List<Long> categoryIds) {
 
   public InterestSuggestionDTO(Interest interest, Double distanceKm) {
     this(
         interest.getId(),
         interest.getName(),
+        interest.getDescription(),
         (long) interest.countLikes(),
-        distanceKm,
+        (long) interest.countPlaces(),
         interest.getImageName(),
+        distanceKm,
         interest.getCategoryIds());
   }
 }

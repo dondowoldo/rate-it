@@ -57,8 +57,7 @@ public class BaseIntegrationTest extends BaseTest {
             .serverRole(ServerRole.USER)
             .build();
 
-    AppUser u5 =
-        AppUser.builder()
+    AppUser u5 = AppUser.builder()
             .username("Hynek")
             .email("hynek@hynek.cz")
             .password("$2a$10$9g1X9rp6meCML3g/h32MyeQ369SEh/hQpZb82eqjpvI71xCIdPAlG")
@@ -87,7 +86,7 @@ public class BaseIntegrationTest extends BaseTest {
     Interest i1 =
         Interest.builder()
             .name("Makove kolacky")
-            .description("Makové koláčky jako od babičky")
+            .description("Makove kolacky jako od babicky")
             .categories(List.of(categories.get(0)))
             .exclusive(true)
             .build();
@@ -95,7 +94,7 @@ public class BaseIntegrationTest extends BaseTest {
     Interest i2 =
         Interest.builder()
             .name("Quiet spots")
-            .description("Výjimečně klidná místa")
+            .description("Vyjimecne klidna mista")
             .categories(List.of(categories.get(2), categories.get(6)))
             .exclusive(false)
             .build();

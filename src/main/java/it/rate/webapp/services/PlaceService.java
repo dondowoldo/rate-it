@@ -61,7 +61,7 @@ public class PlaceService {
     return new CriteriaOfPlaceDTO(criteriaAvgRatingDTOs);
   }
 
-  private PlaceInfoDTO getPlaceInfoDTO(Place place) {
+  public PlaceInfoDTO getPlaceInfoDTO(@Valid Place place) {
     Set<CriterionAvgRatingDTO> criteria =
         place.getInterest().getCriteria().stream()
             .map(criterion -> getCriterionAvgRatingDTO(criterion, place))
