@@ -55,23 +55,19 @@
                 <a th:if="${loggedUser}" th:href="@{/interests/create}"><h3>Create new</h3></a>
             </div>
 
-<!--            <div class="sort-buttons">-->
-                <section class="splide" id="splide-category" aria-label="Categories">
-                    <div class="splide__track">
-                        <div class="splide__list">
-                            <div class="splide__slide" th:each="category : ${categories}">
-
-                                <label class="sort-container">
-                                    <input th:value="${category.id}" oninput="filterInterests(this)" type="checkbox"
-                                           class="sort-checkbox"/>
-                                    <span th:text="${category.name}"></span>
-                                </label>
-
-                            </div>
+            <section class="splide" id="splide-category" aria-label="Categories">
+                <div class="splide__track">
+                    <div class="splide__list">
+                        <div class="splide__slide" th:each="category : ${categories}">
+                            <label class="sort-container">
+                                <input th:value="${category.id}" oninput="filterInterests(this)" type="checkbox"
+                                       class="sort-checkbox"/>
+                                <span th:text="${category.name}"></span>
+                            </label>
                         </div>
                     </div>
-                </section>
-<!--            </div>-->
+                </div>
+            </section>
 
             <div class="search-container">
                 <input type="text" class="search" name="query" oninput="filterInterests()" autocomplete="off"
@@ -96,6 +92,7 @@
 </div>
 <script src="/scripts/imageFetcher.js"></script>
 <script src="/scripts/index.js"></script>
+<script src="/scripts/categorySplide.js"></script>
 <script th:unless="${likedInterests == null || likedInterests.isEmpty()}" src="/scripts/indexSplide.js"></script>
 </body>
 </html>
