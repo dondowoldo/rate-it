@@ -25,6 +25,7 @@ public class SecurityConfig {
                         "/h2-console/**",
                         "/styles/**",
                         "/icons/**",
+                        "/images/**",
                         "/scripts/**",
                         "/",
                         "/interests/{id}",
