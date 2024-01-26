@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments.html :: head(title=${interest.id == null} ? 'New Interest' : 'Editing ' + ${interest.name})}">
+</head>
+
+<body>
+<div class="container-fluid">
+    <header class="header">
+        <div th:replace="~{fragments.html :: back-button}"></div>
+        <div th:replace="~{fragments.html :: logo}"></div>
+        <div th:replace="~{fragments.html :: login-menu}"></div>
+        <script th:replace="~{fragments.html :: topbar-script}"></script>
+    </header>
+
+    <main class="content">
+        <form th:object="${interest}" th:data-interest-id="*{id}" name="myForm" th:action="${action}"
+              th:method="${method}">
+            <h2 th:if="${interest.id == null}">New Interest</h2>
+            <h2 th:unless="${interest.id == null}" th:text="'Editing ' + ${interest.name}"></h2>
+            <section class="input-param">
+                <h4>Name</h4>
+                <label>
+                    <input class="input-text-field" type="text" name="name" th:value="*{name}" required>
+                </label>
+            </section>
+
+            <section class="input-param">
+                <h4>Category</h4>
+                <div class="sort-buttons">
+                    <label class="sort-container" th:each="category : ${categories}">
+                        <input th:checked="${interest.categoryIds.contains(category.id)}" type="checkbox" name="categoryIds" th:value="${category.id}" class="sort-checkbox"/>
+                        <span th:text="${category.name}"></span>
+                    </label>
+                </div>
+            </section>
+
+            <section class="input-param">
+                <h4>Rate access</h4>
+                <input type="checkbox" id="toggle" class="toggle-checkbox" name="exclusive" th:checked="*{exclusive}"/>
+                <label for="toggle" class="toggle-container">
+                    <span>Anyone can rate</span>
+                    <span>Invite only</span>
+                </label>
+            </section>
+
+            <section class="input-param">
+                <h4>Rating criteria</h4>
+                <div id="criteriaContainer" class="criteria-container">
+                    <label th:if="*{id == null}" class="list-record first-criterion">
+                        <input class="input-text-field" type="text" name="criteriaNames" required/>
+                    </label>
+                    <th:block th:if="*{id != null}">
+                        <label class="list-record first-criterion">
+                            <input class="input-text-field" type="text" name="criteriaNames"
+                                   th:value="${interest.criteria[0]?.name}" required/>
+                        </label>
+
+                        <div th:each="criterion, iterStat : ${interest.criteria}" th:if="${iterStat.index > 0}">
+                            <label class="list-record">
+                                <input class="input-text-field" type="text" name="criteriaNames"
+                                       th:value="${criterion.name}" required/>
+                                <button class="role-option-button kick-button" type="button"
+                                        onclick="removeCriteria(this, ${iterStat.index})">
+                                    <img src="/icons/cross.svg" alt="Kick">
+                                </button>
+                            </label>
+                        </div>
+                    </th:block>
+                </div>
+
+                <div class="add-criterion">
+                    <span>Add criterion</span>
+                    <button class="role-option-button accept-button" type="button" onclick="addCriteria()">
+                        <img src="/icons/add.svg" alt="Add Criterion">
+                    </button>
+                </div>
+
+            </section>
+
+            <section class="input-param">
+                <h4>Description</h4>
+                <label>
+                    <textarea class="input-text-field" name="description" th:field="*{description}" required></textarea>
+                </label>
+            </section>
+
+            <div id="uppy"></div>
+
+            <div class="button-wrap">
+                <a id="uppy-modal" href="#" type="button" class="button" style="text-decoration: none"></a>
+
+
+                <button class="button" type="submit">Save</button>
+            </div>
+
+            <input type="hidden" id="uploadedImageId" name="uploadedImageId" th:field="*{imageName}"/>
+
+        </form>
+    </main>
+    <footer th:replace="~{fragments.html :: footer}"></footer>
+</div>
+
+<script type="module" src="/scripts/interestImageUpload.js"></script>
+<script src="/scripts/interestForm.js"></script>
+<script th:inline="javascript">
+    const MAX_CATEGORIES = [[${maxCategories}]];
+</script>
+
+</body>
+</html>

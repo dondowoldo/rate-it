@@ -1,0 +1,120 @@
+package it.rate.webapp.controllers;
+
+import it.rate.webapp.exceptions.badrequest.BadRequestException;
+import it.rate.webapp.models.AppUser;
+import it.rate.webapp.models.Category;
+import it.rate.webapp.models.Interest;
+import it.rate.webapp.models.Role;
+import it.rate.webapp.services.*;
+import lombok.AllArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.security.Principal;
+import java.util.List;
+import java.util.Set;
+
+@Controller
+@AllArgsConstructor
+@RequestMapping("/interests/{interestId}/admin")
+public class InterestAdminController {
+  private final InterestService interestService;
+  private final ManageInterestService manageInterestService;
+  private final RoleService roleService;
+  private final UserService userService;
+  private final CriterionService criterionService;
+  private final CategoryService categoryService;
+
+  @GetMapping("/edit")
+  @PreAuthorize("@permissionService.manageCommunity(#interestId)")
+  public String editInterestPage(@PathVariable Long interestId, Model model, Principal principal) {
+
+    model.addAttribute("interest", interestService.getById(interestId));
+    model.addAttribute("action", "/interests/" + interestId + "/admin/edit");
+    model.addAttribute("method", "put");
+    model.addAttribute("loggedUser", userService.getByEmail(principal.getName()));
+    model.addAttribute("categories", categoryService.findAll());
+    model.addAttribute("maxCategories", categoryService.getMaxCategories());
+    return "interest/form";
+  }
+
+  @PutMapping("/edit")
+  @PreAuthorize("@permissionService.manageCommunity(#interestId)")
+  public String editInterest(
+      @PathVariable Long interestId,
+      Interest interest,
+      @RequestParam Set<String> criteriaNames,
+      @RequestParam(required = false) Set<Long> categoryIds) {
+
+    interest.setId(interestId);
+    List<Category> categories = categoryService.findMaxLimitByIdIn(categoryIds);
+    interest.setCategories(categories);
+    criterionService.updateExisting(interestService.save(interest), criteriaNames);
+
+    return String.format("redirect:/interests/%d", interestId);
+  }
+
+  @GetMapping("/users")
+  @PreAuthorize("@permissionService.manageCommunity(#interestId)")
+  public String editUsersPage(@PathVariable Long interestId, Model model, Principal principal) {
+
+    model.addAttribute("loggedUser", userService.getByEmail(principal.getName()));
+    model.addAttribute("interest", interestService.getById(interestId));
+
+    return "interest/users";
+  }
+
+  @DeleteMapping("/users/{userId}")
+  @PreAuthorize("@permissionService.manageCommunity(#interestId)")
+  public String removeUser(@PathVariable Long interestId, @PathVariable Long userId) {
+
+    roleService.removeRole(interestId, userId);
+
+    return "redirect:/interests/{interestId}/admin/users";
+  }
+
+  @PutMapping("/users/{userId}")
+  @PreAuthorize("@permissionService.manageCommunity(#interestId)")
+  public String acceptUser(@PathVariable Long interestId, @PathVariable Long userId) {
+
+    AppUser loggedUser = userService.getById(userId);
+    Interest interest = interestService.getById(interestId);
+
+    roleService.setRole(interest, loggedUser, Role.RoleType.VOTER);
+
+    return "redirect:/interests/{interestId}/admin/users";
+  }
+
+  @GetMapping("/invite")
+  @PreAuthorize("@permissionService.manageCommunity(#interestId)")
+  public String inviteUsers(@PathVariable Long interestId, Model model, Principal principal) {
+
+    model.addAttribute("loggedUser", userService.getByEmail(principal.getName()));
+    model.addAttribute("interest", interestService.getById(interestId));
+
+    return "interest/invite";
+  }
+
+  @PostMapping("/invite")
+  @PreAuthorize("@permissionService.manageCommunity(#interestId)")
+  public String inviteUser(
+      @PathVariable Long interestId, String inviteBy, String user, RedirectAttributes ra) {
+
+    Interest interest = interestService.getById(interestId);
+    try {
+      manageInterestService.inviteUser(interest, inviteBy, user, Role.RoleType.VOTER);
+      ra.addFlashAttribute("status", "Invitation successfully sent");
+      ra.addFlashAttribute("statusClass", "successful");
+      ra.addFlashAttribute("isChecked", inviteBy.equals("username"));
+    } catch (BadRequestException e) {
+      ra.addFlashAttribute("status", e.getMessage());
+      ra.addFlashAttribute("statusClass", "error");
+      ra.addFlashAttribute("user", user);
+      ra.addFlashAttribute("isChecked", inviteBy.equals("username"));
+    }
+    return "redirect:/interests/{interestId}/admin/invite";
+  }
+}

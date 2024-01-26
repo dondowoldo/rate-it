@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head th:replace="~{fragments.html :: head(title='Login')}">
+</head>
+<body>
+<div class="container-fluid">
+    <header class="header">
+        <div th:replace="~{fragments.html :: logo}"></div>
+    </header>
+    <main class="user-form">
+        <div class="form-container">
+            <form class="right-container top-container" th:action="@{/users/login}" method="post">
+                <h1>SIGN IN</h1>
+                <div class="rs-logo">
+                    <img src="/icons/R-logo.png" alt="Logo">
+                </div>
+                <div th:if="${param.error}">
+                    <div class="alert alert-danger">Invalid Username or Password</div>
+                </div>
+                <section class="credentials">
+                    <h6>Email address</h6>
+                    <input class="credentials-input" type="text" name="username"
+                           placeholder="Enter your username here...">
+                    <img class="user-icon" src="/icons/email-icon.png" alt="email-icon">
+                </section>
+                <section class="credentials">
+                    <h6>Password</h6>
+                    <input class="credentials-input" type="password" name="password"
+                           placeholder="Enter your password here...">
+                    <img class="user-icon" src="/icons/lock.png" alt="user-lock">
+
+                </section>
+                <a class="forgot-password">Forgot password?</a>
+                <div class="user-form-button">
+                    <button type="submit" class="sign-button">Login</button>
+                </div>
+            </form>
+            <div class="left-container back-container" th:onclick="|location.href='@{/users/signup}';|"
+                 style="cursor: pointer;">
+                <div class="login-signup-wrapper">
+                    <p>REGISTER</p>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer th:replace="~{fragments.html :: footer}"></footer>
+</div>
+</body>
+</html>
