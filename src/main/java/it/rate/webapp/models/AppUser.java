@@ -35,6 +35,7 @@ public class AppUser {
 
   @NotBlank
   @Pattern(regexp = Constraints.PASSWORD_REGEX)
+  @Length(max = Constraints.MAX_VARCHAR_LENGTH)
   @Column(nullable = false)
   private String password;
 
