@@ -51,7 +51,7 @@ public class InterestAdminController {
       @RequestParam Set<String> criteriaNames,
       @RequestParam(required = false) Set<Long> categoryIds) {
 
-//    interest.setId(interestId);
+    interest.setId(interestId);
     List<Category> categories = categoryService.findMaxLimitByIdIn(categoryIds);
     interest.setCategories(categories);
     Interest editedInterest = interestService.saveEdited(interest);

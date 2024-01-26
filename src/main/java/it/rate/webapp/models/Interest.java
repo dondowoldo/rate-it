@@ -21,18 +21,18 @@ import java.util.stream.Collectors;
 public class Interest {
   public interface NewInterest {}
 
-  @Id @GeneratedValue @NotNull private Long id;
+  @Id
+  @GeneratedValue
+  @NotNull(groups = NewInterest.class)
+  private Long id;
 
-  @NotBlank(groups = NewInterest.class)
-  @Length(
-      min = Constraints.MIN_NAME_LENGTH,
-      max = Constraints.MAX_NAME_LENGTH,
-      groups = NewInterest.class)
+  @NotBlank
+  @Length(min = Constraints.MIN_NAME_LENGTH, max = Constraints.MAX_NAME_LENGTH)
   @Column(nullable = false)
   private String name;
 
-  @NotBlank(groups = NewInterest.class)
-  @Length(max = Constraints.MAX_DESCRIPTION_LENGTH, groups = NewInterest.class)
+  @NotBlank
+  @Length(max = Constraints.MAX_DESCRIPTION_LENGTH)
   @Column(nullable = false, length = 1000)
   private String description;
 

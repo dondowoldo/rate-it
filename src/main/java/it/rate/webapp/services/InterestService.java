@@ -31,16 +31,16 @@ public class InterestService {
     return interestRepository.getReferenceById(interestId);
   }
 
-  public Interest saveNew(Interest interest) {
-    Set<ConstraintViolation<Interest>> violations =
-            validator.validate(interest, Interest.NewInterest.class);
-    if (!violations.isEmpty()) {
-      throw new ConstraintViolationException(violations);
-    }
+  public Interest saveNew(@Valid Interest interest) {
     return interestRepository.save(interest);
   }
 
   public Interest saveEdited(@Valid Interest interest) {
+    Set<ConstraintViolation<Interest>> violations =
+        validator.validate(interest, Interest.NewInterest.class);
+    if (!violations.isEmpty()) {
+      throw new ConstraintViolationException(violations);
+    }
     return interestRepository.save(interest);
   }
 
