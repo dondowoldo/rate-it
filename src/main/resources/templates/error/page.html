@@ -7,7 +7,7 @@
     <div class="header">
         <div th:replace="~{fragments.html :: logo}"></div>
     </div>
-    <div class="content">
+    <main class="content">
         <div class="row list-record">
             <div class="col" id="error-simple">
                 <h1 th:text="${error.simpleMessage}"></h1>
@@ -27,7 +27,8 @@
         <div class="row col-7" id="error-homepage-button">
             <a class="button" th:href="@{/}">Go to Homepage</a>
         </div>
-    </div>
+    </main>
+    <footer th:replace="~{fragments.html :: footer}"></footer>
 </div>
 </body>
 </html>

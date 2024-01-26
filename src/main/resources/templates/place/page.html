@@ -13,7 +13,7 @@
          ~{fragments.html :: place-admin-menu} : ~{fragments.html :: login-menu}"></div>
         <script th:replace="~{fragments.html :: topbar-script}"></script>
     </header>
-    <div class="content">
+    <main class="content">
         <a class="place-interest"
            th:href="@{/interests/{interestId}(interestId=${place.interest.id})}">
             <h2 th:text="*{getInterest.name}"></h2>
@@ -107,10 +107,11 @@
         <div class="place-map">
             <div id="map"></div>
         </div>
-    </div>
+    </main>
+    <footer th:replace="~{fragments.html :: footer}"></footer>
 </div>
 
-<script th:replace="~{fragments :: placeMap-script}"></script>
+<script th:replace="~{fragments :: leaflet-script}"></script>
 <script th:inline="javascript">
     /*<![CDATA[*/
 

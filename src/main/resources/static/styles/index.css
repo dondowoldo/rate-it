@@ -5,13 +5,30 @@ body {
     margin: 0;
 }
 
-.container-fluid {
+footer {
+    display: flex;
+    justify-content: center;
     align-items: center;
+    flex-direction: column;
+    margin-top: auto;
+    width: 100%;
+    background-color: #568D73;
+    color: white;
+}
+
+.container-fluid {
+    display: flex;
+    flex-direction: column;
     max-width: 500px;
-    margin: 0 auto;
     background-color: #E2E2E2;
     padding: 0;
     min-height: 100vh;
+}
+
+.footer-links {
+    width: 90%;
+    display: flex;
+    justify-content: space-around;
 }
 
 .header {
@@ -23,13 +40,13 @@ body {
 }
 
 .header-left,
-.header-right{
+.header-right {
     display: flex;
     justify-content: center;
     align-content: center;
 }
 
-.header-top {
+.header-middle {
     display: flex;
     color: white;
     font-family: 'Righteous', sans-serif;
@@ -37,7 +54,7 @@ body {
     justify-content: center;
 }
 
-.header-top > a {
+.header-middle > a {
     all: unset;
     cursor: pointer;
 }
@@ -92,7 +109,7 @@ body {
     border: none;
     padding: 0;
     cursor: pointer;
-    filter:  brightness(0) invert(1);
+    filter: brightness(0) invert(1);
 }
 
 #top-hamburger {
@@ -521,19 +538,23 @@ h3 {
     display: none;
 }
 
+.sort-container {
+    display: flex;
+    cursor: pointer;
+}
+
 .sort-container > .sort-checkbox + span {
     padding: 0.3em 0.5em;
     text-align: justify;
     border-radius: 1rem;
-    font-family: 'Andika', sans-serif;
-    font-weight: 400;
     color: #888585;
     background: transparent;
 }
 
 .sort-container > .sort-checkbox:checked + span {
     color: #478363;
-    font-weight: 700;
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: #478363;
     background-color: rgba(86, 141, 115, 0.1);
 }
 
@@ -922,12 +943,16 @@ h4 {
     margin-top: 3rem;
 }
 
+#splide-category {
+    margin-bottom: 1rem;
+}
+
 .user-form {
-    padding: 2vh 2rem
+    padding: 2rem 2rem;
 }
 
 :root {
-    --form-container-height: 65vh;
+    --form-container-height: 75vh;
 }
 
 .form-container {
@@ -966,8 +991,7 @@ h4 {
 .top-container {
     background: #BED9CC;
     z-index: 2;
-    padding: 1rem 0;
-
+    padding: 1rem 1rem 2rem;
 }
 
 .back-container {
@@ -985,7 +1009,7 @@ h4 {
 .credentials {
     display: flex;
     flex-direction: column;
-    padding: 0.2rem 1rem;
+    padding: 0.2rem;
     position: relative;
 }
 
@@ -1000,27 +1024,29 @@ h4 {
     border-radius: 2rem;
     padding: 0.3rem 2rem;
     box-sizing: border-box;
+    font-size: 0.8rem;
 }
 
 .user-icon {
     position: absolute;
-    top: 65%;
-    transform: translateY(-50%);
-    left: 1.5rem;
+    top: 52%;
+    left: 1rem;
     width: 1rem;
     height: 1rem;
 }
 
 .forgot-password {
     display: flex;
-    flex-direction: row-reverse;
-    padding-right: 2rem
+    justify-content: flex-end;
+    text-decoration: none;
+    color: black;
+    padding: 0.2rem;
 }
 
 .user-form-button {
     flex: 1;
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     justify-content: center;
 }
 
@@ -1029,7 +1055,7 @@ h4 {
     border-radius: 2rem;
     width: 80%;
     font-weight: bold;
-    font-size: 4vh;
+    font-size: 1.5rem;
     font-family: 'Montserrat', sans-serif;
 }
 
@@ -1069,8 +1095,12 @@ h4 {
 .rs-logo {
     display: flex;
     justify-content: center;
-    padding-top: 2vh;
-    height: 8rem;
+    margin-bottom: 0.5rem;
+}
+
+.rs-logo > img{
+    height: 4rem;
+    width: 4rem;
 }
 
 .discover-interests {
