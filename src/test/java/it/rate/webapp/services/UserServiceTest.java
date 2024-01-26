@@ -35,7 +35,7 @@ class UserServiceTest extends BaseTest {
 
   @Test
   void registerUserEmailExists() {
-    SignupUserInDTO user = new SignupUserInDTO("a@b.c", "Password123", "u");
+    SignupUserInDTO user = new SignupUserInDTO("a@b.c", "Password123", "username");
     when(userRepository.existsByEmailIgnoreCase(any())).thenReturn(true);
     when(userRepository.existsByUsernameIgnoreCase(any())).thenReturn(false);
     assertThrows(UserAlreadyExistsException.class, () -> userService.registerUser(user));
@@ -43,7 +43,7 @@ class UserServiceTest extends BaseTest {
 
   @Test
   void registerUserUsernameExists() {
-    SignupUserInDTO user = new SignupUserInDTO("a@b.c", "Password123", "u");
+    SignupUserInDTO user = new SignupUserInDTO("a@b.c", "Password123", "username");
     when(userRepository.existsByEmailIgnoreCase(any())).thenReturn(false);
     when(userRepository.existsByUsernameIgnoreCase(any())).thenReturn(true);
     assertThrows(UserAlreadyExistsException.class, () -> userService.registerUser(user));
@@ -51,7 +51,7 @@ class UserServiceTest extends BaseTest {
 
   @Test
   void registerUserValid() throws BadRequestException {
-    SignupUserInDTO user = new SignupUserInDTO("a@b.c", "Password123", "u");
+    SignupUserInDTO user = new SignupUserInDTO("a@b.c", "Password123", "username");
     when(userRepository.existsByEmailIgnoreCase(any())).thenReturn(false);
     when(userRepository.existsByUsernameIgnoreCase(any())).thenReturn(false);
     userService.registerUser(user);

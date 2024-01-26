@@ -58,7 +58,7 @@ class PlaceServiceTest extends BaseTest {
             .id(1L)
             .username("Lojza")
             .email("lojza@lojza.cz")
-            .password("pass")
+            .password("Password1")
             .serverRole(ServerRole.USER)
             .build();
     u2 =
@@ -66,7 +66,7 @@ class PlaceServiceTest extends BaseTest {
             .id(2L)
             .username("Franta")
             .email("franta@franta.cz")
-            .password("pass")
+            .password("Password1")
             .serverRole(ServerRole.USER)
             .build();
     i1 = Interest.builder().id(1L).name("Interest").description("Description").build();

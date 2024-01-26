@@ -30,9 +30,9 @@ class ManageInterestServiceTest extends BaseTest {
 
   @BeforeEach
   void setUp() {
-    u1 = AppUser.builder().username("Lojza").id(1L).password("password").email("l@l.com").build();
+    u1 = AppUser.builder().username("Lojza").id(1L).password("Password1").email("l@l.com").build();
 
-    i1 = Interest.builder().id(1L).name("IT").description("IT").exclusive(true).build();
+    i1 = Interest.builder().id(1L).name("IT kurzy").description("IT kurzy").exclusive(true).build();
 
     AppUser u2 = AppUser.builder().username("Alfonz").id(2L).build();
 

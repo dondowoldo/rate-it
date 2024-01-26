@@ -29,7 +29,7 @@ public class BaseIntegrationTest extends BaseTest {
         AppUser.builder()
             .username("Lojza")
             .email("lojza@lojza.cz")
-            .password("$2a$10$9g1X9rp6meCML3g/h32MyeQ369SEh/hQpZb82eqjpvI71xCIdPAlG")
+            .password("$2a$10$EBJUECPu/pDHhnt9TX3xmOVHVdYlYdAdR997ilX42EzakA/tL6aQC")
             .serverRole(ServerRole.USER)
             .build();
 
@@ -37,7 +37,7 @@ public class BaseIntegrationTest extends BaseTest {
         AppUser.builder()
             .username("Alfonz")
             .email("alfonz@alfonz.cz")
-            .password("$2a$10$9g1X9rp6meCML3g/h32MyeQ369SEh/hQpZb82eqjpvI71xCIdPAlG")
+            .password("$2a$10$EBJUECPu/pDHhnt9TX3xmOVHVdYlYdAdR997ilX42EzakA/tL6aQC")
             .serverRole(ServerRole.USER)
             .build();
 
@@ -45,7 +45,7 @@ public class BaseIntegrationTest extends BaseTest {
         AppUser.builder()
             .username("Karel")
             .email("karel@karel.cz")
-            .password("$2a$10$9g1X9rp6meCML3g/h32MyeQ369SEh/hQpZb82eqjpvI71xCIdPAlG")
+            .password("$2a$10$EBJUECPu/pDHhnt9TX3xmOVHVdYlYdAdR997ilX42EzakA/tL6aQC")
             .serverRole(ServerRole.ADMIN)
             .build();
 
@@ -53,14 +53,14 @@ public class BaseIntegrationTest extends BaseTest {
         AppUser.builder()
             .username("Franta")
             .email("franta@franta.cz")
-            .password("$2a$10$9g1X9rp6meCML3g/h32MyeQ369SEh/hQpZb82eqjpvI71xCIdPAlG")
+            .password("$2a$10$EBJUECPu/pDHhnt9TX3xmOVHVdYlYdAdR997ilX42EzakA/tL6aQC")
             .serverRole(ServerRole.USER)
             .build();
 
     AppUser u5 = AppUser.builder()
             .username("Hynek")
             .email("hynek@hynek.cz")
-            .password("$2a$10$9g1X9rp6meCML3g/h32MyeQ369SEh/hQpZb82eqjpvI71xCIdPAlG")
+            .password("$2a$10$EBJUECPu/pDHhnt9TX3xmOVHVdYlYdAdR997ilX42EzakA/tL6aQC")
             .serverRole(ServerRole.USER)
             .build();
     userRepository.saveAll(List.of(u1, u2, u3, u4, u5));
