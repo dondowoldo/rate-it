@@ -13,7 +13,7 @@
         <script th:replace="~{fragments.html :: topbar-script}"></script>
     </header>
 
-    <div class="content">
+    <main class="content">
         <form th:object="${interest}" th:data-interest-id="*{id}" name="myForm" th:action="${action}"
               th:method="${method}">
             <h2 th:if="${interest.id == null}">New Interest</h2>
@@ -97,7 +97,8 @@
             <input type="hidden" id="uploadedImageId" name="uploadedImageId" th:field="*{imageName}"/>
 
         </form>
-    </div>
+    </main>
+    <footer th:replace="~{fragments.html :: footer}"></footer>
 </div>
 
 <script type="module" src="/scripts/interestImageUpload.js"></script>

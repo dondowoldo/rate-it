@@ -20,6 +20,7 @@ async function success(position) {
     longitude = position.coords.longitude;
     try {
         await fetchData();
+        setNumberOfTitleLinesForAll();
     } catch (error) {
         console.error('Error fetching suggestions:', error);
     }
@@ -28,6 +29,7 @@ async function success(position) {
 async function error() {
     console.log("Unable to retrieve your location");
     await fetchData();
+    setNumberOfTitleLinesForAll();
 }
 
 async function fetchData() {
@@ -109,6 +111,25 @@ function isEmptyOrSpaces(str) {
     return str === null || str.match(/^ *$/) !== null;
 }
 
+function setNumberOfTitleLinesForAll() {
+    const discoverInterestElements = document.querySelectorAll('.discover-interest');
+    discoverInterestElements.forEach((element) => {
+        setNumberOfTitleLines(element);
+    });
+}
+
+function setNumberOfTitleLines(discoverInterestElement) {
+    const interestTitle = discoverInterestElement.querySelector('.discover-interest-title h3');
+    const titleStyle = window.getComputedStyle(interestTitle);
+    const titleLines = Math.ceil(parseInt(titleStyle.height) / parseInt(titleStyle.lineHeight));
+    interestTitle.style.setProperty('--title-lines', titleLines.toString());
+
+    document.documentElement.style.setProperty('--title-lines', titleLines.toString());
+
+    const interestDesc = discoverInterestElement.querySelector('.discover-interest-content p');
+    interestDesc.style.setProperty('--title-lines', titleLines.toString());
+}
+
 function filterInterests(checkbox) {
     let searchBar = document.querySelector('.search');
     if (typeof checkbox === 'undefined' || checkbox === null) {
@@ -141,4 +162,3 @@ function getCheckedFilter() {
     });
     return checked;
 }
-

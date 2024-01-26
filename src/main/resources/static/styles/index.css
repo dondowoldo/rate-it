@@ -5,13 +5,30 @@ body {
     margin: 0;
 }
 
-.container-fluid {
+footer {
+    display: flex;
+    justify-content: center;
     align-items: center;
+    flex-direction: column;
+    margin-top: auto;
+    width: 100%;
+    background-color: #568D73;
+    color: white;
+}
+
+.container-fluid {
+    display: flex;
+    flex-direction: column;
     max-width: 500px;
-    margin: 0 auto;
     background-color: #E2E2E2;
     padding: 0;
     min-height: 100vh;
+}
+
+.footer-links {
+    width: 90%;
+    display: flex;
+    justify-content: space-around;
 }
 
 .header {
@@ -23,13 +40,13 @@ body {
 }
 
 .header-left,
-.header-right{
+.header-right {
     display: flex;
     justify-content: center;
     align-content: center;
 }
 
-.header-top {
+.header-middle {
     display: flex;
     color: white;
     font-family: 'Righteous', sans-serif;
@@ -37,7 +54,7 @@ body {
     justify-content: center;
 }
 
-.header-top > a {
+.header-middle > a {
     all: unset;
     cursor: pointer;
 }
@@ -92,7 +109,7 @@ body {
     border: none;
     padding: 0;
     cursor: pointer;
-    filter:  brightness(0) invert(1);
+    filter: brightness(0) invert(1);
 }
 
 #top-hamburger {
@@ -363,19 +380,21 @@ h3 {
 
 .interest-place {
     display: flex;
-    flex-direction: column;
     gap: 1rem;
     background: #FFFFFF;
     color: #000000;
-    border-radius: 1.5rem;
+    border-radius: 1rem;
     padding: 0.5rem;
     text-decoration: none;
+    position: relative;
+    height: 9rem;
 }
 
 .interest-place-content {
     display: flex;
     flex-direction: column;
     flex-grow: 2;
+    overflow: hidden;
 }
 
 .interest-place-header {
@@ -383,15 +402,35 @@ h3 {
     justify-content: space-between;
 }
 
-.interest-place-title h3 {
+.interest-place-title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+.interest-place-title h3,
+.interest-place-title h4 {
     color: #000000;
-    font-size: 1.2rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    white-space: normal;
+}
+
+.interest-place-title h3 {
+    font-size: 1rem;
+    margin-top: 0;
     margin-bottom: 0.2rem;
+    max-height: 2.5rem;
+    -webkit-line-clamp: 2;
 }
 
 .interest-place-title h4 {
-    color: #000000;
-    font-size: 0.8rem;
+    font-size: 0.7rem;
+    -webkit-line-clamp: 1;
 }
 
 .interest-place:hover .interest-place-title > h3 {
@@ -401,6 +440,9 @@ h3 {
 .interest-place-ratings {
     list-style: none;
     padding-left: 0;
+    position: absolute;
+    bottom: 0;
+    margin-bottom: 0.3rem;
 }
 
 .interest-place-ratings li {
@@ -408,10 +450,16 @@ h3 {
     align-items: baseline;
 }
 
+.interest-place-ratings li:first-child {
+    font-size: 110%;
+}
+
 .interest-place-ratings i {
     color: #bebebe;
     width: 2rem;
     text-align: center;
+    margin-left: -0.3rem;
+    flex-shrink: 0;
 }
 
 .interest-place-ratings i.overall {
@@ -425,18 +473,27 @@ h3 {
 .interest-place-ratings .rating {
     display: block;
     width: 2rem;
+    flex-shrink: 0;
+
+}
+
+.interest-place-ratings .criterion {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
 }
 
 .interest-place-img {
-    display: flex;
     flex-shrink: 0;
-    width: 100%;
+    width: 35%;
 }
 
 .interest-place-img > img {
     width: 100%;
     height: 100%;
-    border-radius: 1rem;
+    border-radius: 0.7rem;
     object-fit: cover;
 }
 
@@ -446,13 +503,18 @@ h3 {
     font-size: 0.8rem;
 }
 
-@media only screen and (min-width: 475px) {
+@media only screen and (max-width: 475px) {
     .interest-place {
-        flex-direction: row;
+        flex-direction: column;
+        height: auto;
     }
 
     .interest-place-img {
-        width: 10rem;
+        width: 100%;
+    }
+
+    .interest-place-ratings {
+        position: relative;
     }
 }
 
@@ -478,6 +540,7 @@ h3 {
 
 .sort-container {
     display: flex;
+    cursor: pointer;
 }
 
 .sort-container:hover {
@@ -488,14 +551,14 @@ h3 {
     padding: 0.3em 0.5em;
     text-align: justify;
     border-radius: 1rem;
-    font-weight: 400;
     color: #888585;
     background: transparent;
 }
 
 .sort-container > .sort-checkbox:checked + span {
     color: #478363;
-    font-weight: 700;
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: #478363;
     background-color: rgba(86, 141, 115, 0.1);
 }
 
@@ -889,11 +952,11 @@ h4 {
 }
 
 .user-form {
-    padding: 2vh 2rem
+    padding: 2rem 2rem;
 }
 
 :root {
-    --form-container-height: 65vh;
+    --form-container-height: 75vh;
 }
 
 .form-container {
@@ -932,8 +995,7 @@ h4 {
 .top-container {
     background: #BED9CC;
     z-index: 2;
-    padding: 1rem 0;
-
+    padding: 1rem 1rem 2rem;
 }
 
 .back-container {
@@ -951,7 +1013,7 @@ h4 {
 .credentials {
     display: flex;
     flex-direction: column;
-    padding: 0.2rem 1rem;
+    padding: 0.2rem;
     position: relative;
 }
 
@@ -966,27 +1028,29 @@ h4 {
     border-radius: 2rem;
     padding: 0.3rem 2rem;
     box-sizing: border-box;
+    font-size: 0.8rem;
 }
 
 .user-icon {
     position: absolute;
-    top: 65%;
-    transform: translateY(-50%);
-    left: 1.5rem;
+    top: 52%;
+    left: 1rem;
     width: 1rem;
     height: 1rem;
 }
 
 .forgot-password {
     display: flex;
-    flex-direction: row-reverse;
-    padding-right: 2rem
+    justify-content: flex-end;
+    text-decoration: none;
+    color: black;
+    padding: 0.2rem;
 }
 
 .user-form-button {
     flex: 1;
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     justify-content: center;
 }
 
@@ -995,7 +1059,7 @@ h4 {
     border-radius: 2rem;
     width: 80%;
     font-weight: bold;
-    font-size: 4vh;
+    font-size: 1.5rem;
     font-family: 'Montserrat', sans-serif;
 }
 
@@ -1035,8 +1099,12 @@ h4 {
 .rs-logo {
     display: flex;
     justify-content: center;
-    padding-top: 2vh;
-    height: 8rem;
+    margin-bottom: 0.5rem;
+}
+
+.rs-logo > img{
+    height: 4rem;
+    width: 4rem;
 }
 
 .discover-interests {
@@ -1065,7 +1133,7 @@ h4 {
 .discover-interest-img > img {
     width: 100%;
     height: 100%;
-    border-radius: 1rem;
+    border-radius: 0.7rem;
     object-fit: cover;
 }
 
@@ -1110,9 +1178,14 @@ h4 {
     gap: 1rem;
 }
 
-.discover-interest-values > p {
+.discover-interest-content p {
     overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: calc(4 - var(--title-lines));
+    -webkit-box-orient: vertical;
+    max-height: 3.5rem;
     text-overflow: ellipsis;
-    white-space: nowrap;
+    white-space: normal;
     font-size: small;
+    margin-bottom: 0;
 }

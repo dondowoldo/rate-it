@@ -8,10 +8,7 @@
     <header class="header">
         <div th:replace="~{fragments.html :: logo}"></div>
     </header>
-    <div class="rs-logo">
-        <img src="/icons/R-logo.png" alt="Logo">
-    </div>
-    <div class="user-form">
+    <main class="user-form">
         <div class="form-container">
             <div class="right-container back-container" th:onclick="|location.href='@{/users/login}';|"
                  style="cursor: pointer;">
@@ -21,6 +18,9 @@
             </div>
             <form class="left-container top-container" th:action="@{/users/signup}" method="post">
                 <h1>REGISTER</h1>
+                <div class="rs-logo">
+                    <img src="/icons/R-logo.png" alt="Logo">
+                </div>
                 <section class="credentials">
                     <h6>Username</h6>
                     <input type="text" name="username" class="credentials-input" th:value="${userDTO?.username}"
@@ -53,7 +53,8 @@
 
             </form>
         </div>
-    </div>
+    </main>
+    <footer th:replace="~{fragments.html :: footer}"></footer>
 </div>
 </body>
 </html>

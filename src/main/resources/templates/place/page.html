@@ -13,7 +13,7 @@
          ~{fragments.html :: place-admin-menu} : ~{fragments.html :: login-menu}"></div>
         <script th:replace="~{fragments.html :: topbar-script}"></script>
     </header>
-    <div class="content">
+    <main class="content">
         <a class="place-interest"
            th:href="@{/interests/{interestId}(interestId=${place.interest.id})}">
             <h2 th:text="*{getInterest.name}"></h2>
@@ -35,7 +35,7 @@
                 <i class="fas fa-star"></i>
                 <span th:id="place-rating"
                       th:unless="${place.getAverageRating() == null}"
-                      th:text="${#numbers.formatDecimal(place.getAverageRating() / 2, 1, 'DEFAULT', 1, 'POINT')}"></span>
+                      th:text="${#numbers.formatDecimal(@thymeMath.roundRating(place.getAverageRating()), 1, 1, 'POINT')}"></span>
                 <span th:id="place-rating"
                       th:if="${place.getAverageRating() == null}">N/A</span>
             </div>
@@ -59,7 +59,7 @@
                             <i class="fas fa-star"></i>
                             <span th:id="${criterionDTO.id}"
                                   th:unless="${criterionDTO.avgRating == null}" class="rating"
-                                  th:text="${#numbers.formatDecimal(criterionDTO.avgRating / 2, 1, 'DEFAULT', 1, 'POINT')}"></span>
+                                  th:text="${#numbers.formatDecimal(@thymeMath.roundRating(criterionDTO.avgRating), 1, 1, 'POINT')}"></span>
                             <span th:id="${criterionDTO.id}"
                                   th:if="${criterionDTO.avgRating == null}" class="rating">N/A</span>
                         </div>
@@ -107,10 +107,11 @@
         <div class="place-map">
             <div id="map"></div>
         </div>
-    </div>
+    </main>
+    <footer th:replace="~{fragments.html :: footer}"></footer>
 </div>
 
-<script th:replace="~{fragments :: placeMap-script}"></script>
+<script th:replace="~{fragments :: leaflet-script}"></script>
 <script th:inline="javascript">
     /*<![CDATA[*/
 
