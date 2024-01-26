@@ -19,23 +19,20 @@ import java.util.stream.Collectors;
 @Entity
 @Table(name = "interests")
 public class Interest {
-  public interface ExistingInterest {}
+  public interface NewInterest {}
 
-  @Id
-  @GeneratedValue
-  @NotNull
-  private Long id;
+  @Id @GeneratedValue @NotNull private Long id;
 
-  @NotBlank(groups = ExistingInterest.class)
+  @NotBlank(groups = NewInterest.class)
   @Length(
       min = Constraints.MIN_NAME_LENGTH,
       max = Constraints.MAX_NAME_LENGTH,
-      groups = ExistingInterest.class)
+      groups = NewInterest.class)
   @Column(nullable = false)
   private String name;
 
-  @NotBlank(groups = ExistingInterest.class)
-  @Length(max = Constraints.MAX_DESCRIPTION_LENGTH, groups = ExistingInterest.class)
+  @NotBlank(groups = NewInterest.class)
+  @Length(max = Constraints.MAX_DESCRIPTION_LENGTH, groups = NewInterest.class)
   @Column(nullable = false, length = 1000)
   private String description;
 
