@@ -3,7 +3,7 @@ body {
     font-family: 'Montserrat', sans-serif;
     background-color: rgb(185 185 185);
     margin: 0;
-    word-break: break-all;
+    overflow-wrap: anywhere;
 }
 
 footer {
