@@ -857,6 +857,7 @@ h4 {
 .error {
     color: #d74141;
     font-weight: 600;
+    padding: 1.2rem
 }
 
 .successful {

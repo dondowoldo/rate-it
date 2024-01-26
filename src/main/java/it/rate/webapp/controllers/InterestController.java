@@ -7,6 +7,7 @@ import it.rate.webapp.services.*;
 import java.security.Principal;
 import java.util.*;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -43,6 +44,7 @@ public class InterestController {
     return "interest/form";
   }
 
+  @Transactional
   @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
   @PostMapping("/create")
   public String createInterest(

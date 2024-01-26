@@ -1,5 +1,6 @@
 package it.rate.webapp.services;
 
+import it.rate.webapp.config.Constraints;
 import it.rate.webapp.models.Criterion;
 import it.rate.webapp.models.Interest;
 import it.rate.webapp.repositories.CriterionRepository;
@@ -7,6 +8,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -20,7 +22,9 @@ import java.util.stream.Collectors;
 public class CriterionService {
   private final CriterionRepository criterionRepository;
 
-  public void createNew(@Valid Interest interest, @NotEmpty Set<@NotBlank String> criteriaNames) {
+  public void createNew(
+      @Valid Interest interest,
+      @NotEmpty Set<@NotBlank @Length(max = Constraints.MAX_NAME_LENGTH) String> criteriaNames) {
     List<Criterion> criteria =
         criteriaNames.stream()
             .map(c -> Criterion.builder().name(c).interest(interest).build())

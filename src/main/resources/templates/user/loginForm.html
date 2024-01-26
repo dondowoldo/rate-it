@@ -15,9 +15,6 @@
                 <div class="rs-logo">
                     <img src="/icons/R-logo.png" alt="Logo">
                 </div>
-                <div th:if="${param.error}">
-                    <div class="alert alert-danger">Invalid Username or Password</div>
-                </div>
                 <section class="credentials">
                     <h6>Email address</h6>
                     <input class="credentials-input" type="text" name="username"
@@ -32,6 +29,7 @@
 
                 </section>
                 <a class="forgot-password">Forgot password?</a>
+                <p th:if="${param.error}" class="error">Invalid username or password</p>
                 <div class="user-form-button">
                     <button type="submit" class="sign-button">Login</button>
                 </div>
