@@ -1,11 +1,14 @@
 package it.rate.webapp.models;
 
 import it.rate.webapp.config.Constraints;
+import it.rate.webapp.dtos.InterestInDTO;
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,16 +17,16 @@ import java.util.stream.Collectors;
 @Getter
 @Setter
 @Builder
+@Validated
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "interests")
 public class Interest {
-  public interface NewInterest {}
 
   @Id
   @GeneratedValue
-  @NotNull(groups = NewInterest.class)
+  @NotNull
   private Long id;
 
   @NotBlank
@@ -65,6 +68,13 @@ public class Interest {
       joinColumns = @JoinColumn(name = "interest_id"),
       inverseJoinColumns = @JoinColumn(name = "category_id"))
   private List<Category> categories = new ArrayList<>();
+
+  public Interest(@Valid InterestInDTO interestDTO) {
+    this.name = interestDTO.name();
+    this.description = interestDTO.description();
+    this.exclusive = interestDTO.exclusive();
+    this.imageName = interestDTO.imageName();
+  }
 
   public int countLikes() {
     return likes.size();

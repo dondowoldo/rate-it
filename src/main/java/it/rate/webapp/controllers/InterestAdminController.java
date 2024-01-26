@@ -54,8 +54,8 @@ public class InterestAdminController {
     interest.setId(interestId);
     List<Category> categories = categoryService.findMaxLimitByIdIn(categoryIds);
     interest.setCategories(categories);
-    Interest editedInterest = interestService.saveEdited(interest);
-    criterionService.updateExisting(editedInterest, criteriaNames);
+    Interest updatedInterest = interestService.update(interest);
+    criterionService.updateExisting(updatedInterest, criteriaNames);
 
     return String.format("redirect:/interests/%d", interestId);
   }

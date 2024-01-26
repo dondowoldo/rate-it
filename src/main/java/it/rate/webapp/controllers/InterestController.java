@@ -1,5 +1,6 @@
 package it.rate.webapp.controllers;
 
+import it.rate.webapp.dtos.InterestInDTO;
 import it.rate.webapp.exceptions.badrequest.InvalidInterestDetailsException;
 import it.rate.webapp.exceptions.notfound.InterestNotFoundException;
 import it.rate.webapp.models.*;
@@ -47,20 +48,21 @@ public class InterestController {
   @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
   @PostMapping("/create")
   public String createInterest(
-      Interest interest,
+      InterestInDTO interestDTO,
       @RequestParam Set<String> criteriaNames,
       @RequestParam(required = false) Set<Long> categoryIds,
       Principal principal) {
 
     AppUser loggedUser = userService.getByEmail(principal.getName());
     List<Category> categories = categoryService.findMaxLimitByIdIn(categoryIds);
+    Interest interest = new Interest(interestDTO);
     interest.setCategories(categories);
-    Interest savedInterest = interestService.saveNew(interest);
-    criterionService.createNew(savedInterest, criteriaNames);
-    roleService.setRole(savedInterest, loggedUser, Role.RoleType.CREATOR);
-    likeService.save(loggedUser, savedInterest);
+    interest = interestService.save(interest);
+    criterionService.createNew(interest, criteriaNames);
+    roleService.setRole(interest, loggedUser, Role.RoleType.CREATOR);
+    likeService.save(loggedUser, interest);
 
-    return String.format("redirect:/interests/%d", savedInterest.getId());
+    return String.format("redirect:/interests/%d", interest.getId());
   }
 
   @GetMapping("/{interestId}")

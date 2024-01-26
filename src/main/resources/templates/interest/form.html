@@ -21,7 +21,11 @@
             <section class="input-param">
                 <h4>Name</h4>
                 <label>
-                    <input class="input-text-field" type="text" name="name" th:value="*{name}" required>
+                    <input class="input-text-field"
+                           type="text" name="name"
+                           th:value="*{name}"
+                           required
+                    />
                 </label>
             </section>
 
@@ -29,7 +33,12 @@
                 <h4>Category</h4>
                 <div class="sort-buttons">
                     <label class="sort-container" th:each="category : ${categories}">
-                        <input th:checked="${interest.categoryIds.contains(category.id)}" type="checkbox" name="categoryIds" th:value="${category.id}" class="sort-checkbox"/>
+                        <input class="sort-checkbox"
+                               name="categoryIds"
+                               type="checkbox"
+                               th:checked="${interest.categoryIds.contains(category.id)}"
+                               th:value="${category.id}"
+                        />
                         <span th:text="${category.name}"></span>
                     </label>
                 </div>
@@ -37,7 +46,13 @@
 
             <section class="input-param">
                 <h4>Rate access</h4>
-                <input type="checkbox" id="toggle" class="toggle-checkbox" name="exclusive" th:checked="*{exclusive}"/>
+                <input type="hidden" th:field="*{exclusive}">
+                <input class="toggle-checkbox"
+                       id="toggle"
+                       type="checkbox"
+                       th:checked="*{exclusive}"
+                       onchange="setRateAccess()"
+                />
                 <label for="toggle" class="toggle-container">
                     <span>Anyone can rate</span>
                     <span>Invite only</span>
@@ -81,7 +96,7 @@
             <section class="input-param">
                 <h4>Description</h4>
                 <label>
-                    <textarea class="input-text-field" name="description" th:field="*{description}" required></textarea>
+                    <textarea class="input-text-field" th:field="*{description}" required></textarea>
                 </label>
             </section>
 
@@ -94,7 +109,7 @@
                 <button class="button" type="submit">Save</button>
             </div>
 
-            <input type="hidden" id="uploadedImageId" name="uploadedImageId" th:field="*{imageName}"/>
+            <input type="hidden" id="uploadedImageId" th:field="*{imageName}"/>
 
         </form>
     </main>

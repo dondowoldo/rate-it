@@ -1,6 +1,7 @@
 package it.rate.webapp.services;
 
 import it.rate.webapp.dtos.CoordinatesDTO;
+import it.rate.webapp.dtos.InterestInDTO;
 import it.rate.webapp.dtos.InterestSuggestionDTO;
 import it.rate.webapp.dtos.LikedInterestsDTO;
 import it.rate.webapp.models.*;
@@ -19,8 +20,6 @@ import org.springframework.validation.annotation.Validated;
 @AllArgsConstructor
 public class InterestService {
 
-  private final Validator validator;
-
   private final InterestRepository interestRepository;
 
   public Optional<Interest> findById(Long interestId) {
@@ -31,16 +30,11 @@ public class InterestService {
     return interestRepository.getReferenceById(interestId);
   }
 
-  public Interest saveNew(@Valid Interest interest) {
+  public Interest save(Interest interest) {
     return interestRepository.save(interest);
   }
 
-  public Interest saveEdited(@Valid Interest interest) {
-    Set<ConstraintViolation<Interest>> violations =
-        validator.validate(interest, Interest.NewInterest.class);
-    if (!violations.isEmpty()) {
-      throw new ConstraintViolationException(violations);
-    }
+  public Interest update(@Valid Interest interest) {
     return interestRepository.save(interest);
   }
 
