@@ -5,9 +5,11 @@ import it.rate.webapp.dtos.InterestSuggestionDTO;
 import it.rate.webapp.dtos.LikedInterestsDTO;
 import it.rate.webapp.models.*;
 import it.rate.webapp.repositories.*;
-import jakarta.validation.Valid;
+import jakarta.validation.*;
+
 import java.util.*;
 import java.util.stream.Collectors;
+
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -16,6 +18,8 @@ import org.springframework.validation.annotation.Validated;
 @Validated
 @AllArgsConstructor
 public class InterestService {
+
+  private final Validator validator;
 
   private final InterestRepository interestRepository;
 
@@ -27,7 +31,16 @@ public class InterestService {
     return interestRepository.getReferenceById(interestId);
   }
 
-  public Interest save(Interest interest) {
+  public Interest saveNew(@Valid Interest interest) {
+    return interestRepository.save(interest);
+  }
+
+  public Interest saveEdited(Interest interest) {
+    Set<ConstraintViolation<Interest>> violations =
+        validator.validate(interest, Interest.ExistingInterest.class);
+    if (!violations.isEmpty()) {
+      throw new ConstraintViolationException(violations);
+    }
     return interestRepository.save(interest);
   }
 

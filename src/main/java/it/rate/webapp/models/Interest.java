@@ -19,19 +19,28 @@ import java.util.stream.Collectors;
 @Entity
 @Table(name = "interests")
 public class Interest {
-  @Id @GeneratedValue @NotNull private Long id;
+  public interface ExistingInterest {}
 
-  @NotBlank
-  @Length(min = Constraints.MIN_NAME_LENGTH, max = Constraints.MAX_NAME_LENGTH)
+  @Id
+  @GeneratedValue
+  @NotNull
+  private Long id;
+
+  @NotBlank(groups = ExistingInterest.class)
+  @Length(
+      min = Constraints.MIN_NAME_LENGTH,
+      max = Constraints.MAX_NAME_LENGTH,
+      groups = ExistingInterest.class)
   @Column(nullable = false)
   private String name;
 
-  @NotBlank
-  @Length(max = Constraints.MAX_DESCRIPTION_LENGTH)
+  @NotBlank(groups = ExistingInterest.class)
+  @Length(max = Constraints.MAX_DESCRIPTION_LENGTH, groups = ExistingInterest.class)
   @Column(nullable = false, length = 1000)
   private String description;
 
   @Builder.Default private boolean deleted = false;
+
   private boolean exclusive;
 
   private String imageName;

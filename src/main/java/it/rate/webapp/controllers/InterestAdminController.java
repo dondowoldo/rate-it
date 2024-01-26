@@ -6,6 +6,7 @@ import it.rate.webapp.models.Category;
 import it.rate.webapp.models.Interest;
 import it.rate.webapp.models.Role;
 import it.rate.webapp.services.*;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -37,10 +38,11 @@ public class InterestAdminController {
     model.addAttribute("method", "put");
     model.addAttribute("loggedUser", userService.getByEmail(principal.getName()));
     model.addAttribute("categories", categoryService.findAll());
-    model.addAttribute("maxCategories", categoryService.getMaxCategories());
+
     return "interest/form";
   }
 
+  @Transactional
   @PutMapping("/edit")
   @PreAuthorize("@permissionService.manageCommunity(#interestId)")
   public String editInterest(
@@ -49,10 +51,11 @@ public class InterestAdminController {
       @RequestParam Set<String> criteriaNames,
       @RequestParam(required = false) Set<Long> categoryIds) {
 
-    interest.setId(interestId);
+//    interest.setId(interestId);
     List<Category> categories = categoryService.findMaxLimitByIdIn(categoryIds);
     interest.setCategories(categories);
-    criterionService.updateExisting(interestService.save(interest), criteriaNames);
+    Interest editedInterest = interestService.saveEdited(interest);
+    criterionService.updateExisting(editedInterest, criteriaNames);
 
     return String.format("redirect:/interests/%d", interestId);
   }

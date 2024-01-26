@@ -33,7 +33,8 @@ public class CriterionService {
   }
 
   public void updateExisting(
-      @Valid Interest interest, @NotEmpty Set<@NotBlank String> criteriaNames) {
+      @Valid Interest interest,
+      @NotEmpty Set<@NotBlank @Length(max = Constraints.MAX_NAME_LENGTH) String> criteriaNames) {
     // Get old criteria
     List<Criterion> oldCriteria = criterionRepository.findAllByInterest(interest);
 

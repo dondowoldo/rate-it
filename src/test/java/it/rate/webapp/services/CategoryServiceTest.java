@@ -1,6 +1,7 @@
 package it.rate.webapp.services;
 
 import it.rate.webapp.BaseTest;
+import it.rate.webapp.config.Constraints;
 import it.rate.webapp.models.Category;
 import it.rate.webapp.repositories.CategoryRepository;
 import jakarta.validation.ConstraintViolationException;
@@ -22,7 +23,7 @@ class CategoryServiceTest extends BaseTest {
 
   @Test
   void findMaxLimitByIdIn_TooManyCategoriesThrowsException() {
-    int maxLimit = categoryService.getMaxCategories();
+    int maxLimit = Constraints.MAX_CATEGORIES_PER_INTEREST;
     Set<Long> categoryIds = new HashSet<>();
     for (int i = 0; i < maxLimit + 1; i++) {
       categoryIds.add((long) i + 1);

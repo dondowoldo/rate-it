@@ -39,7 +39,6 @@ public class InterestController {
     model.addAttribute("method", "post");
     model.addAttribute("loggedUser", userService.getByEmail(principal.getName()));
     model.addAttribute("categories", categoryService.findAll());
-    model.addAttribute("maxCategories", categoryService.getMaxCategories());
 
     return "interest/form";
   }
@@ -56,7 +55,7 @@ public class InterestController {
     AppUser loggedUser = userService.getByEmail(principal.getName());
     List<Category> categories = categoryService.findMaxLimitByIdIn(categoryIds);
     interest.setCategories(categories);
-    Interest savedInterest = interestService.save(interest);
+    Interest savedInterest = interestService.saveNew(interest);
     criterionService.createNew(savedInterest, criteriaNames);
     roleService.setRole(savedInterest, loggedUser, Role.RoleType.CREATOR);
     likeService.save(loggedUser, savedInterest);
