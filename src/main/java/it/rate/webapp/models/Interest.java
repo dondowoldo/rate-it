@@ -1,9 +1,11 @@
 package it.rate.webapp.models;
 
+import it.rate.webapp.config.Constraints;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.hibernate.validator.constraints.Length;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,10 +22,12 @@ public class Interest {
   @Id @GeneratedValue @NotNull private Long id;
 
   @NotBlank
+  @Length(min = Constraints.MIN_NAME_LENGTH, max = Constraints.MAX_NAME_LENGTH)
   @Column(nullable = false)
   private String name;
 
   @NotBlank
+  @Length(max = Constraints.MAX_DESCRIPTION_LENGTH)
   @Column(nullable = false, length = 1000)
   private String description;
 
