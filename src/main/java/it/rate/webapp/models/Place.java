@@ -24,7 +24,9 @@ public class Place {
   @Column(nullable = false)
   private String name;
 
+  @Column(length = 1000)
   private String description;
+
   private String address;
 
   @NotNull

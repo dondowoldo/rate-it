@@ -24,7 +24,7 @@ public class Interest {
   private String name;
 
   @NotBlank
-  @Column(nullable = false)
+  @Column(nullable = false, length = 1000)
   private String description;
 
   @Builder.Default private boolean deleted = false;
