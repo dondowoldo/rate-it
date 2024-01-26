@@ -21,7 +21,6 @@ public class ImageController {
 
   private final GoogleImageService googleImageService;
   private final PlaceService placeService;
-  private final Logger logger = LoggerFactory.getLogger(ImageController.class);
 
   @PostMapping("interests/{interestId}/places/{placeId}/new-image")
   @PreAuthorize("@permissionService.ratePlace(#placeId)")
@@ -32,18 +31,10 @@ public class ImageController {
       Principal principal)
       throws IOException {
 
-    try {
-      String userEmail = principal.getName();
-      Place place = placeService.getById(placeId);
-      placeService.addImage(place, googleImageService.saveImage(file, userEmail));
+    String userEmail = principal.getName();
+    Place place = placeService.getById(placeId);
+    placeService.addImage(place, googleImageService.saveImage(file, userEmail));
 
-      return "redirect:/interests/" + interestId + "/places/" + placeId;
-    } catch (IOException e) {
-      logger.error("An error occurred while uploading an image", e);
-      throw e;
-    } catch (Exception e) {
-      logger.error("An unexpected error occurred", e);
-      throw e;
-    }
+    return "redirect:/interests/" + interestId + "/places/" + placeId;
   }
 }

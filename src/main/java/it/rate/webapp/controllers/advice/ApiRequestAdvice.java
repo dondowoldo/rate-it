@@ -3,6 +3,8 @@ package it.rate.webapp.controllers.advice;
 import it.rate.webapp.dtos.ErrorResponseDTO;
 import it.rate.webapp.exceptions.api.ApiServiceUnavailableException;
 import it.rate.webapp.exceptions.api.InvalidApiResponseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -20,6 +22,7 @@ public class ApiRequestAdvice {
   private String clientMessage;
   private String simpleMessage;
   private int statusCode;
+  private Logger logger = LoggerFactory.getLogger(ApiRequestAdvice.class);
 
   @ExceptionHandler(InvalidApiResponseException.class)
   @ResponseStatus(HttpStatus.BAD_GATEWAY)
@@ -28,6 +31,7 @@ public class ApiRequestAdvice {
     simpleMessage = "Bad Gateway";
     clientMessage =
         "Sorry, we received an invalid response from a third party service. Please try again later.";
+    logger.error("An invalid API response error has occurred", e);
     return new ModelAndView(
         "error/page", "error", new ErrorResponseDTO(statusCode, simpleMessage, clientMessage));
   }
@@ -38,6 +42,7 @@ public class ApiRequestAdvice {
     statusCode = HttpStatus.SERVICE_UNAVAILABLE.value();
     simpleMessage = "Service Unavailable";
     clientMessage = "Sorry, a third party service is unavailable. Please try again later.";
+    logger.error("API service unavailable error has occurred", e);
     return new ModelAndView(
         "error/page", "error", new ErrorResponseDTO(statusCode, simpleMessage, clientMessage));
   }
