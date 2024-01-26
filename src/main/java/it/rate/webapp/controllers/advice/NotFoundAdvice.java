@@ -2,6 +2,8 @@ package it.rate.webapp.controllers.advice;
 
 import it.rate.webapp.dtos.ErrorResponseDTO;
 import it.rate.webapp.exceptions.notfound.ResourceNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -20,9 +22,11 @@ public class NotFoundAdvice {
   private final String clientMessage = "Sorry, we couldn't quite find what you were looking for.";
   private final String simpleMessage = "Page not found";
   private final int statusCode = HttpStatus.NOT_FOUND.value();
+  private final Logger logger = LoggerFactory.getLogger(NotFoundAdvice.class);
 
   @ExceptionHandler({ResourceNotFoundException.class, NoResourceFoundException.class})
   public ModelAndView handleResourceNotFoundException(Exception e) {
+    logger.error("Resource Not Found Exception has occurred", e);
     return new ModelAndView(
         "error/page", "error", new ErrorResponseDTO(statusCode, simpleMessage, clientMessage));
   }

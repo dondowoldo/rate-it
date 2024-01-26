@@ -3,6 +3,8 @@ package it.rate.webapp.controllers.advice;
 import it.rate.webapp.dtos.ErrorResponseDTO;
 import it.rate.webapp.exceptions.badrequest.BadRequestException;
 import jakarta.validation.ConstraintViolationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -25,6 +27,7 @@ public class BadRequestAdvice {
       "Sorry, your request was invalid. Please check the details and try again.";
   private final String simpleMessage = "Bad request";
   private final int statusCode = HttpStatus.BAD_REQUEST.value();
+  private final Logger logger = LoggerFactory.getLogger(BadRequestAdvice.class);
 
   @ExceptionHandler(MethodArgumentNotValidException.class)
   public ModelAndView handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
@@ -32,6 +35,7 @@ public class BadRequestAdvice {
         e.getBindingResult().getFieldError().getField()
             + ": "
             + e.getBindingResult().getFieldError().getDefaultMessage();
+    logger.error("Method Argument Not Valid Exception has occurred", e);
     return new ModelAndView(
         "error/page", "error", new ErrorResponseDTO(statusCode, simpleMessage, errorMessage));
   }
@@ -44,6 +48,7 @@ public class BadRequestAdvice {
     MethodArgumentTypeMismatchException.class
   })
   public ModelAndView handleConstraintViolationException(Exception e) {
+    logger.error("Constraint Violation Exception has occurred", e);
     return new ModelAndView(
         "error/page", "error", new ErrorResponseDTO(statusCode, simpleMessage, clientMessage));
   }

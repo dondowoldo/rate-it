@@ -22,7 +22,7 @@ public class ApiRequestAdvice {
   private String clientMessage;
   private String simpleMessage;
   private int statusCode;
-  private Logger logger = LoggerFactory.getLogger(ApiRequestAdvice.class);
+  private final Logger logger = LoggerFactory.getLogger(ApiRequestAdvice.class);
 
   @ExceptionHandler(InvalidApiResponseException.class)
   @ResponseStatus(HttpStatus.BAD_GATEWAY)
