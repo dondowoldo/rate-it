@@ -1,7 +1,6 @@
 package it.rate.webapp.services;
 
 import it.rate.webapp.dtos.CoordinatesDTO;
-import it.rate.webapp.dtos.InterestInDTO;
 import it.rate.webapp.dtos.InterestSuggestionDTO;
 import it.rate.webapp.dtos.LikedInterestsDTO;
 import it.rate.webapp.models.*;
