@@ -6,6 +6,8 @@ import it.rate.webapp.services.PlaceService;
 import java.io.IOException;
 import java.security.Principal;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +21,7 @@ public class ImageController {
 
   private final GoogleImageService googleImageService;
   private final PlaceService placeService;
+  private final Logger logger = LoggerFactory.getLogger(ImageController.class);
 
   @PostMapping("interests/{interestId}/places/{placeId}/new-image")
   @PreAuthorize("@permissionService.ratePlace(#placeId)")
@@ -29,10 +32,18 @@ public class ImageController {
       Principal principal)
       throws IOException {
 
-    String userEmail = principal.getName();
-    Place place = placeService.getById(placeId);
-    placeService.addImage(place, googleImageService.saveImage(file, userEmail));
+    try {
+      String userEmail = principal.getName();
+      Place place = placeService.getById(placeId);
+      placeService.addImage(place, googleImageService.saveImage(file, userEmail));
 
-    return "redirect:/interests/" + interestId + "/places/" + placeId;
+      return "redirect:/interests/" + interestId + "/places/" + placeId;
+    } catch (IOException e) {
+      logger.error("An error occurred while uploading an image", e);
+      throw e;
+    } catch (Exception e) {
+      logger.error("An unexpected error occurred", e);
+      throw e;
+    }
   }
 }

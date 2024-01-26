@@ -13,6 +13,8 @@ import it.rate.webapp.services.UserService;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +31,7 @@ public class InterestRestController {
   private final PlaceService placeService;
   private final UserService userService;
   private final LikeService likeService;
+  private final Logger logger = LoggerFactory.getLogger(InterestRestController.class);
 
   @GetMapping("/suggestions")
   public ResponseEntity<?> getAllSuggestions(
@@ -71,6 +74,7 @@ public class InterestRestController {
     if (optInterest.isPresent()) {
       return ResponseEntity.ok().body(placeService.getPlaceInfoDTOS(optInterest.get()));
     }
+    logger.warn("Interest with ID {} does not exist", interestId);
     return ResponseEntity.badRequest().body("This interest doesn't exist");
   }
 
@@ -91,6 +95,7 @@ public class InterestRestController {
     if (validationErrors.isEmpty()) {
       return ResponseEntity.ok().body(interestService.getAllSuggestionDTOS(coordinates));
     }
+    logger.warn("Validation errors occurred for CoordinatesDTO: {}", coordinates);
     return ResponseEntity.badRequest()
         .body(
             new ErrorMessagesDTO(
