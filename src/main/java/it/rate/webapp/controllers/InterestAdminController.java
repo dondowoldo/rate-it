@@ -2,6 +2,7 @@ package it.rate.webapp.controllers;
 
 import it.rate.webapp.exceptions.badrequest.BadRequestException;
 import it.rate.webapp.models.AppUser;
+import it.rate.webapp.models.Category;
 import it.rate.webapp.models.Interest;
 import it.rate.webapp.models.Role;
 import it.rate.webapp.services.*;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
+import java.util.List;
 import java.util.Set;
 
 @Controller
@@ -24,6 +26,7 @@ public class InterestAdminController {
   private final RoleService roleService;
   private final UserService userService;
   private final CriterionService criterionService;
+  private final CategoryService categoryService;
 
   @GetMapping("/edit")
   @PreAuthorize("@permissionService.manageCommunity(#interestId)")
@@ -33,16 +36,22 @@ public class InterestAdminController {
     model.addAttribute("action", "/interests/" + interestId + "/admin/edit");
     model.addAttribute("method", "put");
     model.addAttribute("loggedUser", userService.getByEmail(principal.getName()));
-
+    model.addAttribute("categories", categoryService.findAll());
+    model.addAttribute("maxCategories", categoryService.getMaxCategories());
     return "interest/form";
   }
 
   @PutMapping("/edit")
   @PreAuthorize("@permissionService.manageCommunity(#interestId)")
   public String editInterest(
-      @PathVariable Long interestId, Interest interest, @RequestParam Set<String> criteriaNames) {
+      @PathVariable Long interestId,
+      Interest interest,
+      @RequestParam Set<String> criteriaNames,
+      @RequestParam(required = false) Set<Long> categoryIds) {
 
     interest.setId(interestId);
+    List<Category> categories = categoryService.findMaxLimitByIdIn(categoryIds);
+    interest.setCategories(categories);
     criterionService.updateExisting(interestService.save(interest), criteriaNames);
 
     return String.format("redirect:/interests/%d", interestId);

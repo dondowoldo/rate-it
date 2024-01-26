@@ -27,7 +27,12 @@
 
             <section class="input-param">
                 <h4>Category</h4>
-                <p>TBD</p>
+                <div class="sort-buttons">
+                    <label class="sort-container" th:each="category : ${categories}">
+                        <input th:checked="${interest.categoryIds.contains(category.id)}" type="checkbox" name="categoryIds" th:value="${category.id}" class="sort-checkbox"/>
+                        <span th:text="${category.name}"></span>
+                    </label>
+                </div>
             </section>
 
             <section class="input-param">
@@ -98,6 +103,9 @@
 
 <script type="module" src="/scripts/interestImageUpload.js"></script>
 <script src="/scripts/interestForm.js"></script>
+<script th:inline="javascript">
+    const MAX_CATEGORIES = [[${maxCategories}]];
+</script>
 
 </body>
 </html>
