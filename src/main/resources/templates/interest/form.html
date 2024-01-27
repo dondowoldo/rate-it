@@ -24,7 +24,7 @@
                     <input class="input-text-field"
                            type="text" name="name"
                            th:value="*{name}"
-                           required
+                           required th:maxlength="${@constraints.MAX_NAME_LENGTH}"
                     />
                 </label>
             </section>
@@ -63,18 +63,21 @@
                 <h4>Rating criteria</h4>
                 <div id="criteriaContainer" class="criteria-container">
                     <label th:if="*{id == null}" class="list-record first-criterion">
-                        <input class="input-text-field" type="text" name="criteriaNames" required/>
+                        <input class="input-text-field" type="text" name="criteriaNames"
+                               th:maxlength="${@constraints.MAX_NAME_LENGTH}" required/>
                     </label>
                     <th:block th:if="*{id != null}">
                         <label class="list-record first-criterion">
                             <input class="input-text-field" type="text" name="criteriaNames"
-                                   th:value="${interest.criteria[0]?.name}" required/>
+                                   th:value="${interest.criteria[0]?.name}"
+                                   th:maxlength="${@constraints.MAX_NAME_LENGTH}" required/>
                         </label>
 
                         <div th:each="criterion, iterStat : ${interest.criteria}" th:if="${iterStat.index > 0}">
                             <label class="list-record">
                                 <input class="input-text-field" type="text" name="criteriaNames"
-                                       th:value="${criterion.name}" required/>
+                                       th:value="${criterion.name}" th:maxlength="${@constraints.MAX_NAME_LENGTH}"
+                                       required/>
                                 <button class="role-option-button kick-button" type="button"
                                         onclick="removeCriteria(this, ${iterStat.index})">
                                     <img src="/icons/cross.svg" alt="Kick">
@@ -86,7 +89,8 @@
 
                 <div class="add-criterion">
                     <span>Add criterion</span>
-                    <button class="role-option-button accept-button" type="button" onclick="addCriteria()">
+                    <button class="role-option-button accept-button" type="button"
+                            th:onclick="'addCriteria(' + ${@constraints.MAX_NAME_LENGTH} + ')'">
                         <img src="/icons/add.svg" alt="Add Criterion">
                     </button>
                 </div>
@@ -96,7 +100,8 @@
             <section class="input-param">
                 <h4>Description</h4>
                 <label>
-                    <textarea class="input-text-field" th:field="*{description}" required></textarea>
+                    <textarea class="input-text-field" th:field="*{description}"
+                              th:maxlength="${@constraints.MAX_DESCRIPTION_LENGTH}" required></textarea>
                 </label>
             </section>
 

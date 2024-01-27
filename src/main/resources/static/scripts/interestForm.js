@@ -1,4 +1,4 @@
-function addCriteria() {
+function addCriteria(maxLength) {
     const criteriaContainer = document.getElementById('criteriaContainer');
     const div = document.createElement('div');
     const label = document.createElement('label')
@@ -13,6 +13,7 @@ function addCriteria() {
     input.name = 'criteriaNames';
     input.required = true;
     input.classList.add('input-text-field');
+    input.maxLength = maxLength;
 
     removeButton.type = 'button';
     removeButton.textContent = '';
