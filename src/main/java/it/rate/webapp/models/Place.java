@@ -1,12 +1,15 @@
 package it.rate.webapp.models;
 
 import it.rate.webapp.config.Constraints;
+import it.rate.webapp.dtos.PlaceInDTO;
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Range;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +18,7 @@ import java.util.OptionalDouble;
 @Getter
 @Setter
 @Builder
+@Validated
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -58,6 +62,14 @@ public class Place {
   @Builder.Default
   private List<Rating> ratings = new ArrayList<>();
 
+  public Place(@Valid PlaceInDTO placeDTO) {
+    this.name = placeDTO.name();
+    this.address = placeDTO.address();
+    this.description = placeDTO.description();
+    this.latitude = placeDTO.latitude();
+    this.longitude = placeDTO.longitude();
+  }
+
   public Double getAverageRating() {
     Double averageRating = null;
     OptionalDouble optAverageRating = ratings.stream().mapToDouble(Rating::getRating).average();
@@ -65,5 +77,13 @@ public class Place {
       averageRating = optAverageRating.getAsDouble();
     }
     return averageRating;
+  }
+
+  public void update(@Valid PlaceInDTO placeDTO) {
+    this.setName(placeDTO.name());
+    this.setAddress(placeDTO.address());
+    this.setDescription(placeDTO.description());
+    this.setLatitude(placeDTO.latitude());
+    this.setLongitude(placeDTO.longitude());
   }
 }

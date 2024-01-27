@@ -53,12 +53,12 @@ public class InterestController {
       @RequestParam(required = false) Set<Long> categoryIds,
       Principal principal) {
 
-    AppUser loggedUser = userService.getByEmail(principal.getName());
-    List<Category> categories = categoryService.findMaxLimitByIdIn(categoryIds);
     Interest interest = new Interest(interestDTO);
+    List<Category> categories = categoryService.findMaxLimitByIdIn(categoryIds);
     interest.setCategories(categories);
     interest = interestService.save(interest);
     criterionService.createNew(interest, criteriaNames);
+    AppUser loggedUser = userService.getByEmail(principal.getName());
     roleService.setRole(interest, loggedUser, Role.RoleType.CREATOR);
     likeService.save(loggedUser, interest);
 

@@ -2,6 +2,7 @@ package it.rate.webapp.services;
 
 import it.rate.webapp.dtos.CriteriaOfPlaceDTO;
 import it.rate.webapp.dtos.CriterionAvgRatingDTO;
+import it.rate.webapp.dtos.PlaceInDTO;
 import it.rate.webapp.dtos.PlaceInfoDTO;
 import it.rate.webapp.models.*;
 import it.rate.webapp.models.AppUser;
@@ -37,6 +38,11 @@ public class PlaceService {
     place.setCreator(appUser);
     place.setInterest(interest);
 
+    return placeRepository.save(place);
+  }
+
+  public Place update(@Valid Place place, PlaceInDTO placeDTO) {
+    place.update(placeDTO);
     return placeRepository.save(place);
   }
 

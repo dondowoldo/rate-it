@@ -34,23 +34,25 @@ function addCriteria(maxLength) {
     div.appendChild(label);
     criteriaContainer.appendChild(div);
 
-    const criteriaForm = document.getElementById('criteriaForm');
-    criteriaForm.addEventListener('submit', function (event) {
-        const criteriaInputs = document.querySelectorAll('input[name="criteriaNames"]');
-        let isValid = true;
+    //this currently does not work because criteriaForm id does not exist in the form
 
-        criteriaInputs.forEach(function (input) {
-            if (input.value.trim() === '') {
-                isValid = false;
-                input.classList.add('invalid-field');
-            }
-        });
-
-        if (!isValid) {
-            event.preventDefault();
-            alert('Please fill in all criteria fields.');
-        }
-    });
+    // const criteriaForm = document.getElementById('criteriaForm');
+    // criteriaForm.addEventListener('submit', function (event) {
+    //     const criteriaInputs = document.querySelectorAll('input[name="criteriaNames"]');
+    //     let isValid = true;
+    //
+    //     criteriaInputs.forEach(function (input) {
+    //         if (input.value.trim() === '') {
+    //             isValid = false;
+    //             input.classList.add('invalid-field');
+    //         }
+    //     });
+    //
+    //     if (!isValid) {
+    //         event.preventDefault();
+    //         alert('Please fill in all criteria fields.');
+    //     }
+    // });
 }
 
 function removeCriteria(div) {
