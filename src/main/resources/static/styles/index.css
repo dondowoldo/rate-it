@@ -753,6 +753,7 @@ h4 {
     border: none;
     margin: 0.2rem 0 0.2rem 0;
     width: 100%;
+    resize: none;
 }
 
 .new-place-map {
@@ -1189,4 +1190,9 @@ h4 {
     white-space: normal;
     font-size: small;
     margin-bottom: 0;
+}
+
+#charCount {
+    margin-bottom: 0.5rem;
+    color: #888585;
 }

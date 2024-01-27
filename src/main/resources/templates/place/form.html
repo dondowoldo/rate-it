@@ -72,14 +72,16 @@
             </section>
 
             <section class="input-param">
-                <h4>Description</h4>
+                    <h4>Description</h4>
                 <label>
                     <textarea class="input-text-field"
                               id="description"
                               name="description"
-                              th:field="*{description}" th:maxlength="${@constraints.MAX_DESCRIPTION_LENGTH}">
+                              th:field="*{description}" th:maxlength="${@constraints.MAX_DESCRIPTION_LENGTH}"
+                              th:oninput="'updateCharCountAndResize(' + ${@constraints.MAX_DESCRIPTION_LENGTH} + ')'">
                     </textarea>
                 </label>
+                <p id="charCount"></p>
             </section>
 
             <button class="button" type="submit">Save</button>
@@ -93,6 +95,6 @@
     let longitude = [[${place.longitude}]];
 </script>
 <script src="/scripts/placeFormMap.js"></script>
-
+<script src="/scripts/inputForm.js"></script>
 </body>
 </html>
