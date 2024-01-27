@@ -44,12 +44,11 @@ public class PlaceController {
   public String createNewPlace(
       @PathVariable Long interestId, PlaceInDTO placeDTO, Principal principal) {
 
-    Place place = new Place(placeDTO);
-    AppUser loggedUser = userService.getByEmail(principal.getName());
     Interest interest = interestService.getById(interestId);
-    Place createdPlace = placeService.save(place, interest, loggedUser);
+    AppUser loggedUser = userService.getByEmail(principal.getName());
+    Place place = placeService.save(placeDTO, interest, loggedUser);
 
-    return String.format("redirect:/interests/%d/places/%d", interestId, createdPlace.getId());
+    return String.format("redirect:/interests/%d/places/%d", interestId, place.getId());
   }
 
   @GetMapping("/{placeId}")

@@ -49,15 +49,10 @@ public class InterestController {
   @PostMapping("/create")
   public String createInterest(
       InterestInDTO interestDTO,
-      @RequestParam Set<String> criteriaNames,
-      @RequestParam(required = false) Set<Long> categoryIds,
       Principal principal) {
 
-    Interest interest = new Interest(interestDTO);
-    List<Category> categories = categoryService.findMaxLimitByIdIn(categoryIds);
-    interest.setCategories(categories);
-    interest = interestService.save(interest);
-    criterionService.createNew(interest, criteriaNames);
+    Interest interest = interestService.save(interestDTO);
+    criterionService.saveAll(interest, interestDTO.criteriaNames());
     AppUser loggedUser = userService.getByEmail(principal.getName());
     roleService.setRole(interest, loggedUser, Role.RoleType.CREATOR);
     likeService.save(loggedUser, interest);

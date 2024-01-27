@@ -7,6 +7,7 @@ import it.rate.webapp.models.*;
 import it.rate.webapp.repositories.CriterionRepository;
 import it.rate.webapp.repositories.RatingRepository;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -26,7 +27,7 @@ public class RatingService {
     return new RatingsDTO(ratings);
   }
 
-  public void updateRating(@Valid RatingsDTO ratings, @Valid Place place, @Valid AppUser appUser) {
+  public void updateRating(@NotNull @Valid RatingsDTO ratings, @Valid Place place, @Valid AppUser appUser) {
     Set<Criterion> ratedCriteria = validateRatings(ratings, place);
 
     ratings

@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 public class CriterionService {
   private final CriterionRepository criterionRepository;
 
-  public void createNew(
+  public void saveAll(
       @Valid Interest interest,
       @NotEmpty Set<@NotBlank @Length(max = Constraints.MAX_NAME_LENGTH) String> criteriaNames) {
     List<Criterion> criteria =
@@ -32,7 +32,7 @@ public class CriterionService {
     criterionRepository.saveAll(criteria);
   }
 
-  public void updateExisting(
+  public void updateAll(
       @Valid Interest interest,
       @NotEmpty Set<@NotBlank @Length(max = Constraints.MAX_NAME_LENGTH) String> criteriaNames) {
     // Get old criteria

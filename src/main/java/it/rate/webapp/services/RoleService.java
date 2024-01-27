@@ -31,7 +31,7 @@ public class RoleService {
   }
 
   public void setRole(
-      @Valid @NotNull Interest interest, @Valid @NotNull AppUser appUser, @NotNull Role.RoleType roleType) {
+          @NotNull @Valid Interest interest, @NotNull @Valid AppUser appUser, @NotNull Role.RoleType roleType) {
     if (interest.isExclusive() || roleType.equals(Role.RoleType.CREATOR)) {
       roleRepository.save(new Role(appUser, interest, roleType));
     } else {

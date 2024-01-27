@@ -3,13 +3,11 @@ package it.rate.webapp.models;
 import it.rate.webapp.config.Constraints;
 import it.rate.webapp.dtos.PlaceInDTO;
 import jakarta.persistence.*;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Range;
-import org.springframework.validation.annotation.Validated;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +16,6 @@ import java.util.OptionalDouble;
 @Getter
 @Setter
 @Builder
-@Validated
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -62,7 +59,7 @@ public class Place {
   @Builder.Default
   private List<Rating> ratings = new ArrayList<>();
 
-  public Place(@NotNull @Valid PlaceInDTO placeDTO) {
+  public Place(PlaceInDTO placeDTO) {
     this.name = placeDTO.name();
     this.address = placeDTO.address();
     this.description = placeDTO.description();
@@ -79,7 +76,7 @@ public class Place {
     return averageRating;
   }
 
-  public void update(@NotNull @Valid PlaceInDTO placeDTO) {
+  public void update(PlaceInDTO placeDTO) {
     this.name = placeDTO.name();
     this.address = placeDTO.address();
     this.description = placeDTO.description();

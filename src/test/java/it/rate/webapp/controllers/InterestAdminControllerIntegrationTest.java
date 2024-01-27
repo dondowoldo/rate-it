@@ -19,7 +19,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -258,7 +257,8 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
                 put("/interests/" + interestId + "/admin/edit")
                     .param("name", interestName)
                     .param("description", interestDescription)
-                    .param("criteriaNames", criterion1))
+                    .param("criteriaNames", criterion1)
+                    .param("exclusive", "false"))
             .andExpect(status().is3xxRedirection())
             .andReturn();
 
@@ -289,7 +289,8 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
             put("/interests/" + interestId + "/admin/edit")
                 .param("name", interestName)
                 .param("description", interestDescription)
-                .param("criteriaNames", criterion1))
+                .param("criteriaNames", criterion1)
+                .param("exclusive", "false"))
         .andExpect(status().isForbidden())
         .andExpect(view().name("error/page"))
         .andReturn();
@@ -312,7 +313,8 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
             put("/interests/" + interestId + "/admin/edit")
                 .param("name", interestName)
                 .param("description", interestDescription)
-                .param("criteriaNames", criterion1))
+                .param("criteriaNames", criterion1)
+                .param("exclusive", "false"))
         .andExpect(view().name("error/page"))
         .andExpect(status().isNotFound())
         .andReturn();
@@ -336,7 +338,8 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
                 put("/interests/" + interestId + "/admin/edit")
                     .param("name", interestName)
                     .param("description", interestDescription)
-                    .param("criteriaNames", criterion1))
+                    .param("criteriaNames", criterion1)
+                    .param("exclusive", "false"))
             .andExpect(status().is3xxRedirection())
             .andReturn();
     String[] redirectUrl = res.getResponse().getRedirectedUrl().split("/");

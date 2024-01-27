@@ -1,8 +1,8 @@
 package it.rate.webapp.controllers;
 
+import it.rate.webapp.dtos.InterestInDTO;
 import it.rate.webapp.exceptions.badrequest.BadRequestException;
 import it.rate.webapp.models.AppUser;
-import it.rate.webapp.models.Category;
 import it.rate.webapp.models.Interest;
 import it.rate.webapp.models.Role;
 import it.rate.webapp.services.*;
@@ -15,8 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
-import java.util.List;
-import java.util.Set;
 
 @Controller
 @AllArgsConstructor
@@ -46,16 +44,12 @@ public class InterestAdminController {
   @PutMapping("/edit")
   @PreAuthorize("@permissionService.manageCommunity(#interestId)")
   public String editInterest(
-      @PathVariable Long interestId,
-      Interest interest,
-      @RequestParam Set<String> criteriaNames,
-      @RequestParam(required = false) Set<Long> categoryIds) {
+          @PathVariable Long interestId,
+          InterestInDTO interestDTO) {
 
-    interest.setId(interestId);
-    List<Category> categories = categoryService.findMaxLimitByIdIn(categoryIds);
-    interest.setCategories(categories);
-    Interest updatedInterest = interestService.update(interest);
-    criterionService.updateExisting(updatedInterest, criteriaNames);
+    Interest interest = interestService.getById(interestId);
+    interest = interestService.update(interest, interestDTO);
+    criterionService.updateAll(interest, interestDTO.criteriaNames());
 
     return String.format("redirect:/interests/%d", interestId);
   }
