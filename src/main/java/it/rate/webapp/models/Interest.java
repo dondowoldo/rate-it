@@ -69,7 +69,7 @@ public class Interest {
       inverseJoinColumns = @JoinColumn(name = "category_id"))
   private List<Category> categories = new ArrayList<>();
 
-  public Interest(@Valid InterestInDTO interestDTO) {
+  public Interest(@NotNull @Valid InterestInDTO interestDTO) {
     this.name = interestDTO.name();
     this.description = interestDTO.description();
     this.exclusive = interestDTO.exclusive();

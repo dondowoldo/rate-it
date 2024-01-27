@@ -62,7 +62,7 @@ public class Place {
   @Builder.Default
   private List<Rating> ratings = new ArrayList<>();
 
-  public Place(@Valid PlaceInDTO placeDTO) {
+  public Place(@NotNull @Valid PlaceInDTO placeDTO) {
     this.name = placeDTO.name();
     this.address = placeDTO.address();
     this.description = placeDTO.description();
@@ -79,11 +79,11 @@ public class Place {
     return averageRating;
   }
 
-  public void update(@Valid PlaceInDTO placeDTO) {
-    this.setName(placeDTO.name());
-    this.setAddress(placeDTO.address());
-    this.setDescription(placeDTO.description());
-    this.setLatitude(placeDTO.latitude());
-    this.setLongitude(placeDTO.longitude());
+  public void update(@NotNull @Valid PlaceInDTO placeDTO) {
+    this.name = placeDTO.name();
+    this.address = placeDTO.address();
+    this.description = placeDTO.description();
+    this.latitude = placeDTO.latitude();
+    this.longitude = placeDTO.longitude();
   }
 }

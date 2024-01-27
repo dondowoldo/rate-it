@@ -41,7 +41,8 @@ public class PlaceController {
   @Transactional
   @PostMapping("/new")
   @PreAuthorize("@permissionService.createPlace(#interestId)")
-  public String createNewPlace(@PathVariable Long interestId, PlaceInDTO placeDTO, Principal principal) {
+  public String createNewPlace(
+      @PathVariable Long interestId, PlaceInDTO placeDTO, Principal principal) {
 
     Place place = new Place(placeDTO);
     AppUser loggedUser = userService.getByEmail(principal.getName());
