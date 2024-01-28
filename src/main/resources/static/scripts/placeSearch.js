@@ -1,9 +1,34 @@
 let data = [];
 let usersCoords;
-let interestCriteria = [];
-navigator.geolocation.getCurrentPosition(success, error);
 
 document.addEventListener('DOMContentLoaded', async () => {
+    try {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(success, error);
+        } else {
+            console.log("Geolocation is not supported");
+            await fetchData();
+        }
+    } catch (error) {
+        console.error('Error fetching suggestions:', error);
+    }
+});
+
+async function success(position) {
+    usersCoords = [position.coords.latitude, position.coords.longitude];
+    try {
+        await fetchData();
+    } catch (error) {
+        console.error('Error fetching suggestions:', error);
+    }
+}
+
+async function error() {
+    console.log("Unable to retrieve your location");
+    await fetchData();
+}
+
+async function fetchData() {
     try {
         const fetchUrl = `/api/v1/interests/${interestId}/places`;
         const response = await fetch(fetchUrl);
@@ -13,14 +38,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         data = await Promise.all(jsonData.map(async (place) => {
             place.imageUrl = await fetchImageUrl(place);
             return place;
-        }));
+        }))
 
         loadSortButtons();
         loadPlaces();
     } catch (error) {
         console.error('Error fetching places info:', error);
     }
-});
+
+}
 
 function loadSortButtons() {
     if (data.length < 1) {
@@ -37,7 +63,7 @@ function loadSortButtons() {
     createSortingButton(container, template, 'Top Rated');
 
     if (data.length > 0) {
-        interestCriteria = data[0].criteria;
+        let interestCriteria = data[0].criteria;
         interestCriteria.forEach(criterion => {
             createSortingButton(container, template, criterion.name);
         });
@@ -188,15 +214,6 @@ function createRatingItem(iconClass, ratingValue, criterionName) {
     li.appendChild(criterionSpan);
 
     return li;
-}
-
-function success(position) {
-    usersCoords = [position.coords.latitude, position.coords.longitude];
-    loadPlaces();
-}
-
-function error() {
-    console.log("Unable to retrieve your location");
 }
 
 function distance(lat1, lon1, lat2, lon2) {
