@@ -11,11 +11,29 @@
         <div th:replace="~{fragments.html :: login-menu}"></div>
         <script th:replace="~{fragments.html :: topbar-script}"></script>
     </header>
-    <main class="content footer-page">
-        <i class="fa-solid fa-trowel-bricks"></i>
-        <h1>Page is under construction</h1>
+    <main class="content">
+        <h2>Contact Us</h2>
+        <form th:action="@{/contact-us}" method="post" id="contactForm" onsubmit="submitForm(); return false;">
+            <section class="input-param">
+                <h4>Your email</h4>
+                <input class="input-text-field" type="email" name="from" required>
+            </section>
+            <section class="input-param">
+                <h4>Subject</h4>
+                <input class="input-text-field" type="text" name="subject" required>
+            </section>
+            <section class="input-param">
+                <h4>Message</h4>
+                <textarea class="input-text-field" name="text" required></textarea>
+            </section>
+            <input type="hidden" name="to" value="rate.spot.dev@gmail.com">
+            <button type="submit" class="button">Send</button>
+            <p class="successful"></p>
+        </form>
+
     </main>
     <footer th:replace="~{fragments.html :: footer}"></footer>
 </div>
 </body>
+<script src="/scripts/contactUs.js"></script>
 </html>

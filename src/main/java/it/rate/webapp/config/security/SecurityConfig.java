@@ -39,7 +39,8 @@ public class SecurityConfig {
                         "/contact",
                         "/developers",
                         "/about",
-                        "/terms")
+                        "/terms",
+                        "/contact-us")
                     .permitAll()
                     .anyRequest()
                     .authenticated())

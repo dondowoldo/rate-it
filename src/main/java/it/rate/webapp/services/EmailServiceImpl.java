@@ -22,4 +22,15 @@ public class EmailServiceImpl implements EmailService {
 
     this.mailSender.send(smm);
   }
+
+  @Override
+  public void contactUs(EmailMessageDTO emailMessage) {
+    SimpleMailMessage smm = new SimpleMailMessage();
+    smm.setFrom("ratespot.email@centrum.cz");
+    smm.setTo(emailMessage.to());
+    smm.setSubject(emailMessage.subject());
+    smm.setText(emailMessage.from() + ":\n" + emailMessage.text());
+
+    this.mailSender.send(smm);
+  }
 }

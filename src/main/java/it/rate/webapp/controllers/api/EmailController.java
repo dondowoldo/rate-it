@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
+
 @RestController
 @AllArgsConstructor
 public class EmailController {
@@ -18,5 +20,11 @@ public class EmailController {
   public ResponseEntity<?> sendEmail(@RequestBody EmailMessageDTO emailMessageDTO) {
     emailService.sendEmail(emailMessageDTO);
     return ResponseEntity.ok("Sent");
+  }
+
+  @PostMapping("/contact-us")
+  public ResponseEntity<?> contactUs(@RequestBody EmailMessageDTO emailMessageDTO) {
+    emailService.contactUs(emailMessageDTO);
+    return ResponseEntity.ok("Email was sent successfully");
   }
 }
