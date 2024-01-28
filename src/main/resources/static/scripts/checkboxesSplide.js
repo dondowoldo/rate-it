@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const categorySplide = new Splide('#splide-checkboxes', {
+    const checkboxesSplide = new Splide('#splide-checkboxes', {
         autoWidth: true,
         autoHeight: true,
         gap: '0.5rem',
@@ -9,5 +9,5 @@ document.addEventListener('DOMContentLoaded', () => {
         loop: false,
         pagination: false
     });
-    categorySplide.mount();
+    checkboxesSplide.mount();
 });
