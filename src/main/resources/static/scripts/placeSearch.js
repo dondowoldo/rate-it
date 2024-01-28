@@ -53,7 +53,7 @@ function loadSortButtons() {
         return;
     }
 
-    const container = document.querySelector(".sort-buttons");
+    const container = document.querySelector(".splide__list");
     const template = document.getElementById('sort-button-template');
 
     if (usersCoords !== undefined) {

@@ -54,7 +54,7 @@
                 <h2>Discover new</h2>
                 <a th:if="${loggedUser}" th:href="@{/interests/create}"><h3>Create new</h3></a>
             </div>
-            <section class="splide" id="splide-category" aria-label="Categories">
+            <section class="splide" id="splide-checkboxes" aria-label="Categories">
                 <div class="splide__track">
                     <div class="splide__list">
                         <div class="splide__slide" th:each="category : ${categories}">
@@ -108,7 +108,7 @@
 </div>
 <script src="/scripts/imageFetcher.js"></script>
 <script src="/scripts/index.js"></script>
-<script src="/scripts/categorySplide.js"></script>
+<script src="/scripts/checkboxesSplide.js"></script>
 <script th:unless="${likedInterests == null || likedInterests.isEmpty()}" src="/scripts/indexSplide.js"></script>
 </body>
 </html>
