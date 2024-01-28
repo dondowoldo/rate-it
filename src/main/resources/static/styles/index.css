@@ -36,6 +36,17 @@ footer {
     text-decoration: none;
 }
 
+.footer-page {
+    color: #3e6652;
+    text-align: center;
+    margin: auto;
+    gap: 1rem;
+}
+
+.fa-trowel-bricks {
+    font-size: xxx-large;
+}
+
 .header {
     width: 100%;
     display: flex;
