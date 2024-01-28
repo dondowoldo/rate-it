@@ -2,6 +2,8 @@ let data = [];
 let usersCoords;
 
 document.addEventListener('DOMContentLoaded', async () => {
+    initializeInterestsSplide()
+    initializeCheckboxesSplide()
     try {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(success, error);

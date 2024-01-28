@@ -59,15 +59,14 @@
             <section class="splide" id="splide-checkboxes" aria-label="Sort By">
                 <div class="splide__track">
                     <div class="splide__list">
-                        <!--                        commented out to be able to put it back if splide not desired-->
-                        <!--                        <div class="sort-buttons">-->
                         <template id="sort-button-template">
-                            <label class="sort-container splide__slide">
-                                <input type="checkbox" class="sort-checkbox"/>
-                                <span></span>
-                            </label>
+                            <div class="splide__slide">
+                                <label class="sort-container">
+                                    <input type="checkbox" class="sort-checkbox"/>
+                                    <span></span>
+                                </label>
+                            </div>
                         </template>
-                        <!--                        </div>-->
                     </div>
                 </div>
             </section>
@@ -128,9 +127,9 @@
 <script th:inline="javascript">
     const interestId = [[${interest.id}]];
 </script>
+<script src="/scripts/checkboxesSplide.js"></script>
 <script src="/scripts/placeSearch.js"></script>
 <script src="/scripts/imageFetcher.js"></script>
-<script src="/scripts/checkboxesSplide.js"></script>
 <script th:unless="${loggedUser == null || role != null && role.equals(role.CREATOR)}"
         src="/scripts/interestLike.js"></script>
 

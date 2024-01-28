@@ -68,6 +68,7 @@ function loadSortButtons() {
             createSortingButton(container, template, criterion.name);
         });
     }
+    initializeCheckboxesSplide()
 }
 
 function createSortingButton(container, template, sortBy) {
