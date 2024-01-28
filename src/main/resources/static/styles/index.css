@@ -31,6 +31,11 @@ footer {
     justify-content: space-around;
 }
 
+.footer-links a {
+    color: white;
+    text-decoration: none;
+}
+
 .header {
     width: 100%;
     display: flex;

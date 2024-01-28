@@ -35,7 +35,11 @@ public class SecurityConfig {
                         "/users/login",
                         "/api/v1/interests/suggestions",
                         "/api/v1/interests/{id}/places",
-                        "/api/v1/images/{id}")
+                        "/api/v1/images/{id}",
+                        "/contact",
+                        "/developers",
+                        "/about",
+                        "/terms")
                     .permitAll()
                     .anyRequest()
                     .authenticated())
