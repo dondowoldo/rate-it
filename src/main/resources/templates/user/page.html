@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments.html :: head(title=${place.name})}">
+</head>
+
+<body th:object="${place}">
+<div class="container-fluid">
+    <header class="header">
+        <div th:replace="~{fragments.html :: hamburger-menu}"></div>
+        <div th:replace="~{fragments.html :: logo}"></div>
+        <div th:replace="~{fragments.html :: login-menu}"></div>
+        <script th:replace="~{fragments.html :: topbar-script}"></script>
+    </header>
+    <main class="content">
+        <section class="user-info">
+            <div class="user-image">
+                <img>
+            </div>
+            <div class="user-details">
+                <h2 th:text="${user.name}"></h2>
+                <p th:text="${user.description}"></p>
+            </div>
+        </section>
+        <div class="user-follow">
+            <a>Followers</a>
+            <button disabled>Follow</button>
+            <a>Following</a>
+        </div>
+        <template>
+            <section class="user-interests">
+                <div class="user-interest-image">
+                    <img>
+                </div>
+                <div class="user-interest-content">
+                    <header class="user-interest-header">
+                        <div class="user-interest-title">
+                            <h3></h3>
+                            <p></p>
+                        </div>
+
+                        <div class="user-interest-dropdown">
+                            <button disabled></button>
+                        </div>
+                    </header>
+                    <section class="user-interest-places">
+                        <ul class="user-interest-places">
+                            <li>
+                                <i class="fas fa-star yellow"></i>
+                                <span class="rating"></span>
+                                <span class="criterion">Overall</span>
+                            </li>
+
+                            <li>
+                                <i class="fas fa-star yellow"></i>
+                                <span class="rating"></span>
+                                <span class="criterion"></span>
+                            </li>
+
+                            <li>
+                                <i class="fas fa-star yellow"></i>
+                                <span class="rating"></span>
+                                <span class="criterion"></span>
+                            </li>
+                        </ul>
+                        <a class="button">Details</a>
+                    </section>
+                </div>
+
+            </section>
+        </template>
+    </main>
+    <footer th:replace="~{fragments.html :: footer}"></footer>
+</div>
+</body>
+</html>
