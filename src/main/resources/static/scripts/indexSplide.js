@@ -1,4 +1,4 @@
-function initializeInterestsSplide ()  {
+document.addEventListener( 'DOMContentLoaded', function() {
     const splide = new Splide('#splide-interests', {
         fixedWidth: '10rem',
         fixedHeight: '11rem',
@@ -9,4 +9,4 @@ function initializeInterestsSplide ()  {
         loop: false
     });
     splide.mount();
-}
+});
