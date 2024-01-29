@@ -9,14 +9,13 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
 import java.security.Principal;
 import java.util.Optional;
 
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/v1/users")
-public class UsersRestController {
+public class UserRestController {
   private final UserService userService;
   private final FollowService followService;
 
@@ -29,11 +28,12 @@ public class UsersRestController {
     Optional<AppUser> userToFollow = userService.findById(userId);
 
     if (userToFollow.isEmpty()) {
-      return ResponseEntity.badRequest().body("This user doesn't exist");
+      return ResponseEntity.badRequest().body("User does not exist");
     }
 
     try {
-      return ResponseEntity.ok(followService.setFollow(loggedUser, userToFollow.get(), follow.follow()));
+      return ResponseEntity.ok(
+          followService.setFollow(loggedUser, userToFollow.get(), follow.follow()));
     } catch (BadRequestException e) {
       return ResponseEntity.badRequest().body(e.getMessage());
     }

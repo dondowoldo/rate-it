@@ -7,6 +7,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class UsersRestControllerTest extends BaseIntegrationTest {
@@ -25,6 +26,55 @@ class UsersRestControllerTest extends BaseIntegrationTest {
             post("/api/v1/users/1/follow")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(content().string("Followed successfully"));
+  }
+
+  @Test
+  @WithMockUser(
+      username = "alfonz@alfonz.cz",
+      authorities = {"USER"})
+  void unfollowUserOk() throws Exception {
+    String requestBody = "{\"follow\": false}";
+
+    mockMvc
+        .perform(
+            post("/api/v1/users/1/follow")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody))
+        .andExpect(status().isOk())
+        .andExpect(content().string("Unfollowed successfully"));
+  }
+
+  @Test
+  @WithMockUser(
+      username = "alfonz@alfonz.cz",
+      authorities = {"USER"})
+  void followUserBadRequestCannotFollowThemselves() throws Exception {
+    String requestBody = "{\"follow\": true}";
+
+    mockMvc
+        .perform(
+            post("/api/v1/users/2/follow")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody))
+        .andExpect(status().isBadRequest())
+        .andExpect(content().string("User cannot follow themselves"));
+  }
+
+  @Test
+  @WithMockUser(
+      username = "alfonz@alfonz.cz",
+      authorities = {"USER"})
+  void followUserBadRequestDoesNotExist() throws Exception {
+    String requestBody = "{\"follow\": true}";
+
+    mockMvc
+        .perform(
+            post("/api/v1/users/666/follow")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody))
+        .andExpect(status().isBadRequest())
+        .andExpect(content().string("User does not exist"));
   }
 }
