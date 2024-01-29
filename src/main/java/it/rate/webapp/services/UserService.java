@@ -9,6 +9,7 @@ import it.rate.webapp.models.AppUser;
 import it.rate.webapp.models.Interest;
 import it.rate.webapp.models.Role;
 import it.rate.webapp.repositories.UserRepository;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Valid;
 import jakarta.validation.Validator;
@@ -18,9 +19,12 @@ import java.util.stream.Collectors;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -31,6 +35,7 @@ public class UserService {
   private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
   private final Validator validator;
+  private final AuthenticationManager provider;
 
   public Optional<AppUser> findById(Long userId) {
     return userRepository.findById(userId);
@@ -84,6 +89,17 @@ public class UserService {
             .serverRole(ServerRole.USER)
             .build();
     userRepository.save(user);
+  }
+
+  public void authenticate(String username, String password, HttpSession session) {
+    Authentication authentication = new UsernamePasswordAuthenticationToken(username, password);
+    Authentication authenticated = provider.authenticate(authentication);
+
+    SecurityContextHolder.getContext().setAuthentication(authenticated);
+
+    session.setAttribute(
+        HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
+        SecurityContextHolder.getContext());
   }
 
   public AppUser getAuthenticatedUser() {
