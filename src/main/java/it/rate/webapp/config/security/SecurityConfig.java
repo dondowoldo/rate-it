@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.configurers.HeadersCon
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @Configuration
 @EnableMethodSecurity
@@ -36,11 +37,11 @@ public class SecurityConfig {
                         "/api/v1/interests/suggestions",
                         "/api/v1/interests/{id}/places",
                         "/api/v1/images/{id}",
+                        "/api/v1/emails/contact-us",
                         "/contact",
                         "/developers",
                         "/about",
-                        "/terms",
-                        "/contact-us")
+                        "/terms")
                     .permitAll()
                     .anyRequest()
                     .authenticated())
