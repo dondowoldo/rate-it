@@ -3,6 +3,7 @@ body {
     font-family: 'Montserrat', sans-serif;
     background-color: rgb(185 185 185);
     margin: 0;
+    overflow-wrap: anywhere;
 }
 
 footer {
@@ -186,6 +187,7 @@ h3 {
     display: flex;
     align-items: baseline;
     gap: 0.5rem;
+    overflow-wrap: normal;
 }
 
 .place-header > .rating > i, .place-rating-average > i {
@@ -240,6 +242,7 @@ h3 {
     display: flex;
     justify-content: space-between;
     align-items: baseline;
+    overflow-wrap: normal;
 }
 
 .place-rating-average > i {
