@@ -3,24 +3,16 @@ package it.rate.webapp.controllers.api;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.rate.webapp.BaseIntegrationTest;
 import it.rate.webapp.dtos.InterestSuggestionDTO;
-import it.rate.webapp.repositories.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
-
 import java.util.List;
-
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
 
 class InterestRestControllerTest extends BaseIntegrationTest {
 
   @Autowired MockMvc mockMvc;
-
-  // when RatingRepository is not mocked, the test will fail when running ./gradlew check
-  @MockBean private RatingRepository ratingRepository;
 
   @Test
   void getAllSuggestionsOk() throws Exception {

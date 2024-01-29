@@ -2,19 +2,14 @@ package it.rate.webapp.controllers;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
 import it.rate.webapp.BaseIntegrationTest;
 import it.rate.webapp.models.Interest;
 import it.rate.webapp.repositories.InterestRepository;
-
-import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-
 import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -24,8 +19,6 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
   @Autowired private InterestRepository interestRepository;
 
   @Test
-  @Transactional
-  @Rollback
   @WithMockUser(
       username = "alfonz@alfonz.cz",
       authorities = {"USER"})
@@ -39,8 +32,6 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
   }
 
   @Test
-  @Transactional
-  @Rollback
   @WithMockUser(
       username = "franta@franta.cz",
       authorities = {"USER"})
@@ -54,8 +45,6 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
   }
 
   @Test
-  @Transactional
-  @Rollback
   @WithMockUser(
       username = "hynek@hynek.cz",
       authorities = {"USER"})
@@ -69,8 +58,6 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
   }
 
   @Test
-  @Transactional
-  @Rollback
   @WithMockUser(
       username = "alfonz@alfonz.cz",
       authorities = {"USER"})
@@ -84,8 +71,6 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
   }
 
   @Test
-  @Transactional
-  @Rollback
   @WithMockUser(
       username = "alfonz@alfonz.cz",
       authorities = {"ADMIN"})
@@ -99,8 +84,6 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
   }
 
   @Test
-  @Transactional
-  @Rollback
   @WithMockUser(
       username = "lojza@lojza.cz",
       authorities = {"USER"})
@@ -114,8 +97,6 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
   }
 
   @Test
-  @Transactional
-  @Rollback
   @WithMockUser(
       username = "karel@karel.cz",
       authorities = {"ADMIN"})
@@ -129,8 +110,6 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
   }
 
   @Test
-  @Transactional
-  @Rollback
   @WithMockUser(
       username = "alfonz@alfonz.cz",
       authorities = {"USER"})
@@ -144,8 +123,6 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
   }
 
   @Test
-  @Transactional
-  @Rollback
   @WithMockUser(
       username = "franta@franta.cz",
       authorities = {"USER"})
@@ -159,8 +136,6 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
   }
 
   @Test
-  @Transactional
-  @Rollback
   @WithMockUser(
       username = "hynek@hynek.cz",
       authorities = {"USER"})
@@ -174,8 +149,6 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
   }
 
   @Test
-  @Transactional
-  @Rollback
   @WithMockUser(
       username = "alfonz@alfonz.cz",
       authorities = {"USER"})
@@ -189,8 +162,6 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
   }
 
   @Test
-  @Transactional
-  @Rollback
   @WithMockUser(
       username = "karel@karel.cz",
       authorities = {"ADMIN"})
@@ -204,8 +175,6 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
   }
 
   @Test
-  @Transactional
-  @Rollback
   @WithMockUser(
       username = "lojza@lojza.cz",
       authorities = {"USER"})
@@ -219,8 +188,6 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
   }
 
   @Test
-  @Transactional
-  @Rollback
   @WithMockUser(
       username = "karel@karel.cz",
       authorities = {"ADMIN"})
@@ -234,8 +201,6 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
   }
 
   @Test
-  @Transactional
-  @Rollback
   @WithMockUser(
       username = "lojza@lojza.cz",
       authorities = {"USER"})
@@ -266,8 +231,6 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
   }
 
   @Test
-  @Transactional
-  @Rollback
   @WithMockUser(
       username = "lojza@lojza.cz",
       authorities = {"USER"})
@@ -291,8 +254,6 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
   }
 
   @Test
-  @Transactional
-  @Rollback
   @WithMockUser(
       username = "karel@karel.cz",
       authorities = {"ADMIN"})
@@ -315,8 +276,6 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
   }
 
   @Test
-  @Transactional
-  @Rollback
   @WithMockUser(
       username = "karel@karel.cz",
       authorities = {"ADMIN"})
@@ -346,8 +305,6 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
   }
 
   @Test
-  @Transactional
-  @Rollback
   @WithMockUser(
       username = "alfonz@alfonz.cz",
       authorities = {"USER"})
@@ -362,8 +319,6 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
   }
 
   @Test
-  @Transactional
-  @Rollback
   @WithMockUser(
       username = "franta@franta.cz",
       authorities = {"USER"})
@@ -378,8 +333,6 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
   }
 
   @Test
-  @Transactional
-  @Rollback
   @WithMockUser(
       username = "hynek@hynek.cz",
       authorities = {"USER"})
@@ -394,8 +347,6 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
   }
 
   @Test
-  @Transactional
-  @Rollback
   @WithMockUser(
       username = "lojza@lojza.cz",
       authorities = {"USER"})
@@ -410,8 +361,6 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
   }
 
   @Test
-  @Transactional
-  @Rollback
   @WithMockUser(
       username = "lojza@lojza.cz",
       authorities = {"USER"})
@@ -427,8 +376,6 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
   }
 
   @Test
-  @Transactional
-  @Rollback
   @WithMockUser(
       username = "karel@karel.cz",
       authorities = {"ADMIN"})
@@ -443,8 +390,6 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
   }
 
   @Test
-  @Transactional
-  @Rollback
   @WithMockUser(
       username = "alfonz@alfonz.cz",
       authorities = {"USER"})
@@ -459,8 +404,6 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
   }
 
   @Test
-  @Transactional
-  @Rollback
   @WithMockUser(
       username = "franta@franta.cz",
       authorities = {"USER"})
@@ -475,8 +418,6 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
   }
 
   @Test
-  @Transactional
-  @Rollback
   @WithMockUser(
       username = "hynek@hynek.cz",
       authorities = {"USER"})
@@ -491,8 +432,6 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
   }
 
   @Test
-  @Transactional
-  @Rollback
   @WithMockUser(
       username = "lojza@lojza.cz",
       authorities = {"USER"})
@@ -507,8 +446,6 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
   }
 
   @Test
-  @Transactional
-  @Rollback
   @WithMockUser(
       username = "lojza@lojza.cz",
       authorities = {"USER"})
@@ -523,8 +460,6 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
   }
 
   @Test
-  @Transactional
-  @Rollback
   @WithMockUser(
       username = "karel@karel.cz",
       authorities = {"ADMIN"})
