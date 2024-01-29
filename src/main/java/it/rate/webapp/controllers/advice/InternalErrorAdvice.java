@@ -6,6 +6,8 @@ import it.rate.webapp.exceptions.internalerror.InternalErrorException;
 import it.rate.webapp.services.EmailService;
 import it.rate.webapp.services.UserService;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -29,10 +31,12 @@ public class InternalErrorAdvice {
       "Something went wrong. Our developers were notified. Please try again later.";
   private final String simpleMessage = "Internal server error";
   private final int statusCode = HttpStatus.INTERNAL_SERVER_ERROR.value();
+  private final Logger logger = LoggerFactory.getLogger(InternalErrorAdvice.class);
 
   @ExceptionHandler({InternalErrorException.class, Exception.class})
   public ModelAndView unhandledExceptions(Exception e) {
     //    emailService.sendEmail(buildExceptionReport(devEmail, e));
+    logger.error("Unhandled Exception has occurred", e);
     return new ModelAndView(
         "error/page", "error", new ErrorResponseDTO(statusCode, simpleMessage, clientMessage));
   }
