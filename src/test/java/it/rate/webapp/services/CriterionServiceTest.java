@@ -41,7 +41,7 @@ class CriterionServiceTest extends BaseTest {
 
     when(criterionRepository.findAllByInterest(any())).thenReturn(criteria);
 
-    criterionService.updateExisting(interest, newCriteriaNames);
+    criterionService.updateAll(interest, newCriteriaNames);
 
     verify(criterionRepository, times(2)).save(any());
     verify(criterionRepository, times(0)).delete(any());
@@ -53,7 +53,7 @@ class CriterionServiceTest extends BaseTest {
 
     when(criterionRepository.findAllByInterest(any())).thenReturn(criteria);
 
-    criterionService.updateExisting(interest, newCriteriaNames);
+    criterionService.updateAll(interest, newCriteriaNames);
 
     verify(criterionRepository, times(0)).save(any());
     verify(criterionRepository, times(1)).delete(any());
@@ -65,7 +65,7 @@ class CriterionServiceTest extends BaseTest {
 
     when(criterionRepository.findAllByInterest(any())).thenReturn(criteria);
 
-    criterionService.updateExisting(interest, newCriteriaNames);
+    criterionService.updateAll(interest, newCriteriaNames);
 
     verify(criterionRepository, times(1)).save(any());
     verify(criterionRepository, times(1)).delete(any());

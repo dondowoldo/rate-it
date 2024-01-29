@@ -12,6 +12,7 @@ import it.rate.webapp.BaseTest;
 import it.rate.webapp.config.ServerRole;
 import it.rate.webapp.dtos.CriteriaOfPlaceDTO;
 import it.rate.webapp.dtos.CriterionAvgRatingDTO;
+import it.rate.webapp.dtos.PlaceInDTO;
 import it.rate.webapp.dtos.PlaceInfoDTO;
 import it.rate.webapp.exceptions.badrequest.BadRequestException;
 import it.rate.webapp.models.*;
@@ -58,7 +59,7 @@ class PlaceServiceTest extends BaseTest {
             .id(1L)
             .username("Lojza")
             .email("lojza@lojza.cz")
-            .password("pass")
+            .password("Password1")
             .serverRole(ServerRole.USER)
             .build();
     u2 =
@@ -66,7 +67,7 @@ class PlaceServiceTest extends BaseTest {
             .id(2L)
             .username("Franta")
             .email("franta@franta.cz")
-            .password("pass")
+            .password("Password1")
             .serverRole(ServerRole.USER)
             .build();
     i1 = Interest.builder().id(1L).name("Interest").description("Description").build();
@@ -85,8 +86,15 @@ class PlaceServiceTest extends BaseTest {
     // Mock the placeRepository to return whatever Place object it receives
     when(placeRepository.save(any())).thenAnswer(i -> i.getArgument(0));
 
+    PlaceInDTO placeDTO =
+        new PlaceInDTO(
+            p1.getName(),
+            p1.getAddress(),
+            p1.getDescription(),
+            p1.getLatitude(),
+            p1.getLongitude());
     // Call the method under test
-    Place res = placeService.save(p1, i1, u1);
+    Place res = placeService.save(placeDTO, i1, u1);
 
     // Assertions to verify the results
     assertSame(res.getCreator(), u1);
@@ -94,7 +102,7 @@ class PlaceServiceTest extends BaseTest {
 
     // Verify that placeRepository.save() was called exactly once with the same Place object used in
     // the test
-    verify(placeRepository, times(1)).save(same(p1));
+    verify(placeRepository, times(1)).save(same(res));
   }
 
   @Test

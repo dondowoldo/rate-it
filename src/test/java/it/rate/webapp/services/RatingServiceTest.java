@@ -41,7 +41,7 @@ class RatingServiceTest extends BaseTest {
             .id(1L)
             .username("Lojza")
             .email("lojza@lojza.cz")
-            .password("pass")
+            .password("Password1")
             .serverRole(ServerRole.USER)
             .build();
 

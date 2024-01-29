@@ -2,6 +2,7 @@ package it.rate.webapp.services;
 
 import it.rate.webapp.dtos.CriteriaOfPlaceDTO;
 import it.rate.webapp.dtos.CriterionAvgRatingDTO;
+import it.rate.webapp.dtos.PlaceInDTO;
 import it.rate.webapp.dtos.PlaceInfoDTO;
 import it.rate.webapp.models.*;
 import it.rate.webapp.models.AppUser;
@@ -13,6 +14,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -33,10 +35,16 @@ public class PlaceService {
     return placeRepository.getReferenceById(placeId);
   }
 
-  public Place save(Place place, @Valid Interest interest, @Valid AppUser appUser) {
+  public Place save(@NotNull @Valid PlaceInDTO placeDTO, @Valid Interest interest, @Valid AppUser appUser) {
+    Place place = new Place(placeDTO);
     place.setCreator(appUser);
     place.setInterest(interest);
 
+    return placeRepository.save(place);
+  }
+
+  public Place update(@Valid Place place, @NotNull @Valid PlaceInDTO placeDTO) {
+    place.update(placeDTO);
     return placeRepository.save(place);
   }
 

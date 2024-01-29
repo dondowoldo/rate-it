@@ -29,7 +29,7 @@ class InterestServiceTest extends BaseTest {
             .id(1L)
             .username("Lojza")
             .email("lojza@lojza.cz")
-            .password("pass")
+            .password("Password1")
             .serverRole(ServerRole.USER)
             .build();
     Interest i1 = Interest.builder().id(1L).name("zTest").description("desc").build();

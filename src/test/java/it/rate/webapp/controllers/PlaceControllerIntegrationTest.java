@@ -61,6 +61,8 @@ class PlaceControllerIntegrationTest extends BaseIntegrationTest {
     Long interestId = 1L;
     String name = "Test name";
     String description = "Test description";
+    Double latitude = 50.5;
+    Double longitude = 15.2;
 
     // Perform POST request to create a new place and expect redirection
     MvcResult res =
@@ -68,7 +70,9 @@ class PlaceControllerIntegrationTest extends BaseIntegrationTest {
             .perform(
                 post("/interests/" + interestId + "/places/new")
                     .param("name", name)
-                    .param("description", description))
+                    .param("description", description)
+                    .param("latitude", String.valueOf(latitude))
+                    .param("longitude", String.valueOf(longitude)))
             .andExpect(status().is3xxRedirection())
             .andReturn();
 

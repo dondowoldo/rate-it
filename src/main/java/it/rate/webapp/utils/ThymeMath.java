@@ -1,4 +1,4 @@
-package it.rate.webapp.config;
+package it.rate.webapp.utils;
 
 import org.springframework.stereotype.Component;
 

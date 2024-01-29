@@ -32,7 +32,7 @@
                            name="name"
                            th:field="*{name}"
                            required
-                           autocomplete="off">
+                           autocomplete="off" th:maxlength="${@constraints.MAX_NAME_LENGTH}">
                 </label>
             </section>
 
@@ -44,7 +44,7 @@
                            id="address"
                            name="address"
                            th:field="*{address}"
-                           autocomplete="off">
+                           autocomplete="off" th:maxlength="${@constraints.MAX_VARCHAR_LENGTH}">
                 </label>
             </section>
 
@@ -72,14 +72,16 @@
             </section>
 
             <section class="input-param">
-                <h4>Description</h4>
+                    <h4>Description</h4>
                 <label>
                     <textarea class="input-text-field"
                               id="description"
                               name="description"
-                              th:field="*{description}">
+                              th:field="*{description}" th:maxlength="${@constraints.MAX_DESCRIPTION_LENGTH}"
+                              th:oninput="'updateCharCountAndResize(' + ${@constraints.MAX_DESCRIPTION_LENGTH} + ')'">
                     </textarea>
                 </label>
+                <p id="charCount"></p>
             </section>
 
             <button class="button" type="submit">Save</button>
@@ -89,14 +91,10 @@
 
 <script th:replace="~{fragments :: leaflet-script}"></script>
 <script th:inline="javascript">
-    /*<![CDATA[*/
-
     let latitude = [[${place.latitude}]];
     let longitude = [[${place.longitude}]];
-
-    /*]]>*/
 </script>
 <script src="/scripts/placeFormMap.js"></script>
-
+<script src="/scripts/inputForm.js"></script>
 </body>
 </html>

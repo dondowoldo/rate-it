@@ -1,8 +1,10 @@
 package it.rate.webapp.controllers;
 
+import it.rate.webapp.dtos.PlaceInDTO;
 import it.rate.webapp.exceptions.notfound.PlaceNotFoundException;
 import it.rate.webapp.models.*;
 import it.rate.webapp.services.*;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -36,15 +38,17 @@ public class PlaceController {
     return "place/form";
   }
 
+  @Transactional
   @PostMapping("/new")
   @PreAuthorize("@permissionService.createPlace(#interestId)")
-  public String createNewPlace(@PathVariable Long interestId, Place place, Principal principal) {
+  public String createNewPlace(
+      @PathVariable Long interestId, PlaceInDTO placeDTO, Principal principal) {
 
-    AppUser loggedUser = userService.getByEmail(principal.getName());
     Interest interest = interestService.getById(interestId);
-    Place createdPlace = placeService.save(place, interest, loggedUser);
+    AppUser loggedUser = userService.getByEmail(principal.getName());
+    Place place = placeService.save(placeDTO, interest, loggedUser);
 
-    return String.format("redirect:/interests/%d/places/%d", interestId, createdPlace.getId());
+    return String.format("redirect:/interests/%d/places/%d", interestId, place.getId());
   }
 
   @GetMapping("/{placeId}")
@@ -83,15 +87,13 @@ public class PlaceController {
     return "place/form";
   }
 
+  @Transactional
   @PutMapping("/{placeId}/edit")
   @PreAuthorize("@permissionService.hasPlaceEditPermissions(#placeId, #interestId)")
   public String editPlace(
-      @PathVariable Long interestId, @PathVariable Long placeId, Place place, Principal principal) {
+      @PathVariable Long interestId, @PathVariable Long placeId, PlaceInDTO placeDTO) {
 
-    place.setId(placeId);
-    Interest interest = interestService.getById(interestId);
-    AppUser loggedUser = userService.getByEmail(principal.getName());
-    placeService.save(place, interest, loggedUser);
+    Place place = placeService.update(placeService.getById(placeId), placeDTO);
 
     return String.format("redirect:/interests/%d/places/%d", interestId, place.getId());
   }
