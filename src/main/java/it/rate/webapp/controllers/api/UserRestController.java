@@ -3,7 +3,6 @@ package it.rate.webapp.controllers.api;
 import it.rate.webapp.dtos.FollowDTO;
 import it.rate.webapp.exceptions.badrequest.BadRequestException;
 import it.rate.webapp.models.AppUser;
-import it.rate.webapp.services.FollowService;
 import it.rate.webapp.services.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +16,6 @@ import java.util.Optional;
 @RequestMapping("/api/v1/users")
 public class UserRestController {
   private final UserService userService;
-  private final FollowService followService;
 
   @PostMapping("/{userId}/follow")
   @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
@@ -32,8 +30,8 @@ public class UserRestController {
     }
 
     try {
-      return ResponseEntity.ok(
-          followService.setFollow(loggedUser, userToFollow.get(), follow.follow()));
+      userService.follow(loggedUser, userToFollow.get(), follow.follow());
+      return ResponseEntity.ok().build();
     } catch (BadRequestException e) {
       return ResponseEntity.badRequest().body(e.getMessage());
     }

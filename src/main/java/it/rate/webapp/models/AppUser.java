@@ -62,11 +62,16 @@ public class AppUser {
   @Builder.Default
   private List<Rating> ratings = new ArrayList<>();
 
-  @OneToMany(mappedBy = "follower")
+  @ManyToMany
   @Builder.Default
-  private Set<Follow> follows = new HashSet<>();
+  @JoinTable(
+          name = "user_follows",
+          joinColumns = @JoinColumn(name = "follower_id"),
+          inverseJoinColumns = @JoinColumn(name = "followed_id")
+  )
+  private Set<AppUser> follows = new HashSet<>();
 
-  @OneToMany(mappedBy = "followed")
+  @ManyToMany(mappedBy = "follows")
   @Builder.Default
-  private Set<Follow> followers = new HashSet<>();
+  private Set<AppUser> followers = new HashSet<>();
 }

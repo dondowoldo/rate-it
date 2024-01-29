@@ -26,8 +26,7 @@ class UsersRestControllerTest extends BaseIntegrationTest {
             post("/api/v1/users/1/follow")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody))
-        .andExpect(status().isOk())
-        .andExpect(content().string("Followed successfully"));
+        .andExpect(status().isOk());
   }
 
   @Test
@@ -42,8 +41,7 @@ class UsersRestControllerTest extends BaseIntegrationTest {
             post("/api/v1/users/1/follow")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody))
-        .andExpect(status().isOk())
-        .andExpect(content().string("Unfollowed successfully"));
+        .andExpect(status().isOk());
   }
 
   @Test
@@ -59,7 +57,7 @@ class UsersRestControllerTest extends BaseIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody))
         .andExpect(status().isBadRequest())
-        .andExpect(content().string("User cannot follow themselves"));
+        .andExpect(content().string("Users cannot follow themselves!"));
   }
 
   @Test
