@@ -3,15 +3,21 @@ package it.rate.webapp.controllers;
 import it.rate.webapp.dtos.SignupUserInDTO;
 import it.rate.webapp.dtos.SignupUserOutDTO;
 import it.rate.webapp.exceptions.badrequest.BadRequestException;
+import it.rate.webapp.exceptions.notfound.UserNotFoundException;
+import it.rate.webapp.models.AppUser;
+import it.rate.webapp.models.Interest;
+import it.rate.webapp.services.InterestService;
 import it.rate.webapp.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.security.Principal;
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -19,6 +25,7 @@ import java.security.Principal;
 public class UserController {
 
   private final UserService userService;
+  private final InterestService interestService;
 
   @GetMapping("/signup")
   public String signupPage() {
@@ -49,5 +56,13 @@ public class UserController {
       return "redirect:/";
     }
     return "user/loginForm";
+  }
+
+  @GetMapping("/{username}")
+  public String userPage(@PathVariable String username, Model model) {
+    AppUser user = userService.findByUsernameIgnoreCase(username).orElseThrow(UserNotFoundException::new);
+//    List<Interest> ratedInterests = interestService.getAllInterestsRatedByUserId(user.getId());
+    model.addAttribute("user", user);
+    return "user/page";
   }
 }

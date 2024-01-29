@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
+import org.apache.tomcat.util.bcel.Const;
 import org.hibernate.validator.constraints.Length;
 
 import java.util.ArrayList;
@@ -59,4 +60,7 @@ public class AppUser {
   @OneToMany(mappedBy = "appUser")
   @Builder.Default
   private List<Rating> ratings = new ArrayList<>();
+
+  @Length(max = Constraints.MAX_VARCHAR_LENGTH)
+  private String description;
 }
