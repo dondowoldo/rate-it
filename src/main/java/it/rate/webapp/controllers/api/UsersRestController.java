@@ -33,8 +33,7 @@ public class UsersRestController {
     }
 
     try {
-      return ResponseEntity.ok()
-          .body(followService.setFollow(loggedUser, userToFollow.get(), follow.follow()));
+      return ResponseEntity.ok(followService.setFollow(loggedUser, userToFollow.get(), follow.follow()));
     } catch (BadRequestException e) {
       return ResponseEntity.badRequest().body(e.getMessage());
     }

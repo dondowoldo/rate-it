@@ -6,7 +6,6 @@ import it.rate.webapp.dtos.InterestSuggestionDTO;
 import it.rate.webapp.repositories.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -15,7 +14,7 @@ import java.util.List;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@AutoConfigureMockMvc
+
 class InterestRestControllerTest extends BaseIntegrationTest {
 
   @Autowired MockMvc mockMvc;
