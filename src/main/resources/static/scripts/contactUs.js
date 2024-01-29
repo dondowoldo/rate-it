@@ -7,7 +7,7 @@ function submitForm() {
         jsonData[inputName] = value;
     });
 
-    fetch('/contact-us', {
+    fetch('/api/v1/emails/contact-us', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
