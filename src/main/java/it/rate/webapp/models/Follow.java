@@ -20,4 +20,10 @@ public class Follow {
   @ManyToOne
   @MapsId("followedId")
   private AppUser followed;
+
+  public Follow(AppUser follower, AppUser followed) {
+    this.id = new FollowId(follower.getId(), followed.getId());
+    this.follower = follower;
+    this.followed = followed;
+  }
 }
