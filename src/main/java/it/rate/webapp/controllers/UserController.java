@@ -1,7 +1,9 @@
 package it.rate.webapp.controllers;
 
+import it.rate.webapp.dtos.AppUserDTO;
 import it.rate.webapp.dtos.SignupUserInDTO;
 import it.rate.webapp.dtos.SignupUserOutDTO;
+import it.rate.webapp.dtos.UserRatedInterestDTO;
 import it.rate.webapp.exceptions.badrequest.BadRequestException;
 import it.rate.webapp.exceptions.notfound.UserNotFoundException;
 import it.rate.webapp.models.AppUser;
@@ -60,9 +62,10 @@ public class UserController {
 
   @GetMapping("/{username}")
   public String userPage(@PathVariable String username, Model model) {
-    AppUser user = userService.findByUsernameIgnoreCase(username).orElseThrow(UserNotFoundException::new);
-//    List<Interest> ratedInterests = interestService.getAllInterestsRatedByUserId(user.getId());
-    model.addAttribute("user", user);
+    AppUser user = userService.findByUsername(username).orElseThrow(UserNotFoundException::new);
+    List<UserRatedInterestDTO> interests = userService.getAllUserRatedInterestDTOS(user);
+    model.addAttribute("user", new AppUserDTO(user, interests));
+    model.addAttribute("user-interests", interests);
     return "user/page";
   }
 }

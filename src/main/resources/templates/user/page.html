@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{fragments.html :: head(title=${place.name})}">
+<head th:replace="~{fragments.html :: head(title=${user.username()})}">
 </head>
 
-<body th:object="${place}">
+<body>
 <div class="container-fluid">
     <header class="header">
         <div th:replace="~{fragments.html :: hamburger-menu}"></div>
@@ -18,8 +18,8 @@
                 <img>
             </div>
             <div class="user-details">
-                <h2 th:text="${user.name}"></h2>
-                <p th:text="${user.description}"></p>
+<!--                <h2 th:text="${user.name}"></h2>-->
+<!--                <p th:text="${user.description}"></p>-->
             </div>
         </section>
         <div class="user-follow">
@@ -48,7 +48,7 @@
                             <li>
                                 <i class="fas fa-star yellow"></i>
                                 <span class="rating"></span>
-                                <span class="criterion">Overall</span>
+                                <span class="criterion"></span>
                             </li>
 
                             <li>

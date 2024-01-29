@@ -1,9 +1,6 @@
 package it.rate.webapp.services;
 
-import it.rate.webapp.dtos.CoordinatesDTO;
-import it.rate.webapp.dtos.InterestInDTO;
-import it.rate.webapp.dtos.InterestSuggestionDTO;
-import it.rate.webapp.dtos.LikedInterestsDTO;
+import it.rate.webapp.dtos.*;
 import it.rate.webapp.models.*;
 import it.rate.webapp.repositories.*;
 import jakarta.validation.*;
@@ -112,5 +109,9 @@ public class InterestService {
     // Radius of earth in kilometers.
     final double r = 6371;
     return (c * r); // Distance in kilometers
+  }
+
+  public List<Interest> getAllUserRatedInterests(AppUser user) {
+    return interestRepository.findInterestsRatedByUserId(user.getId());
   }
 }

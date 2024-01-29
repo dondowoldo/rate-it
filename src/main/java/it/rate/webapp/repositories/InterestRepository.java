@@ -24,5 +24,5 @@ public interface InterestRepository extends JpaRepository<Interest, Long> {
           "INNER JOIN Place p ON i.id = p.interest.id " +
           "INNER JOIN Rating r ON p.id = r.place.id " +
           "WHERE r.appUser.id = :userId")
-  List<Interest> findInterestsRatedByUser(Long userId);
+  List<Interest> findInterestsRatedByUserId(Long userId);
 }

@@ -10,9 +10,9 @@ public record AppUserDTO(
     String description,
 //    List<String> followers,
 //    List<String> followedUsers,
-    List<Interest> ratedInterests) {
+    List<UserRatedInterestDTO> ratedInterests) {
 
-    public AppUserDTO(AppUser user, List<Interest> interests) {
+    public AppUserDTO(AppUser user, List<UserRatedInterestDTO> interests) {
         this(
                 user.getUsername(),
                 user.getDescription(),
