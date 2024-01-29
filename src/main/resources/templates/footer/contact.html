@@ -20,7 +20,7 @@
             </section>
             <section class="input-param">
                 <h4>Subject</h4>
-                <input class="input-text-field" type="text" name="subject" required>
+                <input class="input-text-field" type="text" name="subject" min="3" required>
             </section>
             <section class="input-param">
                 <h4>Message</h4>
@@ -29,6 +29,7 @@
             <input type="hidden" name="to" value="rate.spot.dev@gmail.com">
             <button type="submit" class="button">Send</button>
             <p class="successful"></p>
+            <p class="error"></p>
         </form>
 
     </main>

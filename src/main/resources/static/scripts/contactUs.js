@@ -21,7 +21,9 @@ function submitForm() {
                 successful.style.marginTop = '1rem';
                 successful.innerHTML = 'Email was sent successfully';
             } else {
-                alert('Failed to send email. Please try again.\nError: ' + response.statusText);
+                const error = document.querySelector('.error');
+                error.style.marginTop = '1rem';
+                error.innerHTML = 'Failed to send email. Please try again.';
             }
         })
         .catch(error => {
