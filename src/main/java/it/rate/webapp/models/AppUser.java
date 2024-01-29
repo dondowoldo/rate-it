@@ -11,7 +11,9 @@ import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -59,4 +61,12 @@ public class AppUser {
   @OneToMany(mappedBy = "appUser")
   @Builder.Default
   private List<Rating> ratings = new ArrayList<>();
+
+  @OneToMany(mappedBy = "follower")
+  @Builder.Default
+  private Set<Follow> follows = new HashSet<>();
+
+  @OneToMany(mappedBy = "followed")
+  @Builder.Default
+  private Set<Follow> followers = new HashSet<>();
 }
