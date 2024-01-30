@@ -3,15 +3,22 @@ package it.rate.webapp;
 import it.rate.webapp.config.ServerRole;
 import it.rate.webapp.models.*;
 import it.rate.webapp.repositories.*;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.Rollback;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
+@AutoConfigureMockMvc
+@Transactional
+@Rollback
 public class BaseIntegrationTest extends BaseTest {
 
   @Autowired private CriterionRepository criterionRepository;
@@ -57,7 +64,8 @@ public class BaseIntegrationTest extends BaseTest {
             .serverRole(ServerRole.USER)
             .build();
 
-    AppUser u5 = AppUser.builder()
+    AppUser u5 =
+        AppUser.builder()
             .username("Hynek")
             .email("hynek@hynek.cz")
             .password("$2a$10$EBJUECPu/pDHhnt9TX3xmOVHVdYlYdAdR997ilX42EzakA/tL6aQC")

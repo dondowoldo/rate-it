@@ -3,6 +3,7 @@ package it.rate.webapp.services;
 import it.rate.webapp.config.ServerRole;
 import it.rate.webapp.dtos.InterestUserDTO;
 import it.rate.webapp.dtos.SignupUserInDTO;
+import it.rate.webapp.exceptions.badrequest.BadRequestException;
 import it.rate.webapp.exceptions.badrequest.InvalidUserDetailsException;
 import it.rate.webapp.exceptions.badrequest.UserAlreadyExistsException;
 import it.rate.webapp.models.AppUser;
@@ -108,5 +109,18 @@ public class UserService {
       return userRepository.getByEmail(authentication.getName());
     }
     return null;
+  }
+
+  public void follow(@Valid AppUser follower, @Valid AppUser followed, boolean follow)
+      throws BadRequestException {
+    if (follower.equals(followed)) {
+      throw new BadRequestException("Users cannot follow themselves!");
+    }
+    if (follow) {
+      follower.getFollows().add(followed);
+    } else {
+      follower.getFollows().remove(followed);
+    }
+    userRepository.save(follower);
   }
 }
