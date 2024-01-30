@@ -19,10 +19,4 @@ public interface InterestRepository extends JpaRepository<Interest, Long> {
   List<Interest> findAllSortByLikes();
 
   List<Interest> findAllByLikes_AppUser(AppUser appUser);
-
-  @Query("SELECT DISTINCT i FROM Interest i " +
-          "INNER JOIN Place p ON i.id = p.interest.id " +
-          "INNER JOIN Rating r ON p.id = r.place.id " +
-          "WHERE r.appUser.id = :userId")
-  List<Interest> findInterestsRatedByUserId(Long userId);
 }

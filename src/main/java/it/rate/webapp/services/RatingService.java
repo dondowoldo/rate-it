@@ -1,6 +1,9 @@
 package it.rate.webapp.services;
 
 import it.rate.webapp.dtos.RatingsDTO;
+import it.rate.webapp.dtos.UserRatedInterestDTO;
+import it.rate.webapp.dtos.UserRatedPlaceDTO;
+import it.rate.webapp.dtos.UserRatingDTO;
 import it.rate.webapp.exceptions.badrequest.InvalidCriterionDetailsException;
 import it.rate.webapp.exceptions.badrequest.InvalidRatingException;
 import it.rate.webapp.models.*;
@@ -13,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Validated
@@ -27,7 +31,8 @@ public class RatingService {
     return new RatingsDTO(ratings);
   }
 
-  public void updateRating(@NotNull @Valid RatingsDTO ratings, @Valid Place place, @Valid AppUser appUser) {
+  public void updateRating(
+      @NotNull @Valid RatingsDTO ratings, @Valid Place place, @Valid AppUser appUser) {
     Set<Criterion> ratedCriteria = validateRatings(ratings, place);
 
     ratings
@@ -87,5 +92,51 @@ public class RatingService {
     return criterionRepository
         .findById(criterionId)
         .orElseThrow(InvalidCriterionDetailsException::new);
+  }
+
+  public List<UserRatedInterestDTO> getAllUserRatedInterestDTOS(AppUser appUser) {
+    List<Rating> userRatings = ratingRepository.findAllByAppUser(appUser);
+
+    Map<Interest, Map<Place, List<Rating>>> ratingsByInterestAndPlace =
+        userRatings.stream()
+            .collect(
+                Collectors.groupingBy(
+                    rating -> rating.getPlace().getInterest(),
+                    Collectors.groupingBy(Rating::getPlace, Collectors.toList())));
+
+    return ratingsByInterestAndPlace.entrySet().stream()
+        .map(
+            entry -> {
+              Interest interest = entry.getKey();
+              List<UserRatedPlaceDTO> userRatedPlaceDTOs =
+                  entry.getValue().entrySet().stream()
+                      .map(
+                          placeEntry -> {
+                            Place place = placeEntry.getKey();
+                            List<UserRatingDTO> userRatingDTOs =
+                                placeEntry.getValue().stream()
+                                    .map(
+                                        userRating ->
+                                            new UserRatingDTO(
+                                                userRating.getRating(),
+                                                userRating.getCriterion().getName()))
+                                    .collect(Collectors.toList());
+
+                            return new UserRatedPlaceDTO(
+                                place.getId(),
+                                place.getName(),
+                                place.getAverageRating(),
+                                userRatingDTOs);
+                          })
+                      .sorted(Comparator.comparingDouble(UserRatedPlaceDTO::avgRating).reversed())
+                      .collect(Collectors.toList());
+
+              return new UserRatedInterestDTO(
+                  interest.getId(),
+                  interest.getName(),
+                  interest.getImageName(),
+                  userRatedPlaceDTOs);
+            })
+        .toList();
   }
 }

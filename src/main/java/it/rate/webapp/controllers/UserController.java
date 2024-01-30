@@ -7,7 +7,7 @@ import it.rate.webapp.dtos.UserRatedInterestDTO;
 import it.rate.webapp.exceptions.badrequest.BadRequestException;
 import it.rate.webapp.exceptions.notfound.UserNotFoundException;
 import it.rate.webapp.models.AppUser;
-import it.rate.webapp.services.InterestService;
+import it.rate.webapp.services.RatingService;
 import it.rate.webapp.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -26,7 +26,7 @@ import java.util.List;
 public class UserController {
 
   private final UserService userService;
-  private final InterestService interestService;
+  private final RatingService ratingService;
 
   @GetMapping("/signup")
   public String signupPage() {
@@ -63,7 +63,7 @@ public class UserController {
   public String userPage(@PathVariable String username, Model model, Principal principal) {
     AppUser user =
         userService.findByUsernameIgnoreCase(username).orElseThrow(UserNotFoundException::new);
-    List<UserRatedInterestDTO> ratedInterests = interestService.getAllUserRatedInterestDTOS(user);
+    List<UserRatedInterestDTO> ratedInterests = ratingService.getAllUserRatedInterestDTOS(user);
     model.addAttribute("loggedUser", userService.getByEmail(principal.getName()));
     model.addAttribute("user", new AppUserDTO(user));
     model.addAttribute("ratedInterests", ratedInterests);
