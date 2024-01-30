@@ -1241,16 +1241,13 @@ h4 {
     background: #FFFFFF;
     color: #000000;
     border-radius: 1rem;
-    padding: 0.5rem;
     text-decoration: none;
-    height: 5rem;
-    overflow: hidden;
-    transition: height 0.3s ease;
     cursor: pointer;
 }
 
 .user-interest.expanded {
     height: auto;
+    gap: 0.5rem;
 }
 
 .user-interest-image {
@@ -1268,6 +1265,7 @@ h4 {
 .user-interest-default {
     display: flex;
     gap: 1rem;
+    margin: 0.5rem;
 }
 
 .user-interest-header {
@@ -1277,12 +1275,16 @@ h4 {
 }
 
 .user-interest-extension {
+    display: none;
+}
+
+.user-interest.expanded .user-interest-extension {
     display: flex;
     flex-direction: row;
     position: relative;
 }
 
-.user-interest.expanded .user-interest-places {
+.user-interest-places {
     display: flex;
     flex-direction: column;
     font-weight: 600;
@@ -1290,8 +1292,9 @@ h4 {
 
 .user-interest-places ul {
     list-style: none;
-    display: flex;
-    padding-left: 0.5rem;
+    display: none;
+    padding-left: 1rem;
+    margin-bottom: 0.5rem;
 }
 
 .user-interest-places li {
@@ -1310,6 +1313,6 @@ h4 {
 
 .user-interest-extension .button {
     position: absolute;
-    bottom: 1rem;
+    bottom: 0.5rem;
     right: 0.5rem;
 }

@@ -60,10 +60,11 @@ public class UserController {
   }
 
   @GetMapping("/{username}")
-  public String userPage(@PathVariable String username, Model model) {
+  public String userPage(@PathVariable String username, Model model, Principal principal) {
     AppUser user =
         userService.findByUsernameIgnoreCase(username).orElseThrow(UserNotFoundException::new);
     List<UserRatedInterestDTO> ratedInterests = interestService.getAllUserRatedInterestDTOS(user);
+    model.addAttribute("loggedUser", userService.getByEmail(principal.getName()));
     model.addAttribute("user", new AppUserDTO(user));
     model.addAttribute("ratedInterests", ratedInterests);
     return "user/page";
