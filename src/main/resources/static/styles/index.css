@@ -199,7 +199,6 @@ h3 {
     aspect-ratio: 16/10;
     border-radius: 1rem;
     background: #FFFFFF;
-    margin-bottom: 1.5rem;
     object-fit: contain;
     overflow: hidden;
 }
@@ -284,6 +283,13 @@ h3 {
 
 .place-button-bar .pending {
     background-color: #575757;
+}
+
+.location-button-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
 }
 
 .fotorama__thumb-border {
@@ -1108,7 +1114,7 @@ h4 {
     margin-bottom: 0.5rem;
 }
 
-.rs-logo > img{
+.rs-logo > img {
     height: 4rem;
     width: 4rem;
 }
@@ -1198,5 +1204,9 @@ h4 {
 
 #charCount {
     margin-bottom: 0.5rem;
+    color: #888585;
+}
+
+#locationAccuracy {
     color: #888585;
 }

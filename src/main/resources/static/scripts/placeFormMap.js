@@ -1,5 +1,5 @@
 const defaultView = [49.8037633, 15.4749126];
-const defaultPlaceZoom = 14;
+const defaultPlaceZoom = 16;
 const defaultZoom = 7;
 const mapUrl = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
 const tileLayerOptions = {
@@ -71,13 +71,16 @@ function fillInputFields(lat, lng) {
 }
 
 function locate() {
-    map.locate({setView: true, maxZoom: 16});
+    map.locate({setView: true, maxZoom: defaultPlaceZoom});
 }
 
 async function onLocationFound(e) {
     const lat = e.latlng.lat;
     const lng = e.latlng.lng;
     createMarker(lat, lng);
+    const radius = e.accuracy / 2;
+    const accuracy = document.getElementById('locationAccuracy');
+    accuracy.innerHTML = `Accuracy: ${radius.toFixed(0)} m`;
     try {
         await handleAddressSearch(lat, lng);
     } catch (error) {

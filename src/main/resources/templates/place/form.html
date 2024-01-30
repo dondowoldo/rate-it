@@ -71,7 +71,10 @@
                        th:field="*{longitude}"
                        required
                        hidden>
-                <button class="button" type="button" onclick="locate()">Get Current location</button>
+                <div class="location-button-bar">
+                    <span id="locationAccuracy"></span>
+                    <button class="button" type="button" onclick="locate()">Get Current location</button>
+                </div>
             </section>
 
             <section class="input-param">
