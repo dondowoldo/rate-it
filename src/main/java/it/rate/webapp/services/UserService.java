@@ -5,14 +5,12 @@ import it.rate.webapp.dtos.*;
 import it.rate.webapp.exceptions.badrequest.InvalidUserDetailsException;
 import it.rate.webapp.exceptions.badrequest.UserAlreadyExistsException;
 import it.rate.webapp.models.*;
-import it.rate.webapp.repositories.RatingRepository;
 import it.rate.webapp.repositories.UserRepository;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Valid;
 import jakarta.validation.Validator;
 
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import jakarta.validation.constraints.NotNull;
@@ -30,7 +28,6 @@ public class UserService {
   private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
   private final Validator validator;
-  private final RatingRepository ratingRepository;
   private final InterestService interestService;
 
   public Optional<AppUser> findById(Long userId) {
@@ -98,39 +95,35 @@ public class UserService {
   public Optional<AppUser> findByUsername(String username) {
     return userRepository.findByUsername(username);
   }
+
   public List<UserRatedInterestDTO> getAllUserRatedInterestDTOS(AppUser user) {
-    List<Rating> ratings = ratingRepository.findAllByAppUser(user);
     List<Interest> ratedInterests = interestService.getAllUserRatedInterests(user);
 
-    Map<Long, Interest> interestMap = ratedInterests.stream()
-            .collect(Collectors.toMap(Interest::getId, Function.identity()));
-
-    Map<Long, List<Rating>> ratingsByInterestId = ratings.stream()
-            .collect(Collectors.groupingBy(rating ->
-                    interestMap.get(rating.getPlace().getInterest().getId()).getId()));
-
-    return ratedInterests.stream()
-            .map(interest -> {
-              List<UserRatedPlaceDTO> ratedPlaces = ratingsByInterestId.getOrDefault(interest.getId(), Collections.emptyList())
-                      .stream()
-                      .collect(Collectors.groupingBy(rating -> rating.getPlace().getId()))
-                      .values().stream()
-                      .map(ratingList -> {
-                          Place place = ratingList.get(0).getPlace();
-                          List<UserRatedCriterionDTO> ratedCriteria = ratingList.stream()
-                                  .map(rating -> new UserRatedCriterionDTO(rating.getCriterion().getName(), rating.getRating()))
-                                  .collect(Collectors.toList());
-
-                          return new UserRatedPlaceDTO(
-                                  place.getId(),
-                                  place.getName(),
-                                  ratedCriteria
-                          );
-                      })
-                      .collect(Collectors.toList());
-
-              return new UserRatedInterestDTO(interest.getId(), interest.getName(), ratedPlaces);
-            })
-            .collect(Collectors.toList());
+    List<UserRatedInterestDTO> ratedInterestDTOS =
+        ratedInterests.stream()
+            .map(
+                interest ->
+                    new UserRatedInterestDTO(
+                        interest.getId(),
+                        interest.getName(),
+                        interest.getPlaces().stream()
+                            .map(
+                                place ->
+                                    new UserRatedPlaceDTO(
+                                        place.getId(),
+                                        place.getName(),
+                                        place.getAverageRating(),
+                                        place.getRatings().stream()
+                                            .map(
+                                                rating ->
+                                                    new UserRatingDTO(
+                                                        rating.getRating(),
+                                                        rating.getCriterion().getName()))
+                                            .collect(Collectors.toList())))
+                            .sorted(
+                                    Comparator.comparingDouble(UserRatedPlaceDTO::avgRating).reversed())
+                            .collect(Collectors.toList())))
+            .toList();
+    return ratedInterestDTOS;
   }
 }
