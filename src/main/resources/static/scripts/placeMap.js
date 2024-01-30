@@ -11,5 +11,6 @@ let map = L.map('map').setView(latlng, defaultPlaceZoom);
 L.tileLayer(mapUrl, tileLayerOptions).addTo(map);
 
 let marker = L.marker(latlng).addTo(map);
-marker.bindPopup("<b>" + placeName + "</b><br><a href='https://www.google.com/maps/place/" + placeLat + ',' + placeLng + "'>See on Google Maps</a>");
+marker.bindPopup("<b>" + placeName + "</b><br>" +
+    "<a href='https://www.google.com/maps/place/" + placeLat + ',' + placeLng + "' target='_blank'>See on Google Maps</a>");
 
