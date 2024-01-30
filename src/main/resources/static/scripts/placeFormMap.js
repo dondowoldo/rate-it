@@ -43,7 +43,7 @@ map.on("click", async function (e) {
 map.on('locationfound', onLocationFound);
 map.on('locationerror', onLocationError);
 
-function claerAddress() {
+function clearAddress() {
     document.getElementById('address').value = '';
 }
 
