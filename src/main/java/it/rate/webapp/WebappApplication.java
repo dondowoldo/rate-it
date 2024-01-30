@@ -60,6 +60,7 @@ public class WebappApplication implements CommandLineRunner {
             .username("Lojza")
             .email("lojza@lojza.cz")
             .password("$2a$10$9g1X9rp6meCML3g/h32MyeQ369SEh/hQpZb82eqjpvI71xCIdPAlG")
+            .bio("Jsem testovací user. Mezi mé zájmy patří to, co mi developer nadefinoval.")
             .serverRole(ServerRole.USER)
             .build();
 
@@ -67,6 +68,7 @@ public class WebappApplication implements CommandLineRunner {
         AppUser.builder()
             .username("Alfonz")
             .email("alfonz@alfonz.cz")
+            .bio("Jsem testovací user. Mezi mé zájmy patří to, co mi developer nadefinoval.")
             .password("$2a$10$9g1X9rp6meCML3g/h32MyeQ369SEh/hQpZb82eqjpvI71xCIdPAlG")
             .serverRole(ServerRole.USER)
             .build();
@@ -75,6 +77,7 @@ public class WebappApplication implements CommandLineRunner {
         AppUser.builder()
             .username("Karel")
             .email("karel@karel.cz")
+            .bio("Jsem testovací user. Mezi mé zájmy patří to, co mi developer nadefinoval.")
             .password("$2a$10$9g1X9rp6meCML3g/h32MyeQ369SEh/hQpZb82eqjpvI71xCIdPAlG")
             .serverRole(ServerRole.ADMIN)
             .build();
@@ -83,6 +86,7 @@ public class WebappApplication implements CommandLineRunner {
         AppUser.builder()
             .username("Franta")
             .email("franta@franta.cz")
+            .bio("Jsem testovací user. Mezi mé zájmy patří to, co mi developer nadefinoval.")
             .password("$2a$10$9g1X9rp6meCML3g/h32MyeQ369SEh/hQpZb82eqjpvI71xCIdPAlG")
             .serverRole(ServerRole.USER)
             .build();
