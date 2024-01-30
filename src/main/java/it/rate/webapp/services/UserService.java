@@ -105,8 +105,4 @@ public class UserService {
     }
     userRepository.save(follower);
   }
-
-  public Optional<AppUser> findByUsername(String username) {
-    return userRepository.findByUsername(username);
-  }
 }

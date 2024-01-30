@@ -76,5 +76,5 @@ public class AppUser {
   private Set<AppUser> followers = new HashSet<>();
 
   @Length(max = Constraints.MAX_VARCHAR_LENGTH)
-  private String description;
+  private String bio;
 }
