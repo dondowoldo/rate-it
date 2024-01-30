@@ -275,11 +275,15 @@ h3 {
     width: 1.5rem;
 }
 
-.place-rating-button-bar {
+.place-button-bar {
     display: flex;
     justify-content: flex-end;
     gap: 0.5rem;
     margin-top: 1rem;
+}
+
+.place-button-bar .pending {
+    background-color: #575757;
 }
 
 .fotorama__thumb-border {
@@ -292,10 +296,6 @@ h3 {
 
 .fotorama__stage__shaft img {
     border-radius: 1rem !important;
-}
-
-.place-rating-button-bar .pending {
-    background-color: #575757;
 }
 
 .interest-cards {
@@ -622,6 +622,7 @@ h3 {
     height: 100%;
     background: linear-gradient(to top, #E2E2E2, rgba(227, 227, 227, 0.8) 4%, transparent 35%, transparent 100%);
 }
+
 
 .interest-button-bar {
     display: flex;

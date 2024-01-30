@@ -43,9 +43,10 @@ map.on("click", async function (e) {
 map.on('locationfound', onLocationFound);
 map.on('locationerror', onLocationError);
 
-function deleteAddress() {
+function claerAddress() {
     document.getElementById('address').value = '';
 }
+
 function createMarker(lat, lng) {
     if (marker) {
         marker.remove();
@@ -101,12 +102,14 @@ async function handleAddressSearch(lat, lng) {
         console.error('Error handling address search:', error);
     }
 }
+
 async function findAddress(lat, lng) {
     const apiUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`;
     const result = await makeApiRequest(apiUrl, 'Error fetching address:');
 
+    clearMessage();
+
     if (result) {
-        // Consider returning the result instead of directly updating the DOM
         return result.display_name;
     } else {
         console.log('No results found');
@@ -118,7 +121,7 @@ async function handleCoordinatesSearch() {
     try {
         const result = await findCoordinates();
         if (result) {
-            const { lat, lng, displayName } = result;
+            const {lat, lng, displayName} = result;
             map.setView([lat, lng], defaultPlaceZoom);
             createMarker(lat, lng);
             document.getElementById('address').value = displayName;
@@ -134,17 +137,40 @@ async function findCoordinates() {
     const apiUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`;
     const result = await makeApiRequest(apiUrl, 'Error fetching coordinates:');
 
+    clearMessage();
+
     if (result && result.length > 0) {
         const lat = Number(result[0].lat);
         const lng = Number(result[0].lon);
         const displayName = result[0].display_name;
 
-        // Consider returning values instead of directly updating the DOM
-        return { lat, lng, displayName };
+        if (result.length > 1) {
+            renderMessage("Multiple results found. Using the first result. Please provide a more specific address if needed.");
+        }
+
+        map.setView([lat, lng], defaultPlaceZoom);
+        createMarker(lat, lng);
+        addressInput.value = displayName;
     } else {
-        console.log('No results found');
-        return null;
+        renderMessage("No results found. Please check the provided address.");
     }
+}
+
+function clearMessage() {
+    const existingMessage = document.getElementById("message");
+    if (existingMessage) {
+        existingMessage.parentNode.removeChild(existingMessage);
+    }
+}
+
+function renderMessage(message) {
+    const messageElement = document.createElement("p", id="message");
+    messageElement.id = "message";
+    messageElement.textContent = message;
+    const placeButtonBar = document.querySelector('.place-button-bar');
+    placeButtonBar.parentNode.insertBefore(messageElement, placeButtonBar.nextSibling);
+    messageElement.style.color = "red";
+    messageElement.style.margin = "1rem";
 }
 
 async function delayIfNeeded() {
@@ -161,9 +187,7 @@ async function delayIfNeeded() {
 async function makeApiRequest(apiUrl, errorMessage) {
     try {
         await delayIfNeeded();
-
         const response = await fetch(apiUrl);
-
         if (!response.ok) {
             throw new Error(`Failed to fetch data from the Nominatim API. Status: ${response.status}`);
         }

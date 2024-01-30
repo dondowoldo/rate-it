@@ -46,12 +46,14 @@
                            th:field="*{address}"
                            autocomplete="off" th:maxlength="${@constraints.MAX_VARCHAR_LENGTH}">
                 </label>
-                <button class="button" type="button" onclick="deleteAddress()">Delete</button>
-                <button class="button" type="button" onclick="handleCoordinatesSearch()">Search</button>
+                <div class="place-button-bar">
+                    <button class="button" type="button" onclick="claerAddress()">Clear</button>
+                    <button class="button" type="button" onclick="handleCoordinatesSearch()">Search</button>
+                </div>
             </section>
 
             <section class="input-param">
-                <h4>Exact spot</h4>
+                <h4>Map Location</h4>
                 <div class="place-map">
                     <div id="map"></div>
                 </div>
@@ -73,7 +75,7 @@
             </section>
 
             <section class="input-param">
-                    <h4>Description</h4>
+                <h4>Description</h4>
                 <label>
                     <textarea class="input-text-field"
                               id="description"
