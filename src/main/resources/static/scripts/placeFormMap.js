@@ -78,9 +78,15 @@ async function onLocationFound(e) {
     const lat = e.latlng.lat;
     const lng = e.latlng.lng;
     createMarker(lat, lng);
-    const radius = e.accuracy / 2;
-    const accuracy = document.getElementById('locationAccuracy');
-    accuracy.innerHTML = `Accuracy: ${radius.toFixed(0)} m`;
+    const accuracy = e.accuracy;
+    const message = document.getElementById('locationAccuracy');
+
+    if (accuracy < 100) {
+        message.innerHTML = `Accuracy: ${accuracy.toFixed(0)} m`;
+    } else {
+        message.innerHTML = `Accuracy: ${(accuracy / 1000).toFixed(1)} km`;
+    }
+
     try {
         await handleAddressSearch(lat, lng);
     } catch (error) {
