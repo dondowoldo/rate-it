@@ -111,7 +111,31 @@ public class InterestService {
     return (c * r); // Distance in kilometers
   }
 
-  public List<Interest> getAllUserRatedInterests(AppUser user) {
-    return interestRepository.findInterestsRatedByUserId(user.getId());
+  public List<UserRatedInterestDTO> getAllUserRatedInterestDTOS(AppUser user) {
+    List<Interest> ratedInterests = interestRepository.findInterestsRatedByUserId(user.getId());
+
+    return ratedInterests.stream()
+        .map(
+            interest ->
+                new UserRatedInterestDTO(
+                    interest.getId(),
+                    interest.getName(),
+                    interest.getPlaces().stream()
+                        .map(
+                            place ->
+                                new UserRatedPlaceDTO(
+                                    place.getId(),
+                                    place.getName(),
+                                    place.getAverageRating(),
+                                    place.getRatings().stream()
+                                        .map(
+                                            rating ->
+                                                new UserRatingDTO(
+                                                    rating.getRating(),
+                                                    rating.getCriterion().getName()))
+                                        .collect(Collectors.toList())))
+                        .sorted(Comparator.comparingDouble(UserRatedPlaceDTO::avgRating).reversed())
+                        .collect(Collectors.toList())))
+        .toList();
   }
 }

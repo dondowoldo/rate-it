@@ -28,7 +28,6 @@ public class UserService {
   private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
   private final Validator validator;
-  private final InterestService interestService;
 
   public Optional<AppUser> findById(Long userId) {
     return userRepository.findById(userId);
@@ -94,36 +93,5 @@ public class UserService {
 
   public Optional<AppUser> findByUsername(String username) {
     return userRepository.findByUsername(username);
-  }
-
-  public List<UserRatedInterestDTO> getAllUserRatedInterestDTOS(AppUser user) {
-    List<Interest> ratedInterests = interestService.getAllUserRatedInterests(user);
-
-    List<UserRatedInterestDTO> ratedInterestDTOS =
-        ratedInterests.stream()
-            .map(
-                interest ->
-                    new UserRatedInterestDTO(
-                        interest.getId(),
-                        interest.getName(),
-                        interest.getPlaces().stream()
-                            .map(
-                                place ->
-                                    new UserRatedPlaceDTO(
-                                        place.getId(),
-                                        place.getName(),
-                                        place.getAverageRating(),
-                                        place.getRatings().stream()
-                                            .map(
-                                                rating ->
-                                                    new UserRatingDTO(
-                                                        rating.getRating(),
-                                                        rating.getCriterion().getName()))
-                                            .collect(Collectors.toList())))
-                            .sorted(
-                                    Comparator.comparingDouble(UserRatedPlaceDTO::avgRating).reversed())
-                            .collect(Collectors.toList())))
-            .toList();
-    return ratedInterestDTOS;
   }
 }
