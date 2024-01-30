@@ -51,7 +51,7 @@
             <h2>Criteria</h2>
         </div>
         <ul>
-            <li th:each="criterion : ${interest.getNotDeletedCriteria()}" th:text="${criterion.name}"></li>
+            <li th:each="criterion : ${interest.getCriteria()}" th:text="${criterion.name}"></li>
         </ul>
         <section class="interest-places-section"
                  th:unless="${places.isEmpty()}">

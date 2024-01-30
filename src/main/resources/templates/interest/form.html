@@ -69,11 +69,11 @@
                     <th:block th:if="*{id != null}">
                         <label class="list-record first-criterion">
                             <input class="input-text-field" type="text" name="criteriaNames"
-                                   th:value="${interest.getNotDeletedCriteria()[0]?.name}"
+                                   th:value="${interest.getCriteria()[0]?.name}"
                                    th:maxlength="${@constraints.MAX_NAME_LENGTH}" required/>
                         </label>
 
-                        <div th:each="criterion, iterStat : ${interest.getNotDeletedCriteria()}" th:if="${iterStat.index > 0}">
+                        <div th:each="criterion, iterStat : ${interest.getCriteria()}" th:if="${iterStat.index > 0}">
                             <label class="list-record">
                                 <input class="input-text-field" type="text" name="criteriaNames"
                                        th:value="${criterion.name}" th:maxlength="${@constraints.MAX_NAME_LENGTH}"

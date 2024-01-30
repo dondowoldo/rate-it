@@ -89,7 +89,7 @@ public class Interest {
     return places.size();
   }
 
-  public List<Criterion> getNotDeletedCriteria() {
+  public List<Criterion> getCriteria() {
     return criteria.stream()
         .filter(criterion -> !criterion.isDeleted())
         .collect(Collectors.toList());

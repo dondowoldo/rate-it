@@ -66,7 +66,7 @@ public class RatingService {
   }
 
   private Set<Criterion> validateRatings(RatingsDTO ratings, Place place) {
-    List<Criterion> placeCriteria = place.getInterest().getNotDeletedCriteria();
+    List<Criterion> placeCriteria = place.getInterest().getCriteria();
     Set<Criterion> ratedCriteria = new HashSet<>();
 
     ratings
