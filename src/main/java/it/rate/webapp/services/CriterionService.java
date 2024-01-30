@@ -4,6 +4,7 @@ import it.rate.webapp.config.Constraints;
 import it.rate.webapp.models.Criterion;
 import it.rate.webapp.models.Interest;
 import it.rate.webapp.repositories.CriterionRepository;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -32,37 +33,43 @@ public class CriterionService {
     criterionRepository.saveAll(criteria);
   }
 
+  @Transactional
   public void updateAll(
       @Valid Interest interest,
       @NotEmpty Set<@NotBlank @Length(max = Constraints.MAX_NAME_LENGTH) String> criteriaNames) {
-    // Get old criteria
+
     List<Criterion> oldCriteria = criterionRepository.findAllByInterest(interest);
 
-    // Collect old criteria names
-    Set<String> oldCriteriaNames =
-        oldCriteria.stream().map(Criterion::getName).collect(Collectors.toSet());
+    markDeletedIfNeeded(oldCriteria, criteriaNames);
+    markUndeletedIfNeeded(oldCriteria, criteriaNames);
+    addNewCriteriaIfNotExist(oldCriteria, criteriaNames, interest);
+  }
 
-    // Identify criteria to delete, mark them as deleted
+  private void markDeletedIfNeeded(List<Criterion> oldCriteria, Set<String> criteriaNames) {
     oldCriteria.stream()
-        .filter(oldCriterion -> !criteriaNames.contains(oldCriterion.getName()))
+        .filter(criterion -> !criteriaNames.contains(criterion.getName()) && !criterion.isDeleted())
         .forEach(
             criterion -> {
               criterion.setDeleted(true);
-              criterionRepository.save(criterion); // Save the marked-as-deleted criterion
+              criterionRepository.save(criterion);
             });
+  }
 
-    // Identify criteria to undelete and save them
+  private void markUndeletedIfNeeded(List<Criterion> oldCriteria, Set<String> criteriaNames) {
     oldCriteria.stream()
-        .filter(
-            oldCriterion ->
-                criteriaNames.contains(oldCriterion.getName()) && oldCriterion.isDeleted())
+        .filter(criterion -> criteriaNames.contains(criterion.getName()) && criterion.isDeleted())
         .forEach(
             criterion -> {
               criterion.setDeleted(false);
-              criterionRepository.save(criterion); // Save the undeleted criterion
+              criterionRepository.save(criterion);
             });
+  }
 
-    // Identify criteria to add and save them
+  private void addNewCriteriaIfNotExist(
+      List<Criterion> oldCriteria, Set<String> criteriaNames, Interest interest) {
+    Set<String> oldCriteriaNames =
+        oldCriteria.stream().map(Criterion::getName).collect(Collectors.toSet());
+
     criteriaNames.stream()
         .filter(name -> !oldCriteriaNames.contains(name))
         .map(name -> Criterion.builder().name(name).interest(interest).build())
