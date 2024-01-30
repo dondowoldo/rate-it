@@ -42,10 +42,25 @@ public class CriterionService {
     Set<String> oldCriteriaNames =
         oldCriteria.stream().map(Criterion::getName).collect(Collectors.toSet());
 
-    // Identify criteria to delete and delete them
+    // Identify criteria to delete, mark them as deleted
     oldCriteria.stream()
         .filter(oldCriterion -> !criteriaNames.contains(oldCriterion.getName()))
-        .forEach(criterionRepository::delete);
+        .forEach(
+            criterion -> {
+              criterion.setDeleted(true);
+              criterionRepository.save(criterion); // Save the marked-as-deleted criterion
+            });
+
+    // Identify criteria to undelete and save them
+    oldCriteria.stream()
+        .filter(
+            oldCriterion ->
+                criteriaNames.contains(oldCriterion.getName()) && oldCriterion.isDeleted())
+        .forEach(
+            criterion -> {
+              criterion.setDeleted(false);
+              criterionRepository.save(criterion); // Save the undeleted criterion
+            });
 
     // Identify criteria to add and save them
     criteriaNames.stream()

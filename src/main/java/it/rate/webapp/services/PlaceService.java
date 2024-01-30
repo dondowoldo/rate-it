@@ -62,7 +62,7 @@ public class PlaceService {
 
     place
         .getInterest()
-        .getCriteria()
+        .getNotDeletedCriteria()
         .forEach(
             criterion -> criteriaAvgRatingDTOs.add(getCriterionAvgRatingDTO(criterion, place)));
 
@@ -71,7 +71,7 @@ public class PlaceService {
 
   public PlaceInfoDTO getPlaceInfoDTO(@Valid Place place) {
     Set<CriterionAvgRatingDTO> criteria =
-        place.getInterest().getCriteria().stream()
+        place.getInterest().getNotDeletedCriteria().stream()
             .map(criterion -> getCriterionAvgRatingDTO(criterion, place))
             .collect(Collectors.toSet());
     return new PlaceInfoDTO(place, criteria);
