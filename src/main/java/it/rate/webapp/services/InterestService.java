@@ -120,6 +120,7 @@ public class InterestService {
                 new UserRatedInterestDTO(
                     interest.getId(),
                     interest.getName(),
+                    interest.getImageName(),
                     interest.getPlaces().stream()
                         .map(
                             place ->

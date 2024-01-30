@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{fragments.html :: head(title=${user.username()})}">
+<head th:replace="~{fragments.html :: head(title=${user.username})}">
 </head>
 
 <body>
@@ -13,62 +13,54 @@
         <script th:replace="~{fragments.html :: topbar-script}"></script>
     </header>
     <main class="content">
-        <section class="user-info">
+        <section class="user-info" th:object="${user}">
             <div class="user-image">
-                <img>
+                <img src="/icons/user.svg" alt="placeholderImg">
             </div>
             <div class="user-details">
-<!--                <h2 th:text="${user.name}"></h2>-->
-<!--                <p th:text="${user.description}"></p>-->
+                <h2 th:text="*{username}"></h2>
+                <p th:text="*{bio}"></p>
             </div>
         </section>
         <div class="user-follow">
-            <a>Followers</a>
+            <a th:text="${user.followers}"> Followers</a>
             <button disabled>Follow</button>
-            <a>Following</a>
+            <a th:text="${user.follows}"> Following</a>
         </div>
-        <template>
-            <section class="user-interests">
+
+        <section class="user-interests" th:each="interest : ${ratedInterests}">
+            <div class="user-interest" th:object="${interest}">
                 <div class="user-interest-image">
-                    <img>
+                    <img th:if="*{imageName == null || imageName.isEmpty()}"
+                         src="https://picsum.photos/400/300" alt="Random image"/>
+                    <img th:unless="*{imageName == null || imageName.isEmpty()}"
+                         th:src="@{|/api/v1/images/*{imageName}}"
+                         alt="Interest image"/>
                 </div>
-                <div class="user-interest-content">
-                    <header class="user-interest-header">
-                        <div class="user-interest-title">
-                            <h3></h3>
-                            <p></p>
-                        </div>
-
-                        <div class="user-interest-dropdown">
-                            <button disabled></button>
-                        </div>
-                    </header>
-                    <section class="user-interest-places">
-                        <ul class="user-interest-places">
-                            <li>
-                                <i class="fas fa-star yellow"></i>
-                                <span class="rating"></span>
-                                <span class="criterion"></span>
-                            </li>
-
-                            <li>
-                                <i class="fas fa-star yellow"></i>
-                                <span class="rating"></span>
-                                <span class="criterion"></span>
-                            </li>
-
-                            <li>
-                                <i class="fas fa-star yellow"></i>
-                                <span class="rating"></span>
-                                <span class="criterion"></span>
-                            </li>
-                        </ul>
-                        <a class="button">Details</a>
-                    </section>
-                </div>
-
-            </section>
-        </template>
+            </div>
+            <div class="user-interest-content">
+                <header class="user-interest-header">
+                    <div class="user-interest-title">
+                        <h3 th:text="*{name}"></h3>
+                        <p th:text="${user.username()} + ' has rated ' + ${interest.ratedPlaces().size()} + ' '
+                            + (${interest.ratedPlaces().size()} == 1 ? 'place' : 'places')"></p>
+                    </div>
+                    <!--                        <div class="user-interest-dropdown">-->
+                    <!--                            <button disabled></button>-->
+                    <!--                        </div>-->
+                </header>
+                <section class="user-interest-places" >
+                    <ul class="user-interest-place" th:each="place : ${interest.ratedPlaces}">
+                        <li th:object="${place}">
+                            <i class="fas fa-star yellow"></i>
+                            <span th:text="*{avgRating}"></span>
+                            <span th:text="*{name}"></span>
+                        </li>
+                    </ul>
+                    <a class="button">Details</a>
+                </section>
+            </div>
+        </section>
     </main>
     <footer th:replace="~{fragments.html :: footer}"></footer>
 </div>

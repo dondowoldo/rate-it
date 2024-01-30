@@ -7,7 +7,6 @@ import it.rate.webapp.dtos.UserRatedInterestDTO;
 import it.rate.webapp.exceptions.badrequest.BadRequestException;
 import it.rate.webapp.exceptions.notfound.UserNotFoundException;
 import it.rate.webapp.models.AppUser;
-import it.rate.webapp.models.Interest;
 import it.rate.webapp.services.InterestService;
 import it.rate.webapp.services.UserService;
 import lombok.RequiredArgsConstructor;
@@ -62,8 +61,11 @@ public class UserController {
 
   @GetMapping("/{username}")
   public String userPage(@PathVariable String username, Model model) {
-    AppUser user = userService.findByEmailIgnoreCase(username).orElseThrow(UserNotFoundException::new);
+    AppUser user =
+        userService.findByUsernameIgnoreCase(username).orElseThrow(UserNotFoundException::new);
+    List<UserRatedInterestDTO> ratedInterests = interestService.getAllUserRatedInterestDTOS(user);
     model.addAttribute("user", new AppUserDTO(user));
+    model.addAttribute("ratedInterests", ratedInterests);
     return "user/page";
   }
 }
