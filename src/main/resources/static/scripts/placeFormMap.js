@@ -7,15 +7,15 @@ const tileLayerOptions = {
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 };
 
-let latlng;
+let placeLatLng;
 let map;
 
-if (latitude && longitude) {
-    latlng = L.latLng([latitude, longitude]);
-    map = L.map('map').setView(latlng, defaultPlaceZoom);
+if (placeLat && placeLng) {
+    placeLatLng = L.latLng([placeLat, placeLng]);
+    map = L.map('map').setView(placeLatLng, defaultPlaceZoom);
 } else {
-    latlng = L.latLng(defaultView);
-    map = L.map('map').setView(latlng, defaultZoom);
+    placeLatLng = L.latLng(defaultView);
+    map = L.map('map').setView(placeLatLng, defaultZoom);
 }
 
 L.tileLayer(mapUrl, tileLayerOptions).addTo(map);
@@ -24,44 +24,153 @@ let marker;
 let inputLat = document.getElementById("place-latitude");
 let inputLng = document.getElementById("place-longitude");
 
-if (latitude && longitude) {
-    createMarker(latitude, longitude);
+if (placeLat && placeLng) {
+    createMarker(placeLat, placeLng);
 }
 
-map.on("click", function (e) {
-    let latitude = e.latlng.lat;
-    let longitude = e.latlng.lng;
-    createMarker(latitude, longitude);
+map.on("click", async function (e) {
+    try {
+        let lat = e.latlng.lat;
+        let lng = e.latlng.lng;
+        createMarker(lat, lng);
+        // Wait for findAddress to complete before moving on
+        await handleAddressSearch(lat, lng);
+    } catch (error) {
+        console.error('Error handling map click:', error);
+    }
 });
 
 map.on('locationfound', onLocationFound);
 map.on('locationerror', onLocationError);
 
-function createMarker(latitude, longitude) {
+function deleteAddress() {
+    document.getElementById('address').value = '';
+}
+function createMarker(lat, lng) {
     if (marker) {
         marker.remove();
     }
-    fillInputFields(latitude, longitude);
-    marker = new L.marker([latitude, longitude], {draggable: true, autoPan: true}).addTo(map);
-    marker.on("dragend", function (event) {
-        let updatedLatLng = event.target.getLatLng();
-        fillInputFields(updatedLatLng.lat, updatedLatLng.lng);
+    fillInputFields(lat, lng);
+    marker = new L.marker([lat, lng], {draggable: true, autoPan: true}).addTo(map);
+    marker.on("dragend", async function (event) {
+        const updatedLat = event.target.getLatLng().lat;
+        const updatedLng = event.target.getLatLng().lng;
+        fillInputFields(updatedLat, updatedLng);
+        try {
+            await handleAddressSearch(updatedLat, updatedLng);
+        } catch (error) {
+            console.error('Error handling map click:', error);
+        }
     });
 }
 
-function fillInputFields(latitude, longitude) {
-    inputLat.value = latitude.toFixed(6);
-    inputLng.value = longitude.toFixed(6);
+function fillInputFields(lat, lng) {
+    inputLat.value = lat.toFixed(6);
+    inputLng.value = lng.toFixed(6);
 }
 
 function locate() {
     map.locate({setView: true, maxZoom: 16});
 }
 
-function onLocationFound(e) {
-    createMarker(e.latlng.lat, e.latlng.lng);
+async function onLocationFound(e) {
+    const lat = e.latlng.lat;
+    const lng = e.latlng.lng;
+    createMarker(lat, lng);
+    try {
+        await handleAddressSearch(lat, lng);
+    } catch (error) {
+        console.error('Error handling map click:', error);
+    }
 }
 
 function onLocationError(e) {
     alert(e.message);
+}
+
+const RATE_LIMIT = 2000; // 2 seconds
+let lastRequestTime = 0;
+
+async function handleAddressSearch(lat, lng) {
+    try {
+        const address = await findAddress(lat, lng);
+        if (address) {
+            document.getElementById("address").value = address;
+        }
+    } catch (error) {
+        console.error('Error handling address search:', error);
+    }
+}
+async function findAddress(lat, lng) {
+    const apiUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`;
+    const result = await makeApiRequest(apiUrl, 'Error fetching address:');
+
+    if (result) {
+        // Consider returning the result instead of directly updating the DOM
+        return result.display_name;
+    } else {
+        console.log('No results found');
+        return null;
+    }
+}
+
+async function handleCoordinatesSearch() {
+    try {
+        const result = await findCoordinates();
+        if (result) {
+            const { lat, lng, displayName } = result;
+            map.setView([lat, lng], defaultPlaceZoom);
+            createMarker(lat, lng);
+            document.getElementById('address').value = displayName;
+        }
+    } catch (error) {
+        console.error('Error handling coordinates search:', error);
+    }
+}
+
+async function findCoordinates() {
+    const addressInput = document.getElementById('address');
+    const address = addressInput.value;
+    const apiUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`;
+    const result = await makeApiRequest(apiUrl, 'Error fetching coordinates:');
+
+    if (result && result.length > 0) {
+        const lat = Number(result[0].lat);
+        const lng = Number(result[0].lon);
+        const displayName = result[0].display_name;
+
+        // Consider returning values instead of directly updating the DOM
+        return { lat, lng, displayName };
+    } else {
+        console.log('No results found');
+        return null;
+    }
+}
+
+async function delayIfNeeded() {
+    const currentTime = Date.now();
+    const timeSinceLastRequest = currentTime - lastRequestTime;
+
+    if (timeSinceLastRequest < RATE_LIMIT) {
+        const delay = RATE_LIMIT - timeSinceLastRequest;
+        await new Promise(resolve => setTimeout(resolve, delay));
+    }
+    lastRequestTime = Date.now();
+}
+
+async function makeApiRequest(apiUrl, errorMessage) {
+    try {
+        await delayIfNeeded();
+
+        const response = await fetch(apiUrl);
+
+        if (!response.ok) {
+            throw new Error(`Failed to fetch data from the Nominatim API. Status: ${response.status}`);
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error(errorMessage, error);
+        return null;
+    }
 }

@@ -46,6 +46,8 @@
                            th:field="*{address}"
                            autocomplete="off" th:maxlength="${@constraints.MAX_VARCHAR_LENGTH}">
                 </label>
+                <button class="button" type="button" onclick="deleteAddress()">Delete</button>
+                <button class="button" type="button" onclick="handleCoordinatesSearch()">Search</button>
             </section>
 
             <section class="input-param">
@@ -67,7 +69,6 @@
                        th:field="*{longitude}"
                        required
                        hidden>
-
                 <button class="button" type="button" onclick="locate()">Get Current location</button>
             </section>
 
@@ -91,10 +92,11 @@
 
 <script th:replace="~{fragments :: leaflet-script}"></script>
 <script th:inline="javascript">
-    let latitude = [[${place.latitude}]];
-    let longitude = [[${place.longitude}]];
+    const placeLat = [[${place.latitude}]];
+    const placeLng = [[${place.longitude}]];
 </script>
 <script src="/scripts/placeFormMap.js"></script>
 <script src="/scripts/inputForm.js"></script>
+
 </body>
 </html>

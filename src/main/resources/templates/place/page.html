@@ -113,15 +113,11 @@
 
 <script th:replace="~{fragments :: leaflet-script}"></script>
 <script th:inline="javascript">
-    /*<![CDATA[*/
-
-    let placeId = [[${place.id}]];
-    let name = [[${place.name}]];
-    let latitude = [[${place.latitude}]];
-    let longitude = [[${place.longitude}]];
-    let rating = [[${place.getAverageRating()}]];
-
-    /*]]>*/
+    const placeId = [[${place.id}]];
+    const placeName = [[${place.name}]];
+    const placeAddress = [[${place.address}]];
+    const placeLat = [[${place.latitude}]];
+    const placeLng = [[${place.longitude}]];
 </script>
 <script src="/scripts/placeMap.js"></script>
 <script src="/scripts/imageFetcher.js"></script>
