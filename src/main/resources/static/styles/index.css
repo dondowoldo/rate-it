@@ -1214,7 +1214,7 @@ h4 {
 }
 
 .user-image img {
-    background-color: #EED889; /* for default icon */
+    background-color: #EED889;
     width: 100%;
     border-radius: 4rem;
 }
@@ -1223,7 +1223,7 @@ h4 {
     display: flex;
     justify-content: space-evenly;
     align-items: center;
-    margin-bottom: 3rem;
+    margin-bottom: 2rem;
     color: #568D73;
     font-weight: 600;
 }
@@ -1236,6 +1236,7 @@ h4 {
 
 .user-interest {
     display: flex;
+    flex-direction: column;
     gap: 1rem;
     background: #FFFFFF;
     color: #000000;
@@ -1243,6 +1244,13 @@ h4 {
     padding: 0.5rem;
     text-decoration: none;
     height: 5rem;
+    overflow: hidden;
+    transition: height 0.3s ease;
+    cursor: pointer;
+}
+
+.user-interest.expanded {
+    height: auto;
 }
 
 .user-interest-image {
@@ -1255,4 +1263,53 @@ h4 {
     height: 100%;
     border-radius: 0.7rem;
     object-fit: cover;
+}
+
+.user-interest-default {
+    display: flex;
+    gap: 1rem;
+}
+
+.user-interest-header {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+}
+
+.user-interest-extension {
+    display: flex;
+    flex-direction: row;
+    position: relative;
+}
+
+.user-interest.expanded .user-interest-places {
+    display: flex;
+    flex-direction: column;
+    font-weight: 600;
+}
+
+.user-interest-places ul {
+    list-style: none;
+    display: flex;
+    padding-left: 0.5rem;
+}
+
+.user-interest-places li {
+    display: flex;
+    align-items: baseline;
+}
+
+.user-interest-places i {
+    color: #EFBB00;
+    width: 1.5rem;
+}
+
+.user-interest-places .place-rating-average {
+    width: 2rem;
+}
+
+.user-interest-extension .button {
+    position: absolute;
+    bottom: 1rem;
+    right: 0.5rem;
 }
