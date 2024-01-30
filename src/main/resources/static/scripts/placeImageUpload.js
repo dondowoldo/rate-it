@@ -6,7 +6,7 @@ let dynamicEndpoint = "/api/v1/images/".concat(placeId).concat("/new-place-image
 const uppy = new Uppy({
     restrictions: {
         allowedFileTypes: ["image/*"],
-        maxFileSize: 5 * 1024 * 1024,
+        maxFileSize: 10 * 1024 * 1024,
 
     },
     allowMultipleUploadBatches: false
