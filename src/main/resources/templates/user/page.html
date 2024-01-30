@@ -2,12 +2,13 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head th:replace="~{fragments.html :: head(title=${user.username})}">
+
 </head>
 
 <body>
 <div class="container-fluid">
     <header class="header">
-        <div th:replace="~{fragments.html :: hamburger-menu}"></div>
+        <div th:replace="~{fragments.html :: back-button}"></div>
         <div th:replace="~{fragments.html :: logo}"></div>
         <div th:replace="~{fragments.html :: login-menu}"></div>
         <script th:replace="~{fragments.html :: topbar-script}"></script>
@@ -24,7 +25,14 @@
         </section>
         <div class="user-follow">
             <a th:text="${user.followers} + ' Followers'"></a>
-            <button class="button">Follow</button>
+            <button th:if="${loggedUser.id != user.id}"
+                    th:action="@{/api/v1/users/{userId}/follow(userId=${user.id})}" th:method="post"
+                    class="button follow" onclick="followUser(user.id, true)">Follow
+            </button>
+            <button th:if="${loggedUser.getFollows().contains(user)}"
+                    th:action="@{/api/v1/users/{userId}/follow(userId=${user.id})}" th:method="post"
+                    class="button unfollow" onclick="followUser(user.id, false)">Unfollow
+            </button>
             <a th:text="${user.follows} + ' Following'"></a>
         </div>
 
@@ -68,5 +76,13 @@
     <footer th:replace="~{fragments.html :: footer}"></footer>
 </div>
 </body>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+
+    let user = [[${user}]];
+
+    /*]]>*/
+</script>
 <script src="/scripts/userInterests.js"></script>
 </html>
