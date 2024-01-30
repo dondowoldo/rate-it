@@ -75,6 +75,6 @@ public class AppUser {
   @Builder.Default
   private Set<AppUser> followers = new HashSet<>();
 
-  @Length(max = Constraints.MAX_VARCHAR_LENGTH)
+  @Length(max = Constraints.MAX_BIO_LENGTH)
   private String bio;
 }
