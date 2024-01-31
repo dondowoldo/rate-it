@@ -18,6 +18,10 @@ import java.util.Optional;
 public class ReviewService {
   private final ReviewRepository reviewRepository;
 
+  public Optional<Review> findById(ReviewId reviewId) {
+    return reviewRepository.findById(reviewId);
+  }
+
   public void deleteById(ReviewId reviewId) {
     reviewRepository.deleteById(reviewId);
   }

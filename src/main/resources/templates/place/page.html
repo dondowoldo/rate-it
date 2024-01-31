@@ -46,7 +46,7 @@
             <h2>Rating criteria</h2>
             <form th:object="${usersRatings}"
                   name="rating"
-                  id="form"
+                  id="rating-form"
             >
                 <div class="place-rating-criteria">
                     <div class="place-rating-criterion"
@@ -82,33 +82,35 @@
                 <div th:if="${usersRatings}" class="place-button-bar">
                     <a id="uppy-modal" href="#" type="button" class="button" style="text-decoration: none">
                         Upload photo</a>
-                    <a type="button" class="button" data-bs-toggle="modal" data-bs-target="#review-modal">Rate</a>
-
-                    <!-- Review Modal -->
-                    <div class="modal fade" id="review-modal" tabindex="-1" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered">
-                            <div class="modal-content">
-                                <div class="modal-body">
-                                    <h4>Add a review</h4>
-                                    <label>
-                            <textarea class="input-text-field"
-                                      id="review-text-field"
-                                      name="review"
-                                      th:maxlength="${@constraints.MAX_VARCHAR_LENGTH}"
-                                      th:oninput="'updateCharCountAndResize(' + ${@constraints.MAX_VARCHAR_LENGTH} + ')'">
-                            </textarea>
-                                    </label>
-                                    <p id="charCount"></p>
-                                    <div class="place-button-bar">
-                                        <button id="rate-without-review" class="button">Rate without Review</button>
-                                        <button id="post-review" class="button">Post</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <button type="submit" class="button" data-bs-toggle="modal" data-bs-target="#review-modal">Rate
+                    </button>
                 </div>
             </form>
+
+            <!-- Review Modal -->
+            <div th:if="${review == null}" class="modal fade" id="review-modal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <form id="review-form" class="modal-body">
+                            <h4>Add a review</h4>
+                            <label>
+                            <textarea class="input-text-field"
+                                      id="review-text-field"
+                                      th:value="${review}"
+                                      th:oninput="'updateCharCountAndResize(' + ${@constraints.MAX_VARCHAR_LENGTH} + ')'"
+                                      th:maxlength="${@constraints.MAX_VARCHAR_LENGTH}"></textarea>
+                            </label>
+                            <p id="charCount"></p>
+                            <div class="place-button-bar">
+                                <button id="rate-without-review" type="button" class="button" data-bs-dismiss="modal">
+                                    Rate without Review
+                                </button>
+                                <button id="post-review" type="submit" class="button">Post</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
 
             <div id="uppy"></div>
 
@@ -143,6 +145,7 @@
 <script src="/scripts/placeMap.js"></script>
 <script src="/scripts/imageFetcher.js"></script>
 <script th:if="${usersRatings}" src="/scripts/rating.js"></script>
+<script th:if="${usersRatings}" src="/scripts/reviewForm.js"></script>
 <script th:if="${usersRatings}" type="module" src="/scripts/imageUpload.js"></script>
 
 </body>
