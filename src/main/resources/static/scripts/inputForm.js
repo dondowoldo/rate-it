@@ -7,7 +7,7 @@ function updateCharCountAndResize(maxLength) {
     const charCount = document.querySelector("#charCount");
     const remainingChars = maxLength - textarea.value.length;
     charCount.textContent = "Characters remaining: " + remainingChars;
-    textarea.style.height = "auto";
+    // textarea.style.height = "auto";
     textarea.style.height = textarea.scrollHeight + "px";
 }
 

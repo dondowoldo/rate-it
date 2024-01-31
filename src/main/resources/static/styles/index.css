@@ -1248,8 +1248,9 @@ h4 {
 
 #review-text-field {
     border: black 1px solid;
-    background-color: #E2E2E2;
     min-height: 58px;
+    background-color: #E2E2E2;
+    overflow: hidden;
 }
 
 #review-modal {
