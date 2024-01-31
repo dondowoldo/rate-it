@@ -92,36 +92,29 @@ public class PlaceService {
   }
 
   public PlaceAllUsersRatingsDTO getPlaceUserRatingDto(Place place) {
-    Set<AppUser> voters = new HashSet<>();
-    List<Rating> allRatings = place.getRatings();
-    List<PlaceUserRatingDTO> userRatings = new ArrayList<>();
-    allRatings.forEach(rating -> voters.add(rating.getAppUser()));
 
-    for (AppUser voter : voters) {
-      userRatings.add(getSingleUserRatingDTO(place, voter));
-    }
+
+    List<PlaceUserRatingDTO> userRatings = place.getRatings().stream()
+            .map(rating -> getSingleUserRatingDTO(place, rating.getAppUser()))
+            .distinct()
+            .collect(Collectors.toList());
 
     return new PlaceAllUsersRatingsDTO(userRatings);
   }
 
   private PlaceUserRatingDTO getSingleUserRatingDTO(Place place, AppUser user) {
-    List<Rating> ratings = place.getRatings();
-    Map<String, Double> criterionRatings = new HashMap<>();
-    ratings.stream()
-        .filter(rating -> rating.getAppUser().equals(user))
-        .forEach(
-            rating ->
-                criterionRatings.put(rating.getCriterion().getName(), rating.getRating() / 2.0));
+    Map<String, Double> criterionRatings = place.getRatings().stream()
+            .filter(rating -> rating.getAppUser().equals(user))
+            .collect(Collectors.toMap(
+                    rating -> rating.getCriterion().getName(),
+                    rating -> rating.getRating() / 2.0
+            ));
 
-    double sumOfRatings = 0.0;
+    double averageRating = criterionRatings.values().stream()
+            .mapToDouble(Double::doubleValue)
+            .average()
+            .orElse(0.0);
 
-    for (Map.Entry<String, Double> entry : criterionRatings.entrySet()) {
-      sumOfRatings += entry.getValue();
-    }
-
-    double totalAverage = sumOfRatings / criterionRatings.size();
-    String formattedDouble = String.format("%.1f", totalAverage);
-    totalAverage = Double.parseDouble(formattedDouble);
-    return new PlaceUserRatingDTO(user.getUsername(), criterionRatings, totalAverage);
+    return new PlaceUserRatingDTO(user.getUsername(), criterionRatings, averageRating);
   }
 }

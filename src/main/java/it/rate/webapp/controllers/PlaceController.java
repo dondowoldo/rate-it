@@ -58,7 +58,7 @@ public class PlaceController {
     Place place = placeService.findById(placeId).orElseThrow(PlaceNotFoundException::new);
     model.addAttribute("place", place);
     model.addAttribute("placeCriteria", placeService.getCriteriaOfPlaceDTO(place));
-    model.addAttribute("placeRatins", placeService.getPlaceUserRatingDto(place));
+    model.addAttribute("placeRatings", placeService.getPlaceUserRatingDto(place));
 
     if (principal != null) {
       AppUser loggedUser = userService.getByEmail(principal.getName());
