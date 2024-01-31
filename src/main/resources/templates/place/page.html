@@ -84,12 +84,11 @@
                 <div th:if="${usersRatings}" class="place-button-bar">
                     <a id="uppy-modal" href="#" type="button" class="button" style="text-decoration: none">
                         Upload photo</a>
-                    <button type="submit" class="button" data-bs-toggle="modal" data-bs-target="#review-modal">Rate
+                    <button id="rate" type="submit" class="button">Rate
                     </button>
                 </div>
             </form>
 
-            <!-- Review Modal -->
             <div th:if="${review == null}" class="modal fade" id="review-modal" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
@@ -105,7 +104,7 @@
                             <p id="charCount"></p>
                             <div class="place-button-bar">
                                 <button id="rate-without-review" type="button" class="button" data-bs-dismiss="modal">
-                                    Rate without Review
+                                    Dismiss
                                 </button>
                                 <button id="post-review" type="submit" class="button">Post</button>
                             </div>
@@ -147,7 +146,7 @@
 <script src="/scripts/placeMap.js"></script>
 <script src="/scripts/imageFetcher.js"></script>
 <script th:if="${usersRatings}" src="/scripts/rating.js"></script>
-<script th:if="${usersRatings}" src="/scripts/reviewForm.js"></script>
+<script th:if="${usersRatings != null && review == null}" src="/scripts/reviewForm.js"></script>
 <script th:if="${usersRatings}" type="module" src="/scripts/placeImageUpload.js"></script>
 
 </body>

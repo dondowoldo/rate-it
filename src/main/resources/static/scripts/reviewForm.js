@@ -1,30 +1,25 @@
+const TIMEOUT_DURATION = 2000;
 document.addEventListener('DOMContentLoaded', function () {
     updateCharCountAndResize(document.querySelector("#review-text-field").getAttribute("maxlength"));
-})
 
-function updateCharCountAndResize(maxLength) {
-    const textarea = document.querySelector("#review-text-field");
-    const charCount = document.querySelector("#charCount");
-    const remainingChars = maxLength - textarea.value.length;
-    charCount.textContent = "Characters remaining: " + remainingChars;
-    textarea.style.height = "auto";
-    textarea.style.height = textarea.scrollHeight + "px";
-}
+    const rateButton = document.querySelector("#rate");
+    rateButton.setAttribute('data-bs-toggle', 'modal');
+    rateButton.setAttribute('data-bs-target', '#review-modal');
 
-document.addEventListener('DOMContentLoaded', function () {
-    const TIMEOUT_DURATION = 2000;
-
-    let previousReviewText = '';
+    const reviewTextField = document.querySelector("#review-text-field");
+    reviewTextField.addEventListener('input', function () {
+        updateCharCountAndResize(reviewTextField.getAttribute("maxlength"));
+    });
 
     async function handleSubmit(event) {
         try {
             event.preventDefault();
 
-            const reviewText = document.querySelector('#review-text-field').value;
+            const reviewText = reviewTextField.value;
 
-            if (!reviewText.trim() || reviewText === previousReviewText) {
-                displayMessage('Please enter a new review before submitting.', 'info');
-                return;  // Stop further execution if the review text is empty or the same
+            if (!reviewText.trim()) {
+                displayMessage('Please enter a new review before submitting.', 'secondary');
+                return;
             }
 
             const response = await fetch(`/api/v1/places/${placeId}/review`, {
@@ -44,7 +39,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
             displayMessage('Review sent successfully!', 'success');
 
-            setTimeout(function() {
+            rateButton.removeAttribute('data-bs-toggle');
+            rateButton.removeAttribute('data-bs-target');
+
+            setTimeout(function () {
                 $('#review-modal').modal('hide');
             }, TIMEOUT_DURATION);
 
@@ -53,20 +51,29 @@ document.addEventListener('DOMContentLoaded', function () {
         } catch (error) {
             console.error(error);
 
-            displayMessage('Error sending review. Please try again later.', 'danger');
+            displayMessage('Error sending review.', 'danger');
         }
-    }
-
-    function displayMessage(message, type) {
-        const charCountElement = document.querySelector('#charCount');
-
-        charCountElement.innerHTML = `<div class="alert alert-${type}" role="alert">${message}</div>`;
-
-        setTimeout(function() {
-            charCountElement.innerHTML = '';
-        }, TIMEOUT_DURATION);
     }
 
     const form = document.getElementById("review-form");
     form.addEventListener('submit', handleSubmit);
 });
+
+function displayMessage(message, type) {
+    const charCountElement = document.querySelector('#charCount');
+
+    charCountElement.innerHTML = `<div class="alert alert-${type}" role="alert">${message}</div>`;
+
+    setTimeout(function () {
+        charCountElement.innerHTML = '';
+    }, TIMEOUT_DURATION);
+}
+
+function updateCharCountAndResize(maxLength) {
+    const textarea = document.querySelector("#review-text-field");
+    const charCount = document.querySelector("#charCount");
+    const remainingChars = maxLength - textarea.value.length;
+    charCount.textContent = "Characters remaining: " + remainingChars;
+    textarea.style.height = "auto";
+    textarea.style.height = textarea.scrollHeight + "px";
+}
