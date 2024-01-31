@@ -44,9 +44,7 @@
         <p th:text="*{description}"></p>
         <section class="place-rating" th:unless="${placeCriteria.criteria().isEmpty()}">
             <h2>Rating criteria</h2>
-            <form th:action="@{/interests/{intId}/places/{placeId}/rate(intId=${place.interest.id}, placeId=${place.id})}"
-                  th:method="post"
-                  th:object="${usersRatings}"
+            <form th:object="${usersRatings}"
                   name="rating"
                   id="form"
             >
@@ -80,17 +78,34 @@
                         </div>
                     </div>
                 </div>
-
                 <div th:if="${usersRatings}" class="place-rating-button-bar">
                     <a id="uppy-modal" href="#" type="button" class="button" style="text-decoration: none">
                         Upload photo</a>
-                    <button id="submit-rating-button" class="button" type="submit">Rate</button>
+                    <button id="submit-rating-button" class="button">Rate</button>
                 </div>
             </form>
 
+
+            <div class="modal" id="modal">
+                <div class="modal-body">
+                    <h4>Add a review</h4>
+                    <label>
+                    <textarea class="input-text-field"
+                              id="review"
+                              name="review"
+                              th:maxlength="${@constraints.MAX_VARCHAR_LENGTH}"
+                              th:oninput="'updateCharCountAndResize(' + ${@constraints.MAX_VARCHAR_LENGTH} + ')'">
+                    </textarea>
+                    </label>
+                </div>
+                <button id="rate-without-review" class="button">Rate without review</button>
+                <button id="post-review" class="button">Post review</button>
+                <div id="overlay"></div>
+            </div>
+
             <div id="uppy"></div>
 
-            <div class="place-rating-button-bar">
+            <div th:unless="${usersRatings}" class="place-rating-button-bar">
                 <span class="button pending"
                       th:if="${loggedUser != null && place.interest.isExclusive() && applicant == true}">Pending Request</span>
                 <form th:if="${loggedUser != null && place.interest.isExclusive() && usersRatings == null && applicant != true}"

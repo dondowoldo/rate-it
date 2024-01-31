@@ -40,19 +40,19 @@ public class PlaceRestController {
 
   @PostMapping("/{placeId}/comment")
   @PreAuthorize("@permissionService.ratePlace(#placeId)")
-  public ResponseEntity<?> commentPlace(
-      @PathVariable Long placeId, String comment, Principal principal) {
+  public ResponseEntity<?> placeReview(
+      @PathVariable Long placeId, String review, Principal principal) {
 
     AppUser loggedUser = userService.getByEmail(principal.getName());
     Place place = placeService.getById(placeId);
-    reviewService.save(comment, place, loggedUser);
+    reviewService.save(review, place, loggedUser);
 
     return ResponseEntity.ok().body("Comment saved");
   }
 
   @DeleteMapping("/{placeId}/delete-comment")
   @PreAuthorize("@permissionService.ratePlace(#placeId)")
-  public ResponseEntity<?> uncommentPlace(@PathVariable Long placeId, Principal principal) {
+  public ResponseEntity<?> deleteReview(@PathVariable Long placeId, Principal principal) {
 
     AppUser loggedUser = userService.getByEmail(principal.getName());
     Place place = placeService.getById(placeId);
