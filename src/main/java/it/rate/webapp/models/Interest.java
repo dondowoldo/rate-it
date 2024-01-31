@@ -21,10 +21,7 @@ import java.util.stream.Collectors;
 @Table(name = "interests")
 public class Interest {
 
-  @Id
-  @GeneratedValue
-  @NotNull
-  private Long id;
+  @Id @GeneratedValue @NotNull private Long id;
 
   @NotBlank
   @Length(min = Constraints.MIN_NAME_LENGTH, max = Constraints.MAX_NAME_LENGTH)
@@ -90,5 +87,11 @@ public class Interest {
 
   public int countPlaces() {
     return places.size();
+  }
+
+  public List<Criterion> getCriteria() {
+    return criteria.stream()
+        .filter(criterion -> !criterion.isDeleted())
+        .collect(Collectors.toList());
   }
 }

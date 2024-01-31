@@ -27,9 +27,9 @@ class CriterionServiceTest extends BaseTest {
 
   @BeforeEach
   void setUp() {
-    cr1 = Criterion.builder().name("Křupavost").build();
-    cr2 = Criterion.builder().name("Kvalita").build();
-    cr3 = Criterion.builder().name("Velikost").build();
+    cr1 = Criterion.builder().name("Křupavost").deleted(false).build();
+    cr2 = Criterion.builder().name("Kvalita").deleted(false).build();
+    cr3 = Criterion.builder().name("Velikost").deleted(true).build();
     criteria = List.of(cr1, cr2, cr3);
     interest =
         Interest.builder().id(1L).name("test").description("desc").criteria(criteria).build();
@@ -43,12 +43,24 @@ class CriterionServiceTest extends BaseTest {
 
     criterionService.updateAll(interest, newCriteriaNames);
 
-    verify(criterionRepository, times(2)).save(any());
-    verify(criterionRepository, times(0)).delete(any());
+    //creating 2, undeleting 1
+    verify(criterionRepository, times(3)).save(any());
   }
 
   @Test
-  void updateExistingDeleteCriterion() {
+  void updateUndelete() {
+    Set<String> newCriteriaNames = Set.of("Křupavost", "Kvalita", "Velikost");
+
+    when(criterionRepository.findAllByInterest(any())).thenReturn(criteria);
+
+    criterionService.updateAll(interest, newCriteriaNames);
+
+    //undeleting 1
+    verify(criterionRepository, times(1)).save(any());
+  }
+
+  @Test
+  void updateWithoutChange() {
     Set<String> newCriteriaNames = Set.of("Křupavost", "Kvalita");
 
     when(criterionRepository.findAllByInterest(any())).thenReturn(criteria);
@@ -56,18 +68,17 @@ class CriterionServiceTest extends BaseTest {
     criterionService.updateAll(interest, newCriteriaNames);
 
     verify(criterionRepository, times(0)).save(any());
-    verify(criterionRepository, times(1)).delete(any());
   }
 
   @Test
   void updateExistingDeleteAndAddCriteria() {
-    Set<String> newCriteriaNames = Set.of("Křupavost", "Kvalita", "Užitek");
+    Set<String> newCriteriaNames = Set.of("Křupavost", "Velikost", "Užitek");
 
     when(criterionRepository.findAllByInterest(any())).thenReturn(criteria);
 
     criterionService.updateAll(interest, newCriteriaNames);
 
-    verify(criterionRepository, times(1)).save(any());
-    verify(criterionRepository, times(1)).delete(any());
+    //deleting 1, undeleting 1, creating 1
+    verify(criterionRepository, times(3)).save(any());
   }
 }
