@@ -78,12 +78,35 @@
                         </div>
                     </div>
                 </div>
+
                 <div th:if="${usersRatings}" class="place-button-bar">
                     <a id="uppy-modal" href="#" type="button" class="button" style="text-decoration: none">
                         Upload photo</a>
-                    <button id="submit-rating-button" class="button" data-bs-toggle="modal"
-                            data-bs-target="#review-modal">Rate
-                    </button>
+                    <a type="button" class="button" data-bs-toggle="modal" data-bs-target="#review-modal">Rate</a>
+
+                    <!-- Review Modal -->
+                    <div class="modal fade" id="review-modal" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-body">
+                                    <h4>Add a review</h4>
+                                    <label>
+                            <textarea class="input-text-field"
+                                      id="review-text-field"
+                                      name="review"
+                                      th:maxlength="${@constraints.MAX_VARCHAR_LENGTH}"
+                                      th:oninput="'updateCharCountAndResize(' + ${@constraints.MAX_VARCHAR_LENGTH} + ')'">
+                            </textarea>
+                                    </label>
+                                    <p id="charCount"></p>
+                                    <div class="place-button-bar">
+                                        <button id="rate-without-review" class="button">Rate without Review</button>
+                                        <button id="post-review" class="button">Post</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </form>
 
@@ -102,29 +125,6 @@
                    th:href="@{/users/login}">Login</a>
             </div>
         </section>
-
-        <!-- Review Modal -->
-        <div class="modal fade" id="review-modal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-body">
-                        <h4>Add a review</h4>
-                        <label>
-                            <textarea class="input-text-field"
-                                      id="review-text-field"
-                                      name="review"
-                                      th:maxlength="${@constraints.MAX_VARCHAR_LENGTH}"
-                                      th:oninput="'updateCharCountAndResize(' + ${@constraints.MAX_VARCHAR_LENGTH} + ')'">
-                            </textarea>
-                        </label>
-                        <div class="place-button-bar">
-                            <button id="rate-without-review" class="button">Rate without Review</button>
-                            <button id="post-review" class="button">Post</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
 
         <section class="place-map">
             <div id="map"></div>
