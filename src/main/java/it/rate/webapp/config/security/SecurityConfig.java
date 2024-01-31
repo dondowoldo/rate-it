@@ -33,7 +33,7 @@ public class SecurityConfig {
                         "/interests/{interestId}/places/{placeId}",
                         "/users/signup",
                         "/users/login",
-                        "/users/{id}",
+                        "/users/{username}",
                         "/api/v1/interests/suggestions",
                         "/api/v1/interests/{id}/places",
                         "/api/v1/images/{id}")
