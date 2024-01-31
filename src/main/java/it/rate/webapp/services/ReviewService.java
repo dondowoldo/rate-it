@@ -1,6 +1,7 @@
 package it.rate.webapp.services;
 
 import it.rate.webapp.config.Constraints;
+import it.rate.webapp.dtos.ReviewDTO;
 import it.rate.webapp.models.*;
 import it.rate.webapp.repositories.ReviewRepository;
 import jakarta.validation.Valid;
@@ -26,7 +27,7 @@ public class ReviewService {
     reviewRepository.deleteById(reviewId);
   }
 
-  public void save(
+  public ReviewDTO save(
       @NotBlank @Length(max = Constraints.MAX_VARCHAR_LENGTH) String text,
       @Valid Place place,
       @Valid AppUser loggedUser) {
@@ -36,6 +37,6 @@ public class ReviewService {
     if (optReview.isPresent()) {
       reviewRepository.deleteById(reviewId);
     }
-    reviewRepository.save(new Review(loggedUser, place, text));
+    return new ReviewDTO(reviewRepository.save(new Review(loggedUser, place, text)));
   }
 }

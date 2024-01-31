@@ -2,6 +2,7 @@ package it.rate.webapp.controllers.api;
 
 import it.rate.webapp.dtos.PlaceInfoDTO;
 import it.rate.webapp.dtos.RatingsDTO;
+import it.rate.webapp.dtos.ReviewDTO;
 import it.rate.webapp.models.AppUser;
 import it.rate.webapp.models.ReviewId;
 import it.rate.webapp.models.Place;
@@ -46,9 +47,9 @@ public class PlaceRestController {
 
     AppUser loggedUser = userService.getByEmail(principal.getName());
     Place place = placeService.getById(placeId);
-    reviewService.save(review, place, loggedUser);
+    ReviewDTO reviewDTO = reviewService.save(review, place, loggedUser);
 
-    return ResponseEntity.ok().body("Review saved");
+    return ResponseEntity.ok().body(reviewDTO);
   }
 
   @DeleteMapping("/{placeId}/delete-review")

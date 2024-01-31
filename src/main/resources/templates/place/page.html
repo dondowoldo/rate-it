@@ -97,7 +97,7 @@
                             <label>
                             <textarea class="input-text-field"
                                       id="review-text-field"
-                                      th:value="${review}"
+                                      name="review"
                                       th:oninput="'updateCharCountAndResize(' + ${@constraints.MAX_VARCHAR_LENGTH} + ')'"
                                       th:maxlength="${@constraints.MAX_VARCHAR_LENGTH}"></textarea>
                             </label>
