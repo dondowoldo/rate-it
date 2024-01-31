@@ -1,21 +1,57 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const userBio = document.getElementsByClassName('user-bio');
+    const userBio = document.getElementById('user-bio');
+    const maxBioLength = 150;
+    const defaultText = 'Tap here to write something about yourself...';
 
-    // Set initial content to the user's bio
-    let initialBio = userBio.textContent;
+    if (userBio.textContent.trim() === '') {
+        userBio.textContent = defaultText;
+    }
+
+    let originalBio = userBio.textContent;
+
+    userBio.addEventListener('focus', function () {
+        if (userBio.textContent === defaultText) {
+            userBio.textContent = '';
+        }
+    });
 
     userBio.addEventListener('input', function () {
-        // Update the initialBio when the content changes
-        initialBio = userBio.textContent;
+        if (userBio.textContent.length > maxBioLength) {
+            userBio.textContent = originalBio;
+        } else {
+            originalBio = userBio.textContent;
+        }
+    });
+
+    userBio.addEventListener('blur', function () {
+        if (userBio.textContent.trim() === '') {
+            userBio.textContent = defaultText;
+        }
+
+        saveBio();
     });
 });
 
 function saveBio() {
-    const userBio = document.getElementsByClassName('user-bio');
+    const userBio = document.getElementById('user-bio');
     const newBio = userBio.textContent;
 
-    // Send the newBio to the server for saving (you need to implement this part)
-
-    // For now, let's log the newBio to the console
-    console.log('New Bio:', newBio);
+    fetch(`/api/v1/users/${userId}/editBio`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+            id: userId,
+            bio: newBio
+        })
+    })
+        .then(response => {
+            if (response.ok) {
+                console.log('Bio updated successfully!');
+            } else {
+                console.error('Failed to update bio:', response.status);
+            }
+        })
+        .catch(error => {
+            console.error('Error updating bio:', error)
+        });
 }

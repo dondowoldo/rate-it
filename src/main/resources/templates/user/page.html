@@ -20,7 +20,10 @@
             </div>
             <div class="user-details">
                 <h2 th:text="*{username}"></h2>
-                <p class="user-bio" th:text="*{bio}" contenteditable="true" onblur="saveBio()"></p>
+                <p th:if="${loggedUser == null || loggedUser.id != user.id}" th:text="*{bio}"></p>
+                <p th:if="${loggedUser.id == user.id}" id="user-bio" th:text="*{bio}"
+                   contenteditable="true">
+                </p>
             </div>
         </section>
         <div class="user-follow">
