@@ -94,6 +94,10 @@ footer {
     display: none;
 }
 
+.dropdown-header a {
+    font-weight: 600;
+}
+
 .like-button {
     display: flex;
     align-items: center;

@@ -8,9 +8,9 @@
 
     <!--splide-->
     <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
-<!--    <script src="-->
-<!--https://cdn.jsdelivr.net/npm/@splidejs/splide-extension-auto-scroll@0.5.3/dist/js/splide-extension-auto-scroll.min.js">-->
-<!--    </script>-->
+    <!--    <script src="-->
+    <!--https://cdn.jsdelivr.net/npm/@splidejs/splide-extension-auto-scroll@0.5.3/dist/js/splide-extension-auto-scroll.min.js">-->
+    <!--    </script>-->
     <link href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css" rel="stylesheet">
 
     <!--    favicon-->
@@ -68,7 +68,10 @@
         <img role="button" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"
              th:src="@{/icons/user.svg}" alt="User Profile">
         <ul class="dropdown-menu">
-            <li th:if="${loggedUser}" class="dropdown-header" th:text="${loggedUser.getUsername()}"></li>
+            <li th:if="${loggedUser}" class="dropdown-header">
+                <a class="dropdown-item" th:href="@{/users/{username}(username=${loggedUser.getUsername()})}"
+                   th:text="${loggedUser.getUsername()}"></a>
+            </li>
             <li th:unless="${loggedUser}" class="dropdown-header" th:text="'Anonymous user'"></li>
             <li>
                 <hr class="dropdown-divider">
