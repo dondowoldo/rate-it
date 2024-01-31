@@ -3,8 +3,10 @@ package it.rate.webapp.controllers.api;
 import it.rate.webapp.dtos.ImageUploadResponseDTO;
 import it.rate.webapp.exceptions.api.ApiServiceUnavailableException;
 import it.rate.webapp.models.Interest;
+import it.rate.webapp.models.Place;
 import it.rate.webapp.services.GoogleImageService;
 import it.rate.webapp.services.InterestService;
+import it.rate.webapp.services.PlaceService;
 import java.io.IOException;
 import java.security.Principal;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +22,7 @@ public class ImageRestController {
 
   private final GoogleImageService googleImageService;
   private final InterestService interestService;
+  private final PlaceService placeService;
 
   @GetMapping("/{id}")
   public ResponseEntity<?> getImage(@PathVariable String id) {
@@ -62,6 +65,23 @@ public class ImageRestController {
                   googleImageService.changeInterestImage(interest, file, userEmail)));
     } catch (ApiServiceUnavailableException e) {
       return ResponseEntity.internalServerError().build();
+    }
+  }
+
+  @PostMapping("/{placeId}/new-place-image")
+  @PreAuthorize("@permissionService.ratePlace(#placeId)")
+  public ResponseEntity<?> uploadPlaceImage(
+      @RequestParam("picture") MultipartFile file,
+      @PathVariable Long placeId,
+      Principal principal) {
+
+    String userEmail = principal.getName();
+    Place place = placeService.getById(placeId);
+    try {
+      placeService.addImage(place, googleImageService.saveImage(file, userEmail));
+      return ResponseEntity.ok().build();
+    } catch (IOException e) {
+      return ResponseEntity.internalServerError().body("Error while processing the file");
     }
   }
 }

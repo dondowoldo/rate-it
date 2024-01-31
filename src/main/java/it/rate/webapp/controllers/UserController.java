@@ -9,6 +9,7 @@ import it.rate.webapp.exceptions.notfound.UserNotFoundException;
 import it.rate.webapp.models.AppUser;
 import it.rate.webapp.services.RatingService;
 import it.rate.webapp.services.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -34,7 +35,8 @@ public class UserController {
   }
 
   @PostMapping("/signup")
-  public String newUser(SignupUserInDTO userDTO, Model model, String confirmPassword) {
+  public String newUser(SignupUserInDTO userDTO, Model model, String confirmPassword,
+                        HttpServletRequest request) {
     if (!confirmPassword.equals(userDTO.password())) {
       model.addAttribute("error", "Passwords do not match. Please try again.");
       model.addAttribute("userDTO", new SignupUserOutDTO(userDTO));
@@ -48,6 +50,8 @@ public class UserController {
       model.addAttribute("userDTO", new SignupUserOutDTO(userDTO));
       return "user/signupForm";
     }
+
+    userService.authenticate(userDTO.email(), userDTO.password(), request.getSession(true));
     return "redirect:/";
   }
 

@@ -32,6 +32,22 @@ footer {
     justify-content: space-around;
 }
 
+.footer-links a {
+    color: white;
+    text-decoration: none;
+}
+
+.footer-page {
+    color: #3e6652;
+    text-align: center;
+    margin: auto;
+    gap: 1rem;
+}
+
+.fa-trowel-bricks {
+    font-size: xxx-large;
+}
+
 .header {
     width: 100%;
     display: flex;
@@ -203,7 +219,6 @@ h3 {
     aspect-ratio: 16/10;
     border-radius: 1rem;
     background: #FFFFFF;
-    margin-bottom: 1.5rem;
     object-fit: contain;
     overflow: hidden;
 }
@@ -279,10 +294,21 @@ h3 {
     width: 1.5rem;
 }
 
-.place-rating-button-bar {
+.place-button-bar {
     display: flex;
     justify-content: flex-end;
     gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.place-button-bar .pending {
+    background-color: #575757;
+}
+
+.location-button-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin-top: 1rem;
 }
 
@@ -296,10 +322,6 @@ h3 {
 
 .fotorama__stage__shaft img {
     border-radius: 1rem !important;
-}
-
-.place-rating-button-bar .pending {
-    background-color: #575757;
 }
 
 .interest-cards {
@@ -626,6 +648,7 @@ h3 {
     height: 100%;
     background: linear-gradient(to top, #E2E2E2, rgba(227, 227, 227, 0.8) 4%, transparent 35%, transparent 100%);
 }
+
 
 .interest-button-bar {
     display: flex;
@@ -1201,6 +1224,10 @@ h4 {
 
 #charCount {
     margin-bottom: 0.5rem;
+    color: #888585;
+}
+
+#locationAccuracy {
     color: #888585;
 }
 

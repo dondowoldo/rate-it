@@ -20,6 +20,8 @@
         </a>
 
         <div class="fotorama"
+             data-width="100%"
+             data-height="30%"
              data-maxheight="50%"
              data-nav="thumbs"
              data-allowfullscreen="true">
@@ -81,7 +83,7 @@
                     </div>
                 </div>
 
-                <div th:if="${usersRatings}" class="place-rating-button-bar">
+                <div th:if="${usersRatings}" class="place-button-bar">
                     <a id="uppy-modal" href="#" type="button" class="button" style="text-decoration: none">
                         Upload photo</a>
                     <button id="submit-rating-button" class="button" type="submit">Rate</button>
@@ -90,7 +92,7 @@
 
             <div id="uppy"></div>
 
-            <div class="place-rating-button-bar">
+            <div class="place-button-bar">
                 <span class="button pending"
                       th:if="${loggedUser != null && place.interest.isExclusive() && applicant == true}">Pending Request</span>
                 <form th:if="${loggedUser != null && place.interest.isExclusive() && usersRatings == null && applicant != true}"
@@ -113,20 +115,16 @@
 
 <script th:replace="~{fragments :: leaflet-script}"></script>
 <script th:inline="javascript">
-    /*<![CDATA[*/
-
-    let placeId = [[${place.id}]];
-    let name = [[${place.name}]];
-    let latitude = [[${place.latitude}]];
-    let longitude = [[${place.longitude}]];
-    let rating = [[${place.getAverageRating()}]];
-
-    /*]]>*/
+    const placeId = [[${place.id}]];
+    const placeName = [[${place.name}]];
+    const placeAddress = [[${place.address}]];
+    const placeLat = [[${place.latitude}]];
+    const placeLng = [[${place.longitude}]];
 </script>
 <script src="/scripts/placeMap.js"></script>
 <script src="/scripts/imageFetcher.js"></script>
 <script th:if="${usersRatings}" src="/scripts/rating.js"></script>
-<script th:if="${usersRatings}" type="module" src="/scripts/imageUpload.js"></script>
+<script th:if="${usersRatings}" type="module" src="/scripts/placeImageUpload.js"></script>
 
 </body>
 </html>
