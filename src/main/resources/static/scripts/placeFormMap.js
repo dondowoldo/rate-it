@@ -7,28 +7,31 @@ const tileLayerOptions = {
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 };
 
-let placeLatLng;
 let map;
-
-if (placeLat && placeLng) {
-    placeLatLng = L.latLng([placeLat, placeLng]);
-    map = L.map('map').setView(placeLatLng, defaultPlaceZoom);
-} else {
-    placeLatLng = L.latLng(defaultView);
-    map = L.map('map').setView(placeLatLng, defaultZoom);
-}
-
-L.tileLayer(mapUrl, tileLayerOptions).addTo(map);
-
 let marker;
-let inputLat = document.getElementById("place-latitude");
-let inputLng = document.getElementById("place-longitude");
+initializeMap();
+addEventListeners()
 
-if (placeLat && placeLng) {
-    createMarker(placeLat, placeLng);
+function initializeMap() {
+    let placeLatLng;
+    if (placeLat && placeLng) {
+        placeLatLng = L.latLng([placeLat, placeLng]);
+        map = L.map('map').setView(placeLatLng, defaultPlaceZoom);
+        createMarker(placeLat, placeLng);
+    } else {
+        placeLatLng = L.latLng(defaultView);
+        map = L.map('map').setView(placeLatLng, defaultZoom);
+    }
+    L.tileLayer(mapUrl, tileLayerOptions).addTo(map);
 }
 
-map.on("click", async function (e) {
+function addEventListeners() {
+    map.on('click', handleMapClick);
+    map.on('locationfound', onLocationFound);
+    map.on('locationerror', onLocationError);
+}
+
+async function handleMapClick(e) {
     try {
         let lat = e.latlng.lat;
         let lng = e.latlng.lng;
@@ -38,40 +41,6 @@ map.on("click", async function (e) {
     } catch (error) {
         console.error('Error handling map click:', error);
     }
-});
-
-map.on('locationfound', onLocationFound);
-map.on('locationerror', onLocationError);
-
-function clearAddress() {
-    document.getElementById('address').value = '';
-}
-
-function createMarker(lat, lng) {
-    if (marker) {
-        marker.remove();
-    }
-    fillInputFields(lat, lng);
-    marker = new L.marker([lat, lng], {draggable: true, autoPan: true}).addTo(map);
-    marker.on("dragend", async function (event) {
-        const updatedLat = event.target.getLatLng().lat;
-        const updatedLng = event.target.getLatLng().lng;
-        fillInputFields(updatedLat, updatedLng);
-        try {
-            await handleAddressSearch(updatedLat, updatedLng);
-        } catch (error) {
-            console.error('Error handling map click:', error);
-        }
-    });
-}
-
-function fillInputFields(lat, lng) {
-    inputLat.value = lat.toFixed(6);
-    inputLng.value = lng.toFixed(6);
-}
-
-function locate() {
-    map.locate({setView: true, maxZoom: defaultPlaceZoom});
 }
 
 async function onLocationFound(e) {
@@ -96,6 +65,39 @@ async function onLocationFound(e) {
 
 function onLocationError(e) {
     alert(e.message);
+}
+
+function clearAddress() {
+    document.getElementById('address').value = '';
+}
+
+function createMarker(lat, lng) {
+    if (marker) {
+        marker.remove();
+    }
+    fillInputFields(lat, lng);
+    marker = new L.marker([lat, lng], {draggable: true, autoPan: true}).addTo(map);
+    marker.on("dragend", async function (event) {
+        const updatedLat = event.target.getLatLng().lat;
+        const updatedLng = event.target.getLatLng().lng;
+        fillInputFields(updatedLat, updatedLng);
+        try {
+            await handleAddressSearch(updatedLat, updatedLng);
+        } catch (error) {
+            console.error('Error handling map click:', error);
+        }
+    });
+}
+
+function fillInputFields(lat, lng) {
+    let inputLat = document.getElementById("place-latitude");
+    let inputLng = document.getElementById("place-longitude");
+    inputLat.value = lat.toFixed(6);
+    inputLng.value = lng.toFixed(6);
+}
+
+function locate() {
+    map.locate({setView: true, maxZoom: defaultPlaceZoom});
 }
 
 const RATE_LIMIT = 2000; // 2 seconds
@@ -173,7 +175,7 @@ function clearMessage() {
 }
 
 function renderMessage(message) {
-    const messageElement = document.createElement("p", id="message");
+    const messageElement = document.createElement("p", id = "message");
     messageElement.id = "message";
     messageElement.textContent = message;
     const placeButtonBar = document.querySelector('.place-button-bar');
