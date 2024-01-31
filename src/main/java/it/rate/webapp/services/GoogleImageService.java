@@ -51,7 +51,7 @@ public class GoogleImageService implements ImageService {
 
       mediaContent = new FileContent("image/*", tempFilePath.toFile());
 
-      String fileName = userEmail + "_" + UUID.randomUUID();
+      String fileName = userEmail + "_" + UUID.randomUUID() + fileExtension;
 
       File fileMeta = new File();
       fileMeta.setName(fileName);
@@ -72,12 +72,6 @@ public class GoogleImageService implements ImageService {
       newImageId = saveImage(file, userEmail);
     } catch (IOException | ApiServiceUnavailableException e) {
       throw new ApiServiceUnavailableException("Could not save image to the server");
-    }
-
-    if (interest.getImageName() == null || interest.getImageName().isEmpty()) {
-      return newImageId;
-    } else {
-      deleteById(interest.getImageName());
     }
 
     return newImageId;
