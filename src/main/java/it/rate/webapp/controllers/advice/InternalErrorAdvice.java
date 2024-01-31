@@ -49,7 +49,6 @@ public class InternalErrorAdvice {
     EmailMessageDTO report =
         new EmailMessageDTO(
             email,
-            email,
             "Unexpected error with cause: " + e.getCause(),
             String.format(
                 """
