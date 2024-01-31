@@ -25,11 +25,7 @@
         </section>
         <div class="user-follow">
             <a th:text="${user.followers} + ' Followers'"></a>
-            <button th:if="${loggedUser.id != user.id}"
-                    th:text="${loggedUser.getFollows().contains(user) ? 'Unfollow' : 'Follow'}"
-                    th:action="@{/api/v1/users/{userId}/follow(userId=${user.id})}" th:method="post"
-                    class="button follow" onclick="followUser(userId, follows)">
-            </button>
+            <button th:if="${loggedUser != null && loggedUser.id != user.id}" class="button follow"></button>
             <a th:text="${user.follows} + ' Following'"></a>
         </div>
 
@@ -77,8 +73,8 @@
 <script th:inline="javascript">
     /*<![CDATA[*/
 
-    let userId = [[${user.id}]];
-    let follows = [[${loggedUser.getFollows().contains(user)}]]
+    let userId = [[${user.id}]]
+    let isFollowed = [[${loggedUser.getFollows().contains(user)}]]
 
     /*]]>*/
 </script>

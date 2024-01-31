@@ -31,7 +31,7 @@ public class UserRestController {
 
     try {
       userService.follow(loggedUser, userToFollow.get(), follow.follow());
-      return ResponseEntity.ok().build();
+      return ResponseEntity.ok().body(follow);
     } catch (BadRequestException e) {
       return ResponseEntity.badRequest().body(e.getMessage());
     }

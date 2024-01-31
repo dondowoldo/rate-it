@@ -1,30 +1,32 @@
-function followUser(userId, follows) {
-    $.ajax({
-        type: 'POST',
-        url: '/api/v1/users/' + userId + '/follow',
-        contentType: 'application/json',
-        data: JSON.stringify({follow: !follows}),
-        success: function () {
-            const followersCount = document.querySelector('.user-follow a:first-child');
-            const followButton = document.querySelector('.button');
-            const currentFollowers = parseInt(followersCount.textContent, 10);
+document.addEventListener('DOMContentLoaded', function () {
+    const button = document.querySelector('.follow');
+    updateFollowButton(button, isFollowed);
+    button.addEventListener('click', () => followUser(button));
+});
 
-            followersCount.textContent = ((currentFollowers + (follows ? 1 : -1)) + ' Followers');
-            followButton.textContent = follows ? 'Unfollow' : 'Follow';
+async function followUser(button) {
+    const isFollowed = button.classList.contains('followed');
+    try {
+        const response = await fetch(`/api/v1/users/${userId}/follow`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ follow: !isFollowed })
+        });
 
-            follows = !follows;
-        },
-        error: function () {
-            const errorMessage = document.createElement('p');
-            errorMessage.className = 'error';
-            errorMessage.textContent = "Sorry, an error occurred";
+        const data = await response.json();
 
-            const main = document.querySelector('.content');
-            const userFollow = document.querySelector('.user-follow');
+        const followersCount = document.querySelector('.user-follow a:first-child');
+        const currentFollowers = parseInt(followersCount.textContent, 10);
+        followersCount.textContent = ((currentFollowers + (isFollowed ? -1 : 1)) + ' Followers');
 
-            if (main && userFollow) {
-                main.insertBefore(errorMessage, userFollow.nextSibling);
-            }
-        }
-    });
+
+        updateFollowButton(button, data.follow);
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+function updateFollowButton(button, isFollowed) {
+    button.classList.toggle('followed', isFollowed);
+    button.textContent = isFollowed ? 'Unfollow' : 'Follow';
 }
