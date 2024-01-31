@@ -30,4 +30,12 @@ function loadAndFormatPlaces(userInterest, limit) {
     }
 }
 
+function handleDetailsClick(event) {
+    event.stopPropagation();
+}
+
+const detailsButtons = document.querySelectorAll('.user-interest-extension .button');
+detailsButtons.forEach(function (button) {
+    button.addEventListener('click', handleDetailsClick);
+});
 

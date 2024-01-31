@@ -125,7 +125,7 @@ public class RatingService {
                             return new UserRatedPlaceDTO(
                                 place.getId(),
                                 place.getName(),
-                                place.getAverageRating(),
+                                place.getAverageRating() / 2,
                                 userRatingDTOs);
                           })
                       .sorted(Comparator.comparingDouble(UserRatedPlaceDTO::avgRating).reversed())
@@ -135,8 +135,10 @@ public class RatingService {
                   interest.getId(),
                   interest.getName(),
                   interest.getImageName(),
+                  interest.countLikes(),
                   userRatedPlaceDTOs);
             })
+        .sorted(Comparator.comparingInt(UserRatedInterestDTO::likes).reversed())
         .toList();
   }
 }
