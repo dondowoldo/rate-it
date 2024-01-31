@@ -67,6 +67,10 @@ function onLocationError(e) {
     alert(e.message);
 }
 
+function locate() {
+    map.locate({setView: true, maxZoom: defaultPlaceZoom});
+}
+
 function clearAddress() {
     document.getElementById('address').value = '';
 }
@@ -94,10 +98,6 @@ function fillInputFields(lat, lng) {
     let inputLng = document.getElementById("place-longitude");
     inputLat.value = lat.toFixed(6);
     inputLng.value = lng.toFixed(6);
-}
-
-function locate() {
-    map.locate({setView: true, maxZoom: defaultPlaceZoom});
 }
 
 const RATE_LIMIT = 2000; // 2 seconds
