@@ -1,20 +1,16 @@
 package it.rate.webapp.services;
 
-import it.rate.webapp.dtos.CriteriaOfPlaceDTO;
-import it.rate.webapp.dtos.CriterionAvgRatingDTO;
-import it.rate.webapp.dtos.PlaceInDTO;
-import it.rate.webapp.dtos.PlaceInfoDTO;
+import it.rate.webapp.dtos.*;
 import it.rate.webapp.models.*;
 import it.rate.webapp.models.AppUser;
 import it.rate.webapp.models.Interest;
 import it.rate.webapp.models.Place;
 import it.rate.webapp.repositories.PlaceRepository;
 import it.rate.webapp.repositories.RatingRepository;
-import java.util.*;
-import java.util.stream.Collectors;
-
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import java.util.*;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -35,7 +31,8 @@ public class PlaceService {
     return placeRepository.getReferenceById(placeId);
   }
 
-  public Place save(@NotNull @Valid PlaceInDTO placeDTO, @Valid Interest interest, @Valid AppUser appUser) {
+  public Place save(
+      @NotNull @Valid PlaceInDTO placeDTO, @Valid Interest interest, @Valid AppUser appUser) {
     Place place = new Place(placeDTO);
     place.setCreator(appUser);
     place.setInterest(interest);
@@ -92,5 +89,39 @@ public class PlaceService {
     }
 
     return new CriterionAvgRatingDTO(criterion.getId(), criterion.getName(), avgRating);
+  }
+
+  public PlaceAllUsersRatingsDTO getPlaceUserRatingDto(Place place) {
+    Set<AppUser> voters = new HashSet<>();
+    List<Rating> allRatings = place.getRatings();
+    List<PlaceUserRatingDTO> userRatings = new ArrayList<>();
+    allRatings.forEach(rating -> voters.add(rating.getAppUser()));
+
+    for (AppUser voter : voters) {
+      userRatings.add(getSingleUserRatingDTO(place, voter));
+    }
+
+    return new PlaceAllUsersRatingsDTO(userRatings);
+  }
+
+  private PlaceUserRatingDTO getSingleUserRatingDTO(Place place, AppUser user) {
+    List<Rating> ratings = place.getRatings();
+    Map<String, Double> criterionRatings = new HashMap<>();
+    ratings.stream()
+        .filter(rating -> rating.getAppUser().equals(user))
+        .forEach(
+            rating ->
+                criterionRatings.put(rating.getCriterion().getName(), rating.getRating() / 2.0));
+
+    double sumOfRatings = 0.0;
+
+    for (Map.Entry<String, Double> entry : criterionRatings.entrySet()) {
+      sumOfRatings += entry.getValue();
+    }
+
+    double totalAverage = sumOfRatings / criterionRatings.size();
+    String formattedDouble = String.format("%.1f", totalAverage);
+    totalAverage = Double.parseDouble(formattedDouble);
+    return new PlaceUserRatingDTO(user.getUsername(), criterionRatings, totalAverage);
   }
 }
