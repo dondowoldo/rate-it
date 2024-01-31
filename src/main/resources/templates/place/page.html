@@ -81,7 +81,9 @@
                 <div th:if="${usersRatings}" class="place-button-bar">
                     <a id="uppy-modal" href="#" type="button" class="button" style="text-decoration: none">
                         Upload photo</a>
-                    <button id="submit-rating-button" class="button" data-bs-toggle="modal" data-bs-target="#exampleModal">Rate</button>
+                    <button id="submit-rating-button" class="button" data-bs-toggle="modal"
+                            data-bs-target="#review-modal">Rate
+                    </button>
                 </div>
             </form>
 
@@ -101,32 +103,32 @@
             </div>
         </section>
 
-        <!-- Modal -->
-        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <!-- Review Modal -->
+        <div class="modal fade" id="review-modal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-body">
                         <h4>Add a review</h4>
                         <label>
                             <textarea class="input-text-field"
-                                      id="review"
+                                      id="review-text-field"
                                       name="review"
                                       th:maxlength="${@constraints.MAX_VARCHAR_LENGTH}"
                                       th:oninput="'updateCharCountAndResize(' + ${@constraints.MAX_VARCHAR_LENGTH} + ')'">
                             </textarea>
                         </label>
+                        <div class="place-button-bar">
+                            <button id="rate-without-review" class="button">Rate without Review</button>
+                            <button id="post-review" class="button">Post</button>
+                        </div>
                     </div>
-
-                    <button id="rate-without-review" class="button">Rate without review</button>
-                    <button id="post-review" class="button">Post review</button>
-                    <div class="active" id="overlay"></div>
                 </div>
             </div>
         </div>
 
-        <div class="place-map">
+        <section class="place-map">
             <div id="map"></div>
-        </div>
+        </section>
     </main>
     <footer th:replace="~{fragments.html :: footer}"></footer>
 </div>
@@ -135,7 +137,6 @@
 <script th:inline="javascript">
     const placeId = [[${place.id}]];
     const placeName = [[${place.name}]];
-    const placeAddress = [[${place.address}]];
     const placeLat = [[${place.latitude}]];
     const placeLng = [[${place.longitude}]];
 </script>

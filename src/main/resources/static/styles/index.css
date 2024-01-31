@@ -278,6 +278,7 @@ h3 {
     display: flex;
     justify-content: flex-end;
     gap: 0.5rem;
+    flex-wrap: wrap;
     margin-top: 1rem;
 }
 
@@ -1209,4 +1210,31 @@ h4 {
 
 #locationAccuracy {
     color: #888585;
+}
+
+.modal-backdrop {
+    background-color: #0000005e;
+}
+
+.modal-content {
+    width: 90%;
+    border-radius: 1.5rem;
+}
+
+.modal-body {
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-dialog-centered {
+    justify-content: center;
+}
+
+#review-text-field {
+    border: black 1px solid;
+    background-color: #E2E2E2
+}
+
+#review-modal {
+    backdrop-filter: blur(4px);
 }
