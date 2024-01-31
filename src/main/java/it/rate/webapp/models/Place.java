@@ -61,7 +61,7 @@ public class Place {
 
   @OneToMany(mappedBy = "place")
   @Builder.Default
-  private List<Comment> comments = new ArrayList<>();
+  private List<Review> reviews = new ArrayList<>();
 
   public Place(PlaceInDTO placeDTO) {
     this.name = placeDTO.name();

@@ -64,7 +64,7 @@ public class AppUser {
 
   @OneToMany(mappedBy = "appUser")
   @Builder.Default
-  private List<Comment> comments = new ArrayList<>();
+  private List<Review> reviews = new ArrayList<>();
 
   @ManyToMany
   @Builder.Default

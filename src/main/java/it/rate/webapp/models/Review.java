@@ -15,9 +15,9 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @Entity
 @Table(name = "comments")
-public class Comment {
+public class Review {
 
-  @EmbeddedId @NotNull private CommentId id;
+  @EmbeddedId @NotNull private ReviewId id;
 
   @NotBlank
   @Length(max = Constraints.MAX_VARCHAR_LENGTH)
@@ -36,8 +36,8 @@ public class Comment {
   @MapsId("placeId")
   private Place place;
 
-  public Comment(AppUser appUser, Place place, String text) {
-    this.id = new CommentId(appUser.getId(), place.getId());
+  public Review(AppUser appUser, Place place, String text) {
+    this.id = new ReviewId(appUser.getId(), place.getId());
     this.appUser = appUser;
     this.place = place;
     this.text = text;

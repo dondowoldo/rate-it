@@ -2,7 +2,7 @@ package it.rate.webapp.services;
 
 import it.rate.webapp.config.Constraints;
 import it.rate.webapp.models.*;
-import it.rate.webapp.repositories.CommentRepository;
+import it.rate.webapp.repositories.ReviewRepository;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -15,23 +15,23 @@ import java.util.Optional;
 @Service
 @Validated
 @AllArgsConstructor
-public class CommentService {
-  private final CommentRepository commentRepository;
+public class ReviewService {
+  private final ReviewRepository reviewRepository;
 
-  public void deleteById(CommentId commentId) {
-    commentRepository.deleteById(commentId);
+  public void deleteById(ReviewId reviewId) {
+    reviewRepository.deleteById(reviewId);
   }
 
   public void save(
       @NotBlank @Length(max = Constraints.MAX_VARCHAR_LENGTH) String text,
       @Valid Place place,
       @Valid AppUser loggedUser) {
-    CommentId commentId = new CommentId(loggedUser.getId(), place.getId());
-    Optional<Comment> optComment = commentRepository.findById(commentId);
+    ReviewId reviewId = new ReviewId(loggedUser.getId(), place.getId());
+    Optional<Review> optReview = reviewRepository.findById(reviewId);
 
-    if (optComment.isPresent()) {
-      commentRepository.deleteById(commentId);
+    if (optReview.isPresent()) {
+      reviewRepository.deleteById(reviewId);
     }
-    commentRepository.save(new Comment(loggedUser, place, text));
+    reviewRepository.save(new Review(loggedUser, place, text));
   }
 }

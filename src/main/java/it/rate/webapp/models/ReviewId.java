@@ -10,7 +10,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @Embeddable
-public class CommentId implements Serializable {
+public class ReviewId implements Serializable {
   private Long userId;
   private Long placeId;
 }

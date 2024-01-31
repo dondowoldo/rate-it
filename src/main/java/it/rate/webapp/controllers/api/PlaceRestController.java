@@ -3,9 +3,9 @@ package it.rate.webapp.controllers.api;
 import it.rate.webapp.dtos.PlaceInfoDTO;
 import it.rate.webapp.dtos.RatingsDTO;
 import it.rate.webapp.models.AppUser;
-import it.rate.webapp.models.CommentId;
+import it.rate.webapp.models.ReviewId;
 import it.rate.webapp.models.Place;
-import it.rate.webapp.services.CommentService;
+import it.rate.webapp.services.ReviewService;
 import it.rate.webapp.services.PlaceService;
 import it.rate.webapp.services.RatingService;
 import it.rate.webapp.services.UserService;
@@ -23,7 +23,7 @@ public class PlaceRestController {
   private final PlaceService placeService;
   private final UserService userService;
   private final RatingService ratingService;
-  private final CommentService commentService;
+  private final ReviewService reviewService;
 
   @PostMapping("/{placeId}/rate")
   @PreAuthorize("@permissionService.ratePlace(#placeId)")
@@ -45,7 +45,7 @@ public class PlaceRestController {
 
     AppUser loggedUser = userService.getByEmail(principal.getName());
     Place place = placeService.getById(placeId);
-    commentService.save(comment, place, loggedUser);
+    reviewService.save(comment, place, loggedUser);
 
     return ResponseEntity.ok().body("Comment saved");
   }
@@ -56,7 +56,7 @@ public class PlaceRestController {
 
     AppUser loggedUser = userService.getByEmail(principal.getName());
     Place place = placeService.getById(placeId);
-    commentService.deleteById(new CommentId(loggedUser.getId(), place.getId()));
+    reviewService.deleteById(new ReviewId(loggedUser.getId(), place.getId()));
 
     return ResponseEntity.ok().body("Comment deleted");
   }
