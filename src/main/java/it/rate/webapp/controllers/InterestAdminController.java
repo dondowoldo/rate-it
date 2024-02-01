@@ -27,6 +27,7 @@ public class InterestAdminController {
   private final UserService userService;
   private final CriterionService criterionService;
   private final CategoryService categoryService;
+  private final EmailService emailService;
 
   @GetMapping("/edit")
   @PreAuthorize("@permissionService.manageCommunity(#interestId)")
@@ -101,8 +102,9 @@ public class InterestAdminController {
 
     Interest interest = interestService.getById(interestId);
     InviteBy invite = manageInterestService.mapInvite(inviteBy);
+    Role role = null;
     try {
-      manageInterestService.inviteUser(interest, invite, user, Role.RoleType.VOTER);
+      role = manageInterestService.inviteUser(interest, invite, user, Role.RoleType.VOTER);
       ra.addFlashAttribute("status", "Invitation successfully sent");
       ra.addFlashAttribute("statusClass", "successful");
       ra.addFlashAttribute("isChecked", invite == InviteBy.USERNAME);
@@ -112,6 +114,8 @@ public class InterestAdminController {
       ra.addFlashAttribute("user", user);
       ra.addFlashAttribute("isChecked", invite == InviteBy.USERNAME);
     }
+    emailService.sendInvite(role);
+
     return "redirect:/interests/{interestId}/admin/invite";
   }
 }
