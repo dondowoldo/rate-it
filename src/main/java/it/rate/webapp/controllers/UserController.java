@@ -8,7 +8,6 @@ import it.rate.webapp.exceptions.badrequest.InvalidUserDetailsException;
 import it.rate.webapp.models.AppUser;
 import it.rate.webapp.services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -89,7 +88,7 @@ public class UserController {
     }
     try {
       userService.updatePassword(pwResetDTO);
-    } catch (BadRequestException | ConstraintViolationException e) {
+    } catch (InvalidUserDetailsException e) {
       model.addAttribute("error", e.getMessage());
       model.addAttribute("token", pwResetDTO.token());
       model.addAttribute("ref", pwResetDTO.ref());

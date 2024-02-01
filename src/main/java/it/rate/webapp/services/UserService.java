@@ -6,6 +6,7 @@ import it.rate.webapp.dtos.PasswordResetDTO;
 import it.rate.webapp.dtos.PasswordResetEmailDTO;
 import it.rate.webapp.dtos.SignupUserInDTO;
 import it.rate.webapp.exceptions.badrequest.BadRequestException;
+import it.rate.webapp.exceptions.badrequest.InvalidTokenException;
 import it.rate.webapp.exceptions.badrequest.InvalidUserDetailsException;
 import it.rate.webapp.exceptions.badrequest.UserAlreadyExistsException;
 import it.rate.webapp.models.AppUser;
@@ -148,16 +149,24 @@ public class UserService {
 
   public PasswordReset validateToken(@NotBlank String token, @NotNull Long ref) {
     PasswordReset pwReset =
-        passwordResetRepository.findByUser_Id(ref).orElseThrow(InvalidUserDetailsException::new);
+        passwordResetRepository
+            .findByUser_Id(ref)
+            .orElseThrow(() -> new InvalidTokenException("Invalid reference"));
 
     if (!passwordEncoder.matches(token, pwReset.getToken())) {
-      throw new BadRequestException("Invalid token");
+      throw new InvalidTokenException("Invalid token");
     }
     return pwReset;
   }
 
   @Transactional
-  public void updatePassword(@Valid PasswordResetDTO pwResetDTO) {
+  public void updatePassword(@NotNull PasswordResetDTO pwResetDTO) {
+    Set<ConstraintViolation<PasswordResetDTO>> violations =
+        validator.validateProperty(pwResetDTO, "password");
+    if (!violations.isEmpty()) {
+      throw new InvalidUserDetailsException(violations.stream().findFirst().get().getMessage());
+    }
+
     PasswordReset pwReset = validateToken(pwResetDTO.token(), pwResetDTO.ref());
     AppUser user = pwReset.getUser();
     user.setPassword(passwordEncoder.encode(pwResetDTO.password()));

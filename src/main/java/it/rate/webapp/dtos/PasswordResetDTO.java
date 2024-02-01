@@ -6,9 +6,9 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
 public record PasswordResetDTO(
-    @NotBlank String token,
-    @NotNull Long ref,
-    @NotBlank
+    @NotBlank(message = "Token cannot be empty") String token,
+    @NotNull(message = "Reference cannot be null") Long ref,
+    @NotBlank(message = "Password cannot be empty")
         @Pattern(
             regexp = Constraints.PASSWORD_REGEX,
             message =
