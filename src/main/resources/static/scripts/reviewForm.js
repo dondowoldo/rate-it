@@ -3,9 +3,10 @@ document.addEventListener('DOMContentLoaded', async function () {
     updateCharCountAndResize(document.querySelector("#review-text-field").getAttribute("maxlength"));
 
     const rateButton = document.querySelector("#rate");
-    rateButton.setAttribute('data-bs-toggle', 'modal');
-    rateButton.setAttribute('data-bs-target', '#review-modal');
-
+    if (!review) {
+        rateButton.setAttribute('data-bs-toggle', 'modal');
+        rateButton.setAttribute('data-bs-target', '#review-modal');
+    }
     const reviewTextField = document.querySelector("#review-text-field");
     reviewTextField.addEventListener('input', function () {
         updateCharCountAndResize(reviewTextField.getAttribute("maxlength"));
@@ -70,69 +71,73 @@ document.addEventListener('DOMContentLoaded', async function () {
 function displayReview(newReview) {
     const reviewContainer = document.querySelector('.place-review');
     const reviewElement = reviewContainer.querySelector('.review-container');
+
+    updateReviewText(reviewElement, newReview);
+    updateReviewTimestamp(reviewElement, newReview);
+    updateReviewButtons(reviewElement, newReview);
+}
+
+function updateReviewText(reviewElement, newReview) {
     const reviewTextElement = reviewElement.querySelector('h2');
     const reviewContentElement = reviewElement.querySelector('p');
+    const textarea = document.querySelector("#review-text-field");
 
-    // Check if timestamp and buttons already exist
-    let timestampElement = reviewElement.querySelector('.timestamp');
-    let editButton = reviewElement.querySelector('.btn-primary');
-    let deleteButton = reviewElement.querySelector('.btn-danger');
-
-    // Update the review elements based on new data or reset to default values
     reviewTextElement.textContent = newReview ? 'Your Review' : 'Review';
     reviewContentElement.textContent = newReview ? newReview.text : 'Rate to add your review!';
+    textarea.value = newReview ? newReview.text : '';
+}
+
+function updateReviewTimestamp(reviewElement, newReview) {
+    let timestampElement = reviewElement.querySelector('.timestamp');
 
     if (newReview) {
-        // If timestamp doesn't exist, create it
         if (!timestampElement) {
             timestampElement = document.createElement('p');
             timestampElement.classList.add('timestamp');
             reviewElement.appendChild(timestampElement);
         }
 
-        // Update the timestamp
         timestampElement.textContent = new Date(newReview.timestamp).toLocaleString();
-
-        // If edit button doesn't exist, create it
-        if (!editButton) {
-            editButton = document.createElement('button');
-            editButton.textContent = 'Edit Review';
-            editButton.classList.add('btn', 'btn-primary', 'mr-2');
-            editButton.addEventListener('click', function () {
-                // Open the review modal or perform any desired edit action
-                $('#review-modal').modal('show');
-            });
-            reviewElement.appendChild(editButton);
-        }
-
-        // If delete button doesn't exist, create it
-        if (!deleteButton) {
-            deleteButton = document.createElement('button');
-            deleteButton.textContent = 'Delete Review';
-            deleteButton.classList.add('btn', 'btn-danger');
-            deleteButton.addEventListener('click', function () {
-                // Call the specified REST endpoint for deleting the review
-                deleteReview(); // You can define the deleteReview function as needed
-            });
-            reviewElement.appendChild(deleteButton);
-        }
     } else {
-        // If there's no review, remove additional elements
         if (timestampElement) {
             reviewElement.removeChild(timestampElement);
-        }
-
-        if (editButton) {
-            reviewElement.removeChild(editButton);
-        }
-
-        if (deleteButton) {
-            reviewElement.removeChild(deleteButton);
         }
     }
 }
 
+function updateReviewButtons(reviewElement, newReview) {
+    let editButton = reviewElement.querySelector('.btn-primary');
+    let deleteButton = reviewElement.querySelector('.btn-danger');
 
+    if (newReview) {
+        updateButton(reviewElement, editButton, 'Edit Review', function () {
+            $('#review-modal').modal('show');
+        }, ['btn-primary', 'mr-2']); // Additional classes as needed
+
+        updateButton(reviewElement, deleteButton, 'Delete Review', function () {
+            deleteReview(); // You can define the deleteReview function as needed
+        }, ['btn-danger']);
+    } else {
+        removeElementIfExist(editButton);
+        removeElementIfExist(deleteButton);
+    }
+}
+
+function updateButton(reviewElement, button, text, clickHandler, classes = []) {
+    if (!button) {
+        button = document.createElement('button');
+        button.classList.add('btn', ...classes); // Adding the specified classes
+        button.textContent = text;
+        button.addEventListener('click', clickHandler);
+        reviewElement.appendChild(button);
+    }
+}
+
+function removeElementIfExist(element) {
+    if (element) {
+        element.parentNode.removeChild(element);
+    }
+}
 
 // Function to handle deleting the review (replace with your actual endpoint)
 // Function to handle deleting the review
@@ -148,6 +153,12 @@ async function deleteReview() {
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
+        displayReview();
+        const rateButton = document.querySelector("#rate");
+        rateButton.setAttribute('data-bs-toggle', 'modal');
+        rateButton.setAttribute('data-bs-target', '#review-modal');
+        const textarea = document.querySelector("#review-text-field");
+        textarea.value = '';
     } catch (error) {
         console.error(error);
     }
