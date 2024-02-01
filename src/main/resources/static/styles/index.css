@@ -1393,7 +1393,7 @@ h4 {
     }
 }
 
-.user-profile a:first-child {
+.user-back-link {
     color: #568d73;
     text-decoration: none;
     font-size: 1.5rem;
