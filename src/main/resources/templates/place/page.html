@@ -89,7 +89,7 @@
                 </div>
             </form>
 
-            <div th:if="${review == null}" class="modal fade" id="review-modal" tabindex="-1" aria-hidden="true">
+            <div class="modal fade" id="review-modal" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
                         <form id="review-form" class="modal-body">
@@ -130,9 +130,23 @@
         </section>
 
         <section class="place-review">
-            <h2 th:if="${review.text() != null}">My review</h2>
-            <h2 th:unless="${review.text() != null}">Rate to add review</h2>
-            <p th:text="${review.text()}"></p>
+                <div class="review-container">
+                    <h2></h2>
+                    <p></p>
+                </div>
+            <!--            <div th:if="${review != null}" class="place-review">-->
+            <!--                <h2>Your review</h2>-->
+            <!--                <p th:text="${review.text()}"></p>-->
+            <!--                <p th:text="${#dates.format(review.timestamp(), 'yyyy-MM-dd HH:mm:ss')}"></p>-->
+            <!--                <div class="place-button-bar">-->
+            <!--                    <button id="edit-review" class="button">Edit Review</button>-->
+            <!--                    <button id="delete-review" class="button">Delete Review</button>-->
+            <!--                </div>-->
+            <!--            </div>-->
+            <!--            <div th:if="${review == null}" class="place-review">-->
+            <!--                <h2>Review</h2>-->
+            <!--                <p>Rate to add a review</p>-->
+            <!--            </div>-->
         </section>
 
         <section>
@@ -151,11 +165,12 @@
     const placeName = [[${place.name}]];
     const placeLat = [[${place.latitude}]];
     const placeLng = [[${place.longitude}]];
+    const review = [[${review}]];
 </script>
 <script src="/scripts/placeMap.js"></script>
 <script src="/scripts/imageFetcher.js"></script>
 <script th:if="${usersRatings}" src="/scripts/rating.js"></script>
-<script th:if="${usersRatings != null && review == null}" src="/scripts/reviewForm.js"></script>
+<script th:if="${usersRatings != null}" src="/scripts/reviewForm.js"></script>
 <script th:if="${usersRatings}" type="module" src="/scripts/placeImageUpload.js"></script>
 
 </body>

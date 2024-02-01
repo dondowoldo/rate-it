@@ -2,9 +2,11 @@ package it.rate.webapp.dtos;
 
 import it.rate.webapp.models.Review;
 
-public record ReviewDTO(String text, String date) {
+import java.sql.Timestamp;
+
+public record ReviewDTO(String text, Timestamp timestamp) {
 
   public ReviewDTO(Review review) {
-    this(review.getText(), review.getCreatedAt().toString());
+    this(review.getText(), review.getCreatedAt());
   }
 }

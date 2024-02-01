@@ -14,7 +14,7 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "comments")
+@Table(name = "reviews")
 public class Review {
 
   @EmbeddedId @NotNull private ReviewId id;
