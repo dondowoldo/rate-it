@@ -8,6 +8,10 @@ public record UserRatedPlaceDTO(
     Long id, String name, Double avgRating, List<UserRatingDTO> ratedCriteria) {
 
   public UserRatedPlaceDTO(Place place, List<UserRatingDTO> ratedCriteria) {
-    this(place.getId(), place.getName(), place.getAverageRating() / 2, ratedCriteria);
+    this(
+        place.getId(),
+        place.getName(),
+        ratedCriteria.stream().mapToDouble(UserRatingDTO::rating).average().orElse(0.0),
+        ratedCriteria);
   }
 }
