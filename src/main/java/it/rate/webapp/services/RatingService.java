@@ -12,7 +12,6 @@ import it.rate.webapp.repositories.RatingRepository;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
-import org.apache.catalina.User;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
