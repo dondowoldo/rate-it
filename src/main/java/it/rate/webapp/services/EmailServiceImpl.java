@@ -1,8 +1,6 @@
 package it.rate.webapp.services;
 
 import it.rate.webapp.dtos.EmailMessageDTO;
-import it.rate.webapp.models.AppUser;
-import it.rate.webapp.models.Interest;
 import it.rate.webapp.models.Role;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -52,7 +50,7 @@ public class EmailServiceImpl implements EmailService {
     smm.setText(
         String.format(
             """
-                              Hi, %s!,\s
+                              Hi, %s.\s
 
                               You have been invited to join %s community.\s
 

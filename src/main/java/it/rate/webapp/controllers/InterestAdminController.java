@@ -102,19 +102,18 @@ public class InterestAdminController {
 
     Interest interest = interestService.getById(interestId);
     InviteBy invite = manageInterestService.mapInvite(inviteBy);
-    Role role = null;
     try {
-      role = manageInterestService.inviteUser(interest, invite, user, Role.RoleType.VOTER);
+      Role role = manageInterestService.inviteUser(interest, invite, user, Role.RoleType.VOTER);
       ra.addFlashAttribute("status", "Invitation successfully sent");
       ra.addFlashAttribute("statusClass", "successful");
       ra.addFlashAttribute("isChecked", invite == InviteBy.USERNAME);
+      emailService.sendInvite(role);
     } catch (BadRequestException e) {
       ra.addFlashAttribute("status", e.getMessage());
       ra.addFlashAttribute("statusClass", "error");
       ra.addFlashAttribute("user", user);
       ra.addFlashAttribute("isChecked", invite == InviteBy.USERNAME);
     }
-    emailService.sendInvite(role);
 
     return "redirect:/interests/{interestId}/admin/invite";
   }
