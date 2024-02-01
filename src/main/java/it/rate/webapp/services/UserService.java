@@ -24,6 +24,7 @@ import jakarta.validation.Validator;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -63,7 +64,7 @@ public class UserService {
     return userRepository.findByUsernameIgnoreCase(username);
   }
 
-  public Optional<AppUser> findByEmailIgnoreCase(String email) {
+  public Optional<AppUser> findByEmailIgnoreCase(@NotNull @Email String email) {
     return userRepository.findByEmailIgnoreCase(email);
   }
 
