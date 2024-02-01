@@ -1,10 +1,8 @@
-// https://medium.com/geekculture/how-to-build-a-simple-star-rating-system-abcbb5117365
-
 const STARS = 10;
 
 function addClassToStars(stars, rating, className) {
     //loop through and set the active class on preceding stars
-    for (let i = 1; i <= STARS; i++) {
+    for (let i = 0; i <= STARS; i++) {
         if (i <= rating) {
             //check if the classlist contains the active class, if not, add the class
             if (!stars.querySelector('.star-' + i).classList.contains(className)) {
@@ -37,16 +35,21 @@ function initializeRating() {
 
                 case 'mouseout':
                     stars.classList.remove('hover');
-                    for (let j = 1; j <= STARS; j++) {
-                        stars.querySelector('.star-' + j).classList.remove('hover-active');
+                    for (let j = 0; j <= STARS; j++) {
+                        let starElement = stars.querySelector('.star-' + j);
+                        starElement.classList.remove('hover-active');
                     }
                     break;
 
                 case 'click':
                     // Set the input value and add class based on the click rating
                     let inputClick = stars.parentElement.querySelector('input');
-                    inputClick.value = rating;
-                    addClassToStars(stars, rating, 'is-active');
+
+                    // If the clicked star is the first one (position 0), set the value to null
+                    let newClickRating = (rating === 0) ? null : rating;
+
+                    inputClick.value = newClickRating;
+                    addClassToStars(stars, newClickRating, 'is-active');
                     break;
 
                 case 'touchmove':

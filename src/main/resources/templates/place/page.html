@@ -69,6 +69,8 @@
                         <div th:if="${usersRatings}">
 
                             <div class="place-rating-stars">
+                                <i class="place-rating-star star-0 empty-star is-active" th:attr="data-star=0"></i>
+                                <i class="place-rating-star star-0 empty-star is-active" th:attr="data-star=0"></i>
                                 <th:block th:each="i: ${#numbers.sequence(0, 9)}">
                                     <i th:class="'place-rating-star star-' + ${i+1} + ' ' + ${i < usersRatings.ratings.get(criterionDTO.id) ? 'is-active' : ''}"
                                        th:attr="data-star=${i+1}"></i>
