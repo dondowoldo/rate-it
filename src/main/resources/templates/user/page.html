@@ -47,7 +47,7 @@
 
                     <header class="user-interest-header">
                         <div class="user-interest-title">
-                            <h4 th:text="*{name}"></h4>
+                            <h4 th:text="*{interestName}"></h4>
                             <p th:text="${user.username} + ' has rated ' + ${interest.ratedPlaces.size()} + ' '
                             + (${interest.ratedPlaces.size()} == 1 ? 'place' : 'places')"></p>
                         </div>
@@ -60,7 +60,7 @@
                             <li th:object="${place}">
                                 <i class="fas fa-star yellow"></i>
                                 <span class="place-rating-average" th:text="*{avgRating}"></span>
-                                <span th:text="*{name}"></span>
+                                <span th:text="*{placeName}"></span>
                             </li>
                         </ul>
                     </div>
@@ -76,7 +76,7 @@
 <script th:inline="javascript" th:if="${loggedUser != null}">
     /*<![CDATA[*/
 
-    let userId = [[${user.id}]]
+    let userId = [[${user.interestId}]]
     let isFollowed = [[${loggedUser.getFollows().contains(user)}]]
     const MAX_BIO_LENGTH = [[${@constraints.MAX_BIO_LENGTH}]];
 

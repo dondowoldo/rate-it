@@ -115,8 +115,8 @@
 
 <script th:replace="~{fragments :: leaflet-script}"></script>
 <script th:inline="javascript">
-    const placeId = [[${place.id}]];
-    const placeName = [[${place.name}]];
+    const placeId = [[${place.interestId}]];
+    const placeName = [[${place.interestName}]];
     const placeAddress = [[${place.address}]];
     const placeLat = [[${place.latitude}]];
     const placeLng = [[${place.longitude}]];
