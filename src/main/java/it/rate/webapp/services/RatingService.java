@@ -95,7 +95,7 @@ public class RatingService {
   }
 
   public List<UserRatedInterestDTO> getAllUserRatedInterestDTOS(AppUser appUser) {
-    List<Rating> userRatings = ratingRepository.findAllByAppUser(appUser);
+    List<Rating> userRatings = ratingRepository.findAllNotDeletedRatingsByUser(appUser);
 
     Map<Interest, Map<Place, List<Rating>>> ratingsByInterestAndPlace =
         userRatings.stream()
@@ -121,7 +121,7 @@ public class RatingService {
   }
 
   public UserRatedInterestDTO getUserRatedInterestDTO(AppUser appUser, Interest interest) {
-    List<Rating> userRatings = ratingRepository.findAllByAppUserAndInterestId(appUser, interest);
+    List<Rating> userRatings = ratingRepository.findAllNotDeletedByAppUserAndInterest(appUser, interest);
     Map<Place, List<Rating>> ratingsByPlace =
         userRatings.stream().collect(Collectors.groupingBy(Rating::getPlace));
 
