@@ -12,6 +12,7 @@ import it.rate.webapp.repositories.RatingRepository;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
+import org.apache.catalina.User;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -118,5 +119,18 @@ public class RatingService {
                         .collect(Collectors.toList())))
         .sorted(Comparator.comparingInt(UserRatedInterestDTO::likes).reversed())
         .toList();
+  }
+
+  public UserRatedInterestDTO getUserRatedInterestDTO(AppUser appUser, Interest interest) {
+    List<Rating> userRatings = ratingRepository.findAllByAppUserAndInterestId(appUser, interest);
+    Map<Place, List<Rating>> ratingsByPlace =
+        userRatings.stream().collect(Collectors.groupingBy(Rating::getPlace));
+
+    return new UserRatedInterestDTO(
+        interest,
+        ratingsByPlace.entrySet().stream()
+            .map(place -> RatingMapper.remapToUserRatedPlaceDTO(place.getKey(), place.getValue()))
+            .sorted(Comparator.comparingDouble(UserRatedPlaceDTO::avgRating).reversed())
+            .collect(Collectors.toList()));
   }
 }

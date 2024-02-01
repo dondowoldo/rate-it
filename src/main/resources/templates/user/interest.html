@@ -12,8 +12,33 @@
         <div th:replace="~{fragments.html :: login-menu}"></div>
         <script th:replace="~{fragments.html :: topbar-script}"></script>
     </header>
-    <main class="content user-profile">
-
+    <main class="content user-profile" th:object="${user}">
+        <h2 th:text="*{username}"></h2>
+        <h2 th:text="${interest.name}"></h2>
+        <section class="user-detail-interest">
+            <div class="user-detail-place" th:each="place : ${interest.ratedPlaces}" th:object="${place}">
+                <div class="user-detail-place-default">
+                    <h4 th:text="*${name}"></h4>
+                    <div class="place-rating-average">
+                        <i class="fas fa-star"></i>
+                        <span class="rating" th:text="${place.avgRating}"></span>
+                    </div>
+                </div>
+                <div class="user-detail-place-extension">
+                    <div class="user-detail-place-criteria">
+                        <ul class="user-detail-criterion" th:each="criterion : ${place.ratedCriteria}">
+                            <li th:object="${criterion}">
+                                <i class="fas fa-star yellow"></i>
+                                <span class="place-rating-average" th:text="*{rating}"></span>
+                                <span th:text="*{criterionName}"></span>
+                            </li>
+                        </ul>
+                    </div>
+                    <a th:href="@{/interests/{intId}/places/{placeId}(intId=${interest.id}, placeId=${place.id})}"
+                       class="button">Visit</a>
+                </div>
+            </div>
+        </section>
     </main>
     <footer th:replace="~{fragments.html :: footer}"></footer>
 </div>

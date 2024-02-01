@@ -5,8 +5,11 @@ import it.rate.webapp.dtos.SignupUserInDTO;
 import it.rate.webapp.dtos.SignupUserOutDTO;
 import it.rate.webapp.dtos.UserRatedInterestDTO;
 import it.rate.webapp.exceptions.badrequest.BadRequestException;
+import it.rate.webapp.exceptions.notfound.InterestNotFoundException;
 import it.rate.webapp.exceptions.notfound.UserNotFoundException;
 import it.rate.webapp.models.AppUser;
+import it.rate.webapp.models.Interest;
+import it.rate.webapp.services.InterestService;
 import it.rate.webapp.services.RatingService;
 import it.rate.webapp.services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,6 +31,7 @@ public class UserController {
 
   private final UserService userService;
   private final RatingService ratingService;
+  private final InterestService interestService;
 
   @GetMapping("/signup")
   public String signupPage() {
@@ -68,11 +72,14 @@ public class UserController {
     AppUser user =
         userService.findByUsernameIgnoreCase(username).orElseThrow(UserNotFoundException::new);
     List<UserRatedInterestDTO> ratedInterests = ratingService.getAllUserRatedInterestDTOS(user);
+
+    model.addAttribute("user", new AppUserDTO(user));
+    model.addAttribute("ratedInterests", ratedInterests);
+
     if (principal != null) {
       model.addAttribute("loggedUser", userService.getByEmail(principal.getName()));
     }
-    model.addAttribute("user", new AppUserDTO(user));
-    model.addAttribute("ratedInterests", ratedInterests);
+
     return "user/page";
   }
 
@@ -83,9 +90,18 @@ public class UserController {
       Model model,
       Principal principal) {
 
-    AppUser user = userService.findByUsernameIgnoreCase(username).orElseThrow(UserNotFoundException::new);
+    AppUser user =
+        userService.findByUsernameIgnoreCase(username).orElseThrow(UserNotFoundException::new);
+    Interest interest =
+        interestService.findById(interestId).orElseThrow(InterestNotFoundException::new);
+    UserRatedInterestDTO ratedInterest = ratingService.getUserRatedInterestDTO(user, interest);
 
     model.addAttribute("user", new AppUserDTO(user));
+    model.addAttribute("interest", ratedInterest);
+
+    if (principal != null) {
+      model.addAttribute("loggedUser", principal.getName());
+    }
 
     return "user/interest";
   }
