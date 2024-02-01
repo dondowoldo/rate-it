@@ -141,10 +141,12 @@
                     </div>
                     <div class="rating-box-main-middle">
                         <p th:text="${userRatingDto.userName()}"></p>
-                        <button class="expand-button" th:id="'button-show-ratings-' + ${userRatingDto.userName()}">
-                            <img th:src="@{/icons/right-arrow.svg}" alt="User icon">
-                            <i>Details</i>
-                        </button>
+                        <div class="button-ratings-container">
+                            <button class="expand-button" th:id="'button-show-ratings-' + ${userRatingDto.userName()}">
+                                <img th:src="@{/icons/right-arrow.svg}" alt="User icon">
+                                <i>Details</i>
+                            </button>
+                        </div>
                     </div>
                     <div class="rating-box-main-right">
                         <div class="average-rating-container">
@@ -157,13 +159,12 @@
                 </div>
 
 
-
                 <ul class="list-of-ratings" th:id="'ratingsList_' + ${userRatingDto.userName()}" style="display: none;">
                     <li th:each="rating : ${userRatingDto.ratings()}">
                         <div class="criterion-rating">
                             <i class="fas fa-star"></i>
-                            <p th:text="${rating.getValue()}" class="rating-score"></p>
-                            <p th:text="${rating.getKey()}"></p>
+                            <p th:text="${rating.getValue()}"></p>
+                            <p th:text="${rating.getKey()}" class="criterion-name"></p>
                         </div>
                     </li>
                 </ul>

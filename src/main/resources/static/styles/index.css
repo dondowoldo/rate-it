@@ -1309,6 +1309,7 @@ h4 {
 .list-of-ratings {
     display: block;
     list-style-type: none;
+    padding-bottom: 1rem;
 }
 
 .criterion-rating {
@@ -1326,6 +1327,6 @@ h4 {
     margin-right: 1rem;
     margin-bottom: 0;
 }
-.rating-score {
+.criterion-name {
     color: #888585;
 }
