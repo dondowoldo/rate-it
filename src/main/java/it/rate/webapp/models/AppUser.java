@@ -74,4 +74,7 @@ public class AppUser {
   @ManyToMany(mappedBy = "follows")
   @Builder.Default
   private Set<AppUser> followers = new HashSet<>();
+
+  @OneToOne(mappedBy = "user")
+  private PasswordReset passwordReset;
 }
