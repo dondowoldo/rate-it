@@ -25,7 +25,7 @@ class PlaceControllerIntegrationTest extends BaseIntegrationTest {
       authorities = {"USER"})
   void testCreateNewPlaceInvalidInterest() throws Exception {
     Long interestId = Long.MAX_VALUE;
-    String name = "Test interestName";
+    String name = "Test name";
     String description = "Test description";
 
     // Perform POST request to create a new place and expect redirection
@@ -44,7 +44,7 @@ class PlaceControllerIntegrationTest extends BaseIntegrationTest {
       authorities = {"USER"})
   void testCreateNewPlace() throws Exception {
     Long interestId = 1L;
-    String name = "Test interestName";
+    String name = "Test name";
     String description = "Test description";
     Double latitude = 50.5;
     Double longitude = 15.2;
@@ -68,7 +68,7 @@ class PlaceControllerIntegrationTest extends BaseIntegrationTest {
     // Fetch the created place from the repository and verify its properties
     Optional<Place> createdPlace = placeRepository.findById(placeId);
     assertTrue(createdPlace.isPresent()); // Check if the place was successfully created
-    assertEquals(name, createdPlace.get().getName()); // Verify the interestName
+    assertEquals(name, createdPlace.get().getName()); // Verify the name
     assertEquals(description, createdPlace.get().getDescription()); // Verify the description
   }
 }
