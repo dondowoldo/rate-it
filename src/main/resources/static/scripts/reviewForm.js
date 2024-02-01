@@ -1,4 +1,8 @@
 const TIMEOUT_DURATION = 2000;
+let previousReviewText = null;
+if (review) {
+    previousReviewText = review.text;
+}
 document.addEventListener('DOMContentLoaded', async function () {
     updateCharCountAndResize(document.querySelector("#review-text-field").getAttribute("maxlength"));
 
@@ -29,6 +33,12 @@ document.addEventListener('DOMContentLoaded', async function () {
                 return;
             }
 
+            // Check if the new review text is the same as the previous review
+            if (reviewText === previousReviewText) {
+                displayMessage('Review text must be different from the previous review.', 'warning');
+                return;
+            }
+
             const response = await fetch(`/api/v1/places/${placeId}/review`, {
                 method: 'POST',
                 body: reviewText,
@@ -41,7 +51,8 @@ document.addEventListener('DOMContentLoaded', async function () {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
 
-            const newReview = await response.json(); // Assuming the server returns the new review object
+            let newReview = await response.json();
+
 
             // Display the new review instantly
             displayReview(newReview);
@@ -55,7 +66,7 @@ document.addEventListener('DOMContentLoaded', async function () {
                 $('#review-modal').modal('hide');
             }, TIMEOUT_DURATION);
 
-            previousReviewText = reviewText;
+            previousReviewText = newReview.text;
 
         } catch (error) {
             console.error(error);
