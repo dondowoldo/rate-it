@@ -2,6 +2,7 @@ package it.rate.webapp.dtos;
 
 import it.rate.webapp.models.Place;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,6 +17,8 @@ public record UserRatedPlaceDTO(
             .mapToDouble(RatingDTO::rating)
             .boxed()
             .collect(Collectors.averagingDouble(Double::doubleValue)),
-        ratings);
+        ratings.stream()
+            .sorted(Comparator.comparingInt(RatingDTO::rating).reversed())
+            .collect(Collectors.toList()));
   }
 }
