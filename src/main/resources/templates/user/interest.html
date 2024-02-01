@@ -13,7 +13,7 @@
         <script th:replace="~{fragments.html :: topbar-script}"></script>
     </header>
     <main class="content user-profile">
-        <h2 th:text="${user.username}"></h2>
+        <a th:href="@{/users/{username}(username=${user.username})}" th:text="${user.username}"></a>
         <h2 th:text="${interest.name}"></h2>
         <section class="user-page-layout">
             <div class="extendable user-detail-place" th:each="place : ${interest.ratedPlaces}" th:object="${place}"
@@ -31,7 +31,7 @@
                             <li th:object="${criterion}">
                                 <i class="fas fa-star"></i>
                                 <span class="place-rating-average" th:text="*{rating}"></span>
-                                <span th:text="*{criterionName}"></span>
+                                <p th:text="*{criterionName}"></p>
                             </li>
                         </ul>
                     </div>

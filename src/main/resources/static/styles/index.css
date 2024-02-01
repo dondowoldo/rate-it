@@ -1378,13 +1378,41 @@ h4 {
         bottom: 0;
     }
 
-    .user-interest.extended .extension {
+    .extended .extension {
         display: flex;
         flex-direction: column;
     }
 
-    .extension .button {
+    .extended .extension .button {
         position: relative;
         margin: 0.5rem 0.5rem 0 auto;
     }
+
+    .user-detail-place.extended .extension .button {
+        margin: auto 0 0 auto;
+    }
 }
+
+.user-profile a:first-child {
+    color: #568d73;
+    text-decoration: none;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.user-detail-place-default {
+    display: flex;
+    align-items: center;
+    margin: 0.5rem 1rem;
+    font-weight: 600;
+}
+
+.user-detail-place.extended .extension {
+    min-height: 2.5rem;
+}
+
+.user-interest-place p {
+    font-weight: 500;
+    margin: 0;
+}
+

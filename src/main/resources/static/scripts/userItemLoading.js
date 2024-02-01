@@ -1,4 +1,12 @@
 document.addEventListener('DOMContentLoaded', function () {
+    const ratingSpans = document.querySelectorAll('.rating');
+
+    ratingSpans.forEach(ratingSpan => {
+        const rating = parseFloat(ratingSpan.textContent);
+        if (!isNaN(rating)) {
+            ratingSpan.textContent = rating.toFixed(1);
+        }
+    });
 });
 
 function toggleExtension(toggleDiv) {
@@ -32,14 +40,6 @@ function loadAndFormatItems(toggleDiv, maxItems) {
 
             if (!isNaN(avgRating)) {
                 avgRatingSpan.textContent = avgRating.toFixed(1);
-            }
-
-            const ratingSpan = ulElement.querySelector('.rating');
-            if (ratingSpan) {
-                const rating = parseFloat(ratingSpan.textContent);
-                if (!isNaN(rating)) {
-                    ratingSpan.textContent = rating.toFixed(1);
-                }
             }
 
             ulElement.style.display = 'flex';
