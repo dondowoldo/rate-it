@@ -129,8 +129,17 @@
             </div>
         </section>
 
-        <section class="place-map">
-            <div id="map"></div>
+        <section class="place-review">
+            <h2 th:if="${review.text() != null}">My review</h2>
+            <h2 th:unless="${review.text() != null}">Rate to add review</h2>
+            <p th:text="${review.text()}"></p>
+        </section>
+
+        <section>
+            <h2>Location</h2>
+            <div class="place-map">
+                <div id="map"></div>
+            </div>
         </section>
     </main>
     <footer th:replace="~{fragments.html :: footer}"></footer>
