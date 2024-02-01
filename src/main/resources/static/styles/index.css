@@ -1272,7 +1272,7 @@ h4 {
     font-weight: 600;
 }
 
-.user-interests {
+.user-page-layout {
     display: flex;
     flex-direction: column;
     gap: 1rem;

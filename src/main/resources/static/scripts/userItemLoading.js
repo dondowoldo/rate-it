@@ -34,6 +34,14 @@ function loadAndFormatItems(toggleDiv, maxItems) {
                 avgRatingSpan.textContent = avgRating.toFixed(1);
             }
 
+            const ratingSpan = ulElement.querySelector('.rating');
+            if (ratingSpan) {
+                const rating = parseFloat(ratingSpan.textContent);
+                if (!isNaN(rating)) {
+                    ratingSpan.textContent = rating.toFixed(1);
+                }
+            }
+
             ulElement.style.display = 'flex';
         }
     }

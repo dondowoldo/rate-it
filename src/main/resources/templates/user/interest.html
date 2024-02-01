@@ -15,7 +15,7 @@
     <main class="content user-profile">
         <h2 th:text="${user.username}"></h2>
         <h2 th:text="${interest.name}"></h2>
-        <section class="user-detail-interest">
+        <section class="user-page-layout">
             <div class="extendable user-detail-place" th:each="place : ${interest.ratedPlaces}" th:object="${place}"
                  onclick="toggleExtension(this)">
                 <div class="user-detail-place-default">
