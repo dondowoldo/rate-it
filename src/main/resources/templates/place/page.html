@@ -158,7 +158,6 @@
                     </div>
                 </div>
 
-
                 <ul class="list-of-ratings" th:id="'ratingsList_' + ${userRatingDto.userName()}" style="display: none;">
                     <li th:each="rating : ${userRatingDto.ratings()}">
                         <div class="criterion-rating">
@@ -169,37 +168,11 @@
                     </li>
                 </ul>
             </div>
-
         </section>
+
     </main>
     <footer th:replace="~{fragments.html :: footer}"></footer>
 </div>
-
-<script th:inline="javascript">
-    document.addEventListener('DOMContentLoaded', function () {
-        var expandButtons = document.getElementsByClassName('expand-button');
-
-        for (var i = 0; i < expandButtons.length; i++) {
-            expandButtons[i].addEventListener('click', function () {
-                var userName = this.id.replace('button-show-ratings-', '');
-                toggleRatings(userName);
-            });
-        }
-    });
-
-    function toggleRatings(userName) {
-        var ratingsList = document.getElementById('ratingsList_' + userName);
-        var expandButton = document.getElementById('button-show-ratings-' + userName);
-
-        ratingsList.style.display = (ratingsList.style.display === 'none') ? 'block' : 'none';
-
-        if (ratingsList.style.display === 'none') {
-            expandButton.querySelector('img').src = '/icons/right-arrow.svg';
-        } else {
-            expandButton.querySelector('img').src = '/icons/down-arrow.svg';
-        }
-    }
-</script>
 
 <script th:replace="~{fragments :: leaflet-script}"></script>
 <script th:inline="javascript">
@@ -210,6 +183,7 @@
 </script>
 <script src="/scripts/placeMap.js"></script>
 <script src="/scripts/imageFetcher.js"></script>
+<script th:if="${placeRatings}" src="/scripts/placeRatingsExpand.js"></script>
 <script th:if="${usersRatings}" src="/scripts/rating.js"></script>
 <script th:if="${usersRatings}" type="module" src="/scripts/imageUpload.js"></script>
 

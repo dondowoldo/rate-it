@@ -92,28 +92,27 @@ public class PlaceService {
   }
 
   public PlaceAllUsersRatingsDTO getPlaceUserRatingDto(Place place) {
-    Map<AppUser, List<Rating>> ratingsByUser = place.getRatings().stream()
-            .collect(Collectors.groupingBy(Rating::getAppUser));
+    Map<AppUser, List<Rating>> ratingsByUser =
+        place.getRatings().stream().collect(Collectors.groupingBy(Rating::getAppUser));
 
-    List<PlaceUserRatingDTO> userRatings = ratingsByUser.entrySet().stream()
+    List<PlaceUserRatingDTO> userRatings =
+        ratingsByUser.entrySet().stream()
             .map(entry -> getSingleUserRatingDTO(entry.getKey(), entry.getValue()))
             .collect(Collectors.toList());
 
     return new PlaceAllUsersRatingsDTO(userRatings);
   }
 
-  private PlaceUserRatingDTO getSingleUserRatingDTO(AppUser user, List<Rating> ratings) {
+  public PlaceUserRatingDTO getSingleUserRatingDTO(AppUser user, List<Rating> ratings) {
 
-    Map<String, Double> criterionRatings = ratings.stream()
-            .collect(Collectors.toMap(
-                    rating -> rating.getCriterion().getName(),
-                    rating -> rating.getRating() / 2.0
-            ));
+    Map<String, Double> criterionRatings =
+        ratings.stream()
+            .collect(
+                Collectors.toMap(
+                    rating -> rating.getCriterion().getName(), rating -> rating.getRating() / 2.0));
 
-    double averageRating = criterionRatings.values().stream()
-            .mapToDouble(Double::doubleValue)
-            .average()
-            .orElse(0.0);
+    double averageRating =
+        criterionRatings.values().stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
 
     if (averageRating != 0.0) {
       averageRating = Math.round(averageRating * 10.0) / 10.0;
