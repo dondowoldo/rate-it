@@ -68,7 +68,9 @@ public class UserController {
     AppUser user =
         userService.findByUsernameIgnoreCase(username).orElseThrow(UserNotFoundException::new);
     List<UserRatedInterestDTO> ratedInterests = ratingService.getAllUserRatedInterestDTOS(user);
-    model.addAttribute("loggedUser", userService.getByEmail(principal.getName()));
+    if (principal != null) {
+      model.addAttribute("loggedUser", userService.getByEmail(principal.getName()));
+    }
     model.addAttribute("user", new AppUserDTO(user));
     model.addAttribute("ratedInterests", ratedInterests);
     return "user/page";

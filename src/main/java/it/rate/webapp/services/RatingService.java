@@ -123,19 +123,14 @@ public class RatingService {
                                     .collect(Collectors.toList());
 
                             return new UserRatedPlaceDTO(
-                                place.getId(),
-                                place.getName(),
-                                place.getAverageRating() / 2,
+                                place,
                                 userRatingDTOs);
                           })
                       .sorted(Comparator.comparingDouble(UserRatedPlaceDTO::avgRating).reversed())
                       .collect(Collectors.toList());
 
               return new UserRatedInterestDTO(
-                  interest.getId(),
-                  interest.getName(),
-                  interest.getImageName(),
-                  interest.countLikes(),
+                  interest,
                   userRatedPlaceDTOs);
             })
         .sorted(Comparator.comparingInt(UserRatedInterestDTO::likes).reversed())

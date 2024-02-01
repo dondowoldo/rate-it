@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
     const userBio = document.getElementById('user-bio');
-    const maxBioLength = 150;
+    const maxBioLength = MAX_BIO_LENGTH;
     const defaultText = 'Tap here to write something about yourself...';
 
     if (userBio.textContent.trim() === '') {
