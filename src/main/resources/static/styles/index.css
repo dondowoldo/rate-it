@@ -1278,7 +1278,7 @@ h4 {
     gap: 1rem;
 }
 
-.user-interest {
+.extendable {
     display: flex;
     flex-direction: column;
     gap: 1rem;
@@ -1293,7 +1293,7 @@ h4 {
     text-decoration: underline;
 }
 
-.user-interest.expanded {
+.user-interest.extended {
     height: auto;
     gap: 0.5rem;
 }
@@ -1322,44 +1322,44 @@ h4 {
     width: 80%;
 }
 
-.user-interest-extension {
+.extension {
     display: none;
 }
 
-.user-interest.expanded .user-interest-extension {
+.extended .extension {
     display: flex;
     flex-direction: row;
     position: relative;
 }
 
-.user-interest-places {
+.extension-list {
     display: flex;
     flex-direction: column;
     font-weight: 600;
 }
 
-.user-interest-places ul {
+.extension-list ul {
     list-style: none;
     display: none;
     padding-left: 1rem;
     margin-bottom: 0.5rem;
 }
 
-.user-interest-places li {
+.extension-list li {
     display: flex;
     align-items: baseline;
 }
 
-.user-interest-places i {
+.extension-list i {
     color: #EFBB00;
     width: 1.5rem;
 }
 
-.user-interest-places .place-rating-average {
+.extension-list .place-rating-average {
     width: 2rem;
 }
 
-.user-interest-extension .button {
+.extension .button {
     position: absolute;
     bottom: 0.5rem;
     right: 0.5rem;
@@ -1378,12 +1378,12 @@ h4 {
         bottom: 0;
     }
 
-    .user-interest.expanded .user-interest-extension {
+    .user-interest.extended .extension {
         display: flex;
         flex-direction: column;
     }
 
-    .user-interest-extension .button {
+    .extension .button {
         position: relative;
         margin: 0.5rem 0.5rem 0 auto;
     }

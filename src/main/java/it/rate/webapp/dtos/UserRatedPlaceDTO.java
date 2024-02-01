@@ -11,7 +11,7 @@ public record UserRatedPlaceDTO(
     this(
         place.getId(),
         place.getName(),
-        ratedCriteria.stream().mapToDouble(UserRatingDTO::rating).average().orElse(0.0),
+        ratedCriteria.stream().mapToDouble(UserRatingDTO::rating).average().orElse(0.0) / 2,
         ratedCriteria);
   }
 }
