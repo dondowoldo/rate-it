@@ -1,9 +1,9 @@
 package it.rate.webapp.services;
 
 import it.rate.webapp.config.ServerRole;
-import it.rate.webapp.dtos.EmailMessageDTO;
 import it.rate.webapp.dtos.InterestUserDTO;
 import it.rate.webapp.dtos.PasswordResetDTO;
+import it.rate.webapp.dtos.PasswordResetEmailDTO;
 import it.rate.webapp.dtos.SignupUserInDTO;
 import it.rate.webapp.exceptions.badrequest.BadRequestException;
 import it.rate.webapp.exceptions.badrequest.InvalidUserDetailsException;
@@ -15,6 +15,7 @@ import it.rate.webapp.models.Role;
 import it.rate.webapp.repositories.PasswordResetRepository;
 import it.rate.webapp.repositories.UserRepository;
 import jakarta.servlet.http.HttpSession;
+import jakarta.transaction.Transactional;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Valid;
 import jakarta.validation.Validator;
@@ -22,10 +23,9 @@ import jakarta.validation.Validator;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
-import lombok.Value;
-import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -134,16 +134,35 @@ public class UserService {
 
   public void initPasswordReset(@Valid AppUser user) {
     UUID uuid = UUID.randomUUID();
-    if (user.getPasswordReset() != null) {
-      PasswordReset pwReset = user.getPasswordReset();
-
-      emailService.sendPasswordReset(
-          new PasswordResetDTO(
-              user, uuid.toString()));
-
+    Optional<PasswordReset> optReset = passwordResetRepository.findByUser(user);
+    if (optReset.isPresent()) {
+      PasswordReset pwReset = optReset.get();
       pwReset.setToken(passwordEncoder.encode(uuid.toString()));
       passwordResetRepository.save(pwReset);
+    } else {
+      passwordResetRepository.save(
+          new PasswordReset(user, passwordEncoder.encode(uuid.toString())));
     }
-    passwordResetRepository.save(new PasswordReset(user, passwordEncoder.encode(uuid.toString())));
+    emailService.sendPasswordReset(new PasswordResetEmailDTO(user, uuid.toString()));
+  }
+
+  public PasswordReset validateToken(@NotBlank String token, @NotNull Long ref) {
+    PasswordReset pwReset =
+        passwordResetRepository.findByUser_Id(ref).orElseThrow(InvalidUserDetailsException::new);
+
+    if (!passwordEncoder.matches(token, pwReset.getToken())) {
+      throw new BadRequestException("Invalid token");
+    }
+    return pwReset;
+  }
+
+  @Transactional
+  public void updatePassword(@Valid PasswordResetDTO pwResetDTO) {
+    PasswordReset pwReset = validateToken(pwResetDTO.token(), pwResetDTO.ref());
+    AppUser user = pwReset.getUser();
+    user.setPassword(passwordEncoder.encode(pwResetDTO.password()));
+    user.setPasswordReset(null);
+    userRepository.save(user);
+    passwordResetRepository.delete(pwReset);
   }
 }

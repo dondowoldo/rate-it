@@ -1,7 +1,7 @@
 package it.rate.webapp.services;
 
 import it.rate.webapp.dtos.EmailMessageDTO;
-import it.rate.webapp.dtos.PasswordResetDTO;
+import it.rate.webapp.dtos.PasswordResetEmailDTO;
 
 public interface EmailService {
   void sendEmail(EmailMessageDTO emailMessage);
@@ -13,5 +13,5 @@ public interface EmailService {
 
 
 
-  void sendPasswordReset(PasswordResetDTO dto);
+  void sendPasswordReset(PasswordResetEmailDTO dto);
 }

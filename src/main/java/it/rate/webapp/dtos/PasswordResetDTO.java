@@ -1,20 +1,16 @@
 package it.rate.webapp.dtos;
 
-import it.rate.webapp.models.AppUser;
+import it.rate.webapp.config.Constraints;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 
-public record PasswordResetDTO(String email, String username, String subject, String body) {
-  public PasswordResetDTO(AppUser user, String token) {
-    this(
-        user.getEmail(),
-        user.getUsername(),
-        "Reset your RateSpot account password",
-        String.format(
-            "Hi, %s. \n\n"
-                + "We've received a request to reset your password. "
-                + "Please click the link below to complete the reset. \n\n"
-                + "http://localhost:8080/users/reset?token=%s \n\n"
-                + "If you need additional assistance, or you did not make this change, "
-                + "please contact: ",
-            user.getUsername(), token));
-  }
-}
+public record PasswordResetDTO(
+    @NotBlank String token,
+    @NotNull Long ref,
+    @NotBlank
+        @Pattern(
+            regexp = Constraints.PASSWORD_REGEX,
+            message =
+                "Password needs to be at least 8 characters long and contain at least one uppercase letter and one digit")
+        String password) {}
