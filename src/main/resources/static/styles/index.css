@@ -992,6 +992,8 @@ h4 {
     margin: auto;
     height: var(--form-container-height);
     width: 100%;
+    display: flex;
+    justify-content: center;
 }
 
 .left-container,
@@ -1225,4 +1227,13 @@ h4 {
 
 #locationAccuracy {
     color: #888585;
+}
+
+.center-container {
+    border: 2px solid black;
+    border-radius: 2rem;
+    height: calc(0.9 * var(--form-container-height));
+    width: 90%;
+    box-sizing: border-box;
+    text-align: center;
 }
