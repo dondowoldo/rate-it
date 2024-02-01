@@ -38,6 +38,7 @@ public class SecurityConfig {
                         "/users/signup",
                         "/users/login",
                         "/users/{username}",
+                        "/users/{username}/interests/{interestId}",
                         "/api/v1/interests/suggestions",
                         "/api/v1/interests/{id}/places",
                         "/api/v1/images/{id}",

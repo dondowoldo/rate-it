@@ -35,8 +35,8 @@ public class UserController {
   }
 
   @PostMapping("/signup")
-  public String newUser(SignupUserInDTO userDTO, Model model, String confirmPassword,
-                        HttpServletRequest request) {
+  public String newUser(
+      SignupUserInDTO userDTO, Model model, String confirmPassword, HttpServletRequest request) {
     if (!confirmPassword.equals(userDTO.password())) {
       model.addAttribute("error", "Passwords do not match. Please try again.");
       model.addAttribute("userDTO", new SignupUserOutDTO(userDTO));
@@ -74,5 +74,19 @@ public class UserController {
     model.addAttribute("user", new AppUserDTO(user));
     model.addAttribute("ratedInterests", ratedInterests);
     return "user/page";
+  }
+
+  @GetMapping("/{username}/interests/{interestId}")
+  public String interestDetail(
+      @PathVariable String username,
+      @PathVariable Long interestId,
+      Model model,
+      Principal principal) {
+
+    AppUser user = userService.findByUsernameIgnoreCase(username).orElseThrow(UserNotFoundException::new);
+
+    model.addAttribute("user", new AppUserDTO(user));
+
+    return "user/interest";
   }
 }
