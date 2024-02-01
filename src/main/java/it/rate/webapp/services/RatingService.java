@@ -106,19 +106,16 @@ public class RatingService {
 
     return ratingsByInterestAndPlace.entrySet().stream()
         .map(
-            entry -> {
-              Interest interest = entry.getKey();
-              List<UserRatedPlaceDTO> userRatedPlaceDTOs =
-                  entry.getValue().entrySet().stream()
-                      .map(
-                          placeEntry -> RatingMapper.remapToUserRatedPlaceDTO(placeEntry.getKey(), placeEntry.getValue()))
-                      .sorted(Comparator.comparingDouble(UserRatedPlaceDTO::avgRating).reversed())
-                      .collect(Collectors.toList());
-
-              return new UserRatedInterestDTO(
-                  interest,
-                  userRatedPlaceDTOs);
-            })
+            interest ->
+                RatingMapper.remapToUserRatedInterestDTO(
+                    interest.getKey(),
+                    interest.getValue().entrySet().stream()
+                        .map(
+                            place ->
+                                RatingMapper.remapToUserRatedPlaceDTO(
+                                    place.getKey(), place.getValue()))
+                        .sorted(Comparator.comparingDouble(UserRatedPlaceDTO::avgRating))
+                        .collect(Collectors.toList())))
         .sorted(Comparator.comparingInt(UserRatedInterestDTO::likes).reversed())
         .toList();
   }
