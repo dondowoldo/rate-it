@@ -3,9 +3,9 @@ package it.rate.webapp.services;
 import it.rate.webapp.dtos.RatingsDTO;
 import it.rate.webapp.dtos.UserRatedInterestDTO;
 import it.rate.webapp.dtos.UserRatedPlaceDTO;
-import it.rate.webapp.dtos.UserRatingDTO;
 import it.rate.webapp.exceptions.badrequest.InvalidCriterionDetailsException;
 import it.rate.webapp.exceptions.badrequest.InvalidRatingException;
+import it.rate.webapp.mappers.RatingMapper;
 import it.rate.webapp.models.*;
 import it.rate.webapp.repositories.CriterionRepository;
 import it.rate.webapp.repositories.RatingRepository;
@@ -111,21 +111,7 @@ public class RatingService {
               List<UserRatedPlaceDTO> userRatedPlaceDTOs =
                   entry.getValue().entrySet().stream()
                       .map(
-                          placeEntry -> {
-                            Place place = placeEntry.getKey();
-                            List<UserRatingDTO> userRatingDTOs =
-                                placeEntry.getValue().stream()
-                                    .map(
-                                        userRating ->
-                                            new UserRatingDTO(
-                                                userRating.getRating(),
-                                                userRating.getCriterion().getName()))
-                                    .collect(Collectors.toList());
-
-                            return new UserRatedPlaceDTO(
-                                place,
-                                userRatingDTOs);
-                          })
+                          placeEntry -> RatingMapper.remapToUserRatedPlaceDTO(placeEntry.getKey(), placeEntry.getValue()))
                       .sorted(Comparator.comparingDouble(UserRatedPlaceDTO::avgRating).reversed())
                       .collect(Collectors.toList());
 
