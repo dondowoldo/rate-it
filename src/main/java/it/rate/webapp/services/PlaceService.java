@@ -115,6 +115,10 @@ public class PlaceService {
             .average()
             .orElse(0.0);
 
+    if (averageRating != 0.0) {
+      averageRating = Math.round(averageRating * 10.0) / 10.0;
+    }
+
     return new PlaceUserRatingDTO(user.getUsername(), criterionRatings, averageRating);
   }
 }
