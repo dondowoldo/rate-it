@@ -115,7 +115,7 @@ public class RatingService {
                             place ->
                                 RatingMapper.remapToUserRatedPlaceDTO(
                                     place.getKey(), place.getValue()))
-                        .sorted(Comparator.comparingDouble(UserRatedPlaceDTO::avgRating))
+                        .sorted(Comparator.comparingDouble(UserRatedPlaceDTO::avgRating).reversed())
                         .collect(Collectors.toList())))
         .sorted(Comparator.comparingInt(UserRatedInterestDTO::likes).reversed())
         .toList();
