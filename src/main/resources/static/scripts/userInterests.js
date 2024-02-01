@@ -22,7 +22,7 @@ function loadAndFormatPlaces(userInterest, limit) {
             const avgRating = parseFloat(avgRatingSpan.textContent);
 
             if (!isNaN(avgRating)) {
-                avgRatingSpan.textContent = avgRating.toFixed(1);
+                avgRatingSpan.textContent = (avgRating / 2).toFixed(1);
             }
 
             ulElement.style.display = 'flex';

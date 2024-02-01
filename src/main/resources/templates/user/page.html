@@ -74,13 +74,9 @@
 </body>
 
 <script th:inline="javascript" th:if="${loggedUser != null}">
-    /*<![CDATA[*/
-
-    let userId = [[${user.interestId}]]
+    let userId = [[${user.id}]]
     let isFollowed = [[${loggedUser.getFollows().contains(user)}]]
     const MAX_BIO_LENGTH = [[${@constraints.MAX_BIO_LENGTH}]];
-
-    /*]]>*/
 </script>
 <script src="/scripts/userInterests.js"></script>
 <script th:if="${loggedUser != null && loggedUser.id != user.id}" src="/scripts/userFollow.js"></script>

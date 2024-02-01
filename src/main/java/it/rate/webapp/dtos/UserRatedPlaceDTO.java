@@ -6,16 +6,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public record UserRatedPlaceDTO(
-        Long placeId, String placeName, Double avgRating, List<RatingDTO> ratings) {
+    Long placeId, String placeName, Double avgRating, List<RatingDTO> ratings) {
 
-  public UserRatedPlaceDTO(Place place, List<RatingDTO> ratedCriteria) {
+  public UserRatedPlaceDTO(Place place, List<RatingDTO> ratings) {
     this(
-            place.getId(),
-            place.getName(),
-            ratedCriteria.stream()
-                    .mapToDouble(RatingDTO::rating)
-                    .boxed()
-                    .collect(Collectors.averagingDouble(Double::doubleValue)),
-            ratedCriteria);
+        place.getId(),
+        place.getName(),
+        ratings.stream()
+            .mapToDouble(RatingDTO::rating)
+            .boxed()
+            .collect(Collectors.averagingDouble(Double::doubleValue)),
+        ratings);
   }
 }

@@ -27,7 +27,7 @@
 <script th:replace="~{fragments :: leaflet-script}"></script>
 <script th:inline="javascript">
     const places = [[${places}]];
-    const interestId = [[${interest.interestId}]];
+    const interestId = [[${interest.id}]];
 </script>
 <script src="/scripts/interestMap.js"></script>
 <script th:unless="${loggedUser == null || role != null && role.equals(role.CREATOR)}"
