@@ -92,19 +92,19 @@ public class PlaceService {
   }
 
   public PlaceAllUsersRatingsDTO getPlaceUserRatingDto(Place place) {
+    Map<AppUser, List<Rating>> ratingsByUser = place.getRatings().stream()
+            .collect(Collectors.groupingBy(Rating::getAppUser));
 
-
-    List<PlaceUserRatingDTO> userRatings = place.getRatings().stream()
-            .map(rating -> getSingleUserRatingDTO(place, rating.getAppUser()))
-            .distinct()
+    List<PlaceUserRatingDTO> userRatings = ratingsByUser.entrySet().stream()
+            .map(entry -> getSingleUserRatingDTO(entry.getKey(), entry.getValue()))
             .collect(Collectors.toList());
 
     return new PlaceAllUsersRatingsDTO(userRatings);
   }
 
-  private PlaceUserRatingDTO getSingleUserRatingDTO(Place place, AppUser user) {
-    Map<String, Double> criterionRatings = place.getRatings().stream()
-            .filter(rating -> rating.getAppUser().equals(user))
+  private PlaceUserRatingDTO getSingleUserRatingDTO(AppUser user, List<Rating> ratings) {
+
+    Map<String, Double> criterionRatings = ratings.stream()
             .collect(Collectors.toMap(
                     rating -> rating.getCriterion().getName(),
                     rating -> rating.getRating() / 2.0
