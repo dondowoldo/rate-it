@@ -1,3 +1,5 @@
+// https://medium.com/geekculture/how-to-build-a-simple-star-rating-system-abcbb5117365
+
 const STARS = 10;
 
 function addClassToStars(stars, rating, className) {
@@ -35,9 +37,8 @@ function initializeRating() {
 
                 case 'mouseout':
                     stars.classList.remove('hover');
-                    for (let j = 0; j <= STARS; j++) {
-                        let starElement = stars.querySelector('.star-' + j);
-                        starElement.classList.remove('hover-active');
+                    for (let j = 1; j <= STARS; j++) {
+                        stars.querySelector('.star-' + j).classList.remove('hover-active');
                     }
                     break;
 
