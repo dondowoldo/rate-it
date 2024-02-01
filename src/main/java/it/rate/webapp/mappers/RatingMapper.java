@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 public class RatingMapper {
 
   public static UserRatingDTO remapToUserRatingDTO(Rating userRating) {
-    return new UserRatingDTO(userRating.getRating(), userRating.getCriterion().getName());
+    return new UserRatingDTO((double) userRating.getRating() / 2, userRating.getCriterion().getName());
   }
 
   public static UserRatedPlaceDTO remapToUserRatedPlaceDTO(

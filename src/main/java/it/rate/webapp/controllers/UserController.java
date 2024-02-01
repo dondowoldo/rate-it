@@ -100,7 +100,7 @@ public class UserController {
     model.addAttribute("interest", ratedInterest);
 
     if (principal != null) {
-      model.addAttribute("loggedUser", principal.getName());
+      model.addAttribute("loggedUser", userService.getByEmail(principal.getName()));
     }
 
     return "user/interest";
