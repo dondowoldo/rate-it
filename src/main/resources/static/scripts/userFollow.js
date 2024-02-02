@@ -15,7 +15,7 @@ async function followUser(button) {
 
         const data = await response.json();
 
-        const followersCount = document.querySelector('.user-follow a:first-child');
+        const followersCount = document.querySelector('.user-follow p:first-child');
         const currentFollowers = parseInt(followersCount.textContent, 10);
         followersCount.textContent = ((currentFollowers + (isFollowed ? -1 : 1)) + ' Followers');
 

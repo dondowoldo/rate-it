@@ -1,12 +1,10 @@
-let DIVISION_DONE;
-
 document.addEventListener('DOMContentLoaded', function () {
     const ratingSpans = document.querySelectorAll('.rating');
 
     ratingSpans.forEach(ratingSpan => {
         const rating = parseFloat(ratingSpan.textContent);
         if (!isNaN(rating)) {
-            ratingSpan.textContent = (rating / 2).toFixed(1);
+            ratingSpan.textContent = rating.toFixed(1);
         }
     });
 });
@@ -26,7 +24,7 @@ function loadAndFormatItems(toggleDiv, maxItems) {
 
     if (extensionContainer) {
 
-        const ulElements = extensionContainer.querySelectorAll('ul');
+        const ulElements = extensionContainer.querySelectorAll('.user-interest-place');
         let limit;
 
         if (maxItems === 3) {
@@ -41,10 +39,8 @@ function loadAndFormatItems(toggleDiv, maxItems) {
             const avgRating = parseFloat(avgRatingSpan.textContent);
 
             if (!isNaN(avgRating)) {
-                avgRatingSpan.textContent =
-                    DIVISION_DONE ? (avgRating).toFixed(1) : (avgRating / 2).toFixed(1);
+                avgRatingSpan.textContent = avgRating.toFixed(1);
             }
-            DIVISION_DONE = true;
 
             ulElement.style.display = 'flex';
         }
