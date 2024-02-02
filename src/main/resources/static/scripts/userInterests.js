@@ -1,3 +1,5 @@
+let DIVISION_DONE = false;
+
 document.addEventListener('DOMContentLoaded', function () {
 });
 
@@ -22,9 +24,10 @@ function loadAndFormatPlaces(userInterest, limit) {
             const avgRating = parseFloat(avgRatingSpan.textContent);
 
             if (!isNaN(avgRating)) {
-                avgRatingSpan.textContent = (avgRating / 2).toFixed(1);
+                avgRatingSpan.textContent =
+                    DIVISION_DONE ? (avgRating).toFixed(1) : (avgRating / 2).toFixed(1);
             }
-
+            DIVISION_DONE = true;
             ulElement.style.display = 'flex';
         }
     }
