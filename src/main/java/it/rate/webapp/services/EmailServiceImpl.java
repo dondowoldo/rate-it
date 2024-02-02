@@ -70,7 +70,7 @@ public class EmailServiceImpl implements EmailService {
     sb.append("Hi, ").append(dto.username()).append(". \n\n");
     sb.append("We've received a request to reset your password. ");
     sb.append("Please click the link below to complete the reset. \n\n");
-    sb.append(environment.getProperty("base.url")).append("/users/reset?");
+    sb.append(environment.getProperty("base.url")).append("/reset?");
     sb.append("token=").append(dto.token()).append("&ref=").append(dto.userId()).append("\n\n");
     sb.append(
         "If you need additional assistance, or you did not make this change, please contact: ");

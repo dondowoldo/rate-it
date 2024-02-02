@@ -103,7 +103,7 @@ public class UserController {
       model.addAttribute("ref", pwResetDTO.ref());
       return "user/resetPasswordForm";
     }
-    return "redirect:/users/login";
+    return "redirect:/login";
   }
 
   @GetMapping("/{username}")
