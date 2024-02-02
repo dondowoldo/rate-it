@@ -23,7 +23,7 @@
                     <h4 th:text="${place.placeName}"></h4>
                     <div class="place-rating-average">
                         <i class="fas fa-star"></i>
-                        <span class="rating" th:text="${place.avgRating}"></span>
+                        <span class="rating" th:text="${#numbers.formatDecimal(@thymeMath.roundRating(place.avgRating), 1, 1, 'POINT')}"></span>
                     </div>
                 </div>
                 <div class="extension">
@@ -31,7 +31,7 @@
                         <ul class="user-interest-place" th:each="criterion : ${place.ratings}">
                             <li th:object="${criterion}">
                                 <i class="fas fa-star"></i>
-                                <span class="place-rating-average" th:text="*{rating}"></span>
+                                <span class="place-rating-average" th:text="${#numbers.formatDecimal(@thymeMath.roundRating(criterion.rating), 1, 1, 'POINT')}"></span>
                                 <p th:text="*{criterionName}"></p>
                             </li>
                         </ul>

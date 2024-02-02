@@ -1,15 +1,10 @@
-let DIVISION_DONE = false;
-let processedExtensionLists = 0;
-const totalExtensionLists = document.querySelectorAll('.extension-list').length;
-
-
 document.addEventListener('DOMContentLoaded', function () {
     const ratingSpans = document.querySelectorAll('.rating');
 
     ratingSpans.forEach(ratingSpan => {
         const rating = parseFloat(ratingSpan.textContent);
         if (!isNaN(rating)) {
-            ratingSpan.textContent = (rating / 2).toFixed(1);
+            ratingSpan.textContent = rating.toFixed(1);
         }
     });
 });
@@ -44,16 +39,10 @@ function loadAndFormatItems(toggleDiv, maxItems) {
             const avgRating = parseFloat(avgRatingSpan.textContent);
 
             if (!isNaN(avgRating)) {
-                avgRatingSpan.textContent =
-                    DIVISION_DONE ? (avgRating).toFixed(1) : (avgRating / 2).toFixed(1);
+                avgRatingSpan.textContent = avgRating.toFixed(1);
             }
 
             ulElement.style.display = 'flex';
-        }
-
-        processedExtensionLists++;
-        if (processedExtensionLists === totalExtensionLists) {
-            DIVISION_DONE = true;
         }
     }
 }
