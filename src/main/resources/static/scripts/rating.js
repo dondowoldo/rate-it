@@ -23,8 +23,6 @@ function initializeRating() {
     let placeRatingStars = document.querySelectorAll('.place-rating-star');
 
     placeRatingStars.forEach(function (star) {
-        let activeStars = document.querySelectorAll('.is-active');
-
         function handleStarEvent(event) {
             event.preventDefault(); // Prevent default behavior for touch events
 
