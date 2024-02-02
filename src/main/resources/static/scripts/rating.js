@@ -160,6 +160,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    const form = document.getElementById("form");
+    const form = document.getElementById("rating-form");
     form.addEventListener('submit', handleSubmit);
 });

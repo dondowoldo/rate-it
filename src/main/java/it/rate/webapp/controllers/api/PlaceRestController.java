@@ -2,6 +2,7 @@ package it.rate.webapp.controllers.api;
 
 import it.rate.webapp.dtos.PlaceInfoDTO;
 import it.rate.webapp.dtos.RatingsDTO;
+import it.rate.webapp.dtos.ReviewDTO;
 import it.rate.webapp.models.AppUser;
 import it.rate.webapp.models.ReviewId;
 import it.rate.webapp.models.Place;
@@ -9,6 +10,7 @@ import it.rate.webapp.services.ReviewService;
 import it.rate.webapp.services.PlaceService;
 import it.rate.webapp.services.RatingService;
 import it.rate.webapp.services.UserService;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -38,19 +40,19 @@ public class PlaceRestController {
     return ResponseEntity.ok().body(placeInfoDTO);
   }
 
-  @PostMapping("/{placeId}/comment")
+  @PostMapping("/{placeId}/review")
   @PreAuthorize("@permissionService.ratePlace(#placeId)")
   public ResponseEntity<?> placeReview(
-      @PathVariable Long placeId, String review, Principal principal) {
+      @PathVariable Long placeId, @RequestBody @NotBlank String review, Principal principal) {
 
     AppUser loggedUser = userService.getByEmail(principal.getName());
     Place place = placeService.getById(placeId);
-    reviewService.save(review, place, loggedUser);
+    ReviewDTO reviewDTO = reviewService.save(review, place, loggedUser);
 
-    return ResponseEntity.ok().body("Comment saved");
+    return ResponseEntity.ok().body(reviewDTO);
   }
 
-  @DeleteMapping("/{placeId}/delete-comment")
+  @DeleteMapping("/{placeId}/delete-review")
   @PreAuthorize("@permissionService.ratePlace(#placeId)")
   public ResponseEntity<?> deleteReview(@PathVariable Long placeId, Principal principal) {
 
@@ -58,6 +60,6 @@ public class PlaceRestController {
     Place place = placeService.getById(placeId);
     reviewService.deleteById(new ReviewId(loggedUser.getId(), place.getId()));
 
-    return ResponseEntity.ok().body("Comment deleted");
+    return ResponseEntity.ok().body("Review deleted");
   }
 }

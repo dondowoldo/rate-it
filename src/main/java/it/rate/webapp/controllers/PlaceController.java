@@ -1,6 +1,7 @@
 package it.rate.webapp.controllers;
 
 import it.rate.webapp.dtos.PlaceInDTO;
+import it.rate.webapp.dtos.ReviewDTO;
 import it.rate.webapp.exceptions.notfound.PlaceNotFoundException;
 import it.rate.webapp.models.*;
 import it.rate.webapp.services.*;
@@ -24,6 +25,7 @@ public class PlaceController {
   private final PermissionService permissionService;
   private final RoleService roleService;
   private final InterestService interestService;
+  private final ReviewService reviewService;
 
   @GetMapping("/new")
   @PreAuthorize("@permissionService.createPlace(#interestId)")
@@ -65,6 +67,9 @@ public class PlaceController {
       model.addAttribute("loggedUser", loggedUser);
       if (permissionService.hasRatingPermission(loggedUser, place.getInterest())) {
         model.addAttribute("usersRatings", ratingService.getUsersRatingsDto(loggedUser, place));
+        Optional<Review> optReview =
+            reviewService.findById(new ReviewId(loggedUser.getId(), placeId));
+        optReview.ifPresent(review -> model.addAttribute("review", new ReviewDTO(review)));
       }
       Optional<Role> optRole = roleService.findById(new RoleId(loggedUser.getId(), interestId));
       if (optRole.isPresent() && optRole.get().getRoleType().equals(Role.RoleType.APPLICANT)) {

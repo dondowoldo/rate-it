@@ -48,7 +48,7 @@
             <h2>Rating criteria</h2>
             <form th:object="${usersRatings}"
                   name="rating"
-                  id="form"
+                  id="rating-form"
             >
                 <div class="place-rating-criteria">
                     <div class="place-rating-criterion"
@@ -89,33 +89,34 @@
                 <div th:if="${usersRatings}" class="place-button-bar">
                     <a id="uppy-modal" href="#" type="button" class="button" style="text-decoration: none">
                         Upload photo</a>
-                    <a type="button" class="button" data-bs-toggle="modal" data-bs-target="#review-modal">Rate</a>
+                    <button id="rate" type="submit" class="button">Rate
+                    </button>
+                </div>
+            </form>
 
-                    <!-- Review Modal -->
-                    <div class="modal fade" id="review-modal" tabindex="-1" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered">
-                            <div class="modal-content">
-                                <div class="modal-body">
-                                    <h4>Add a review</h4>
-                                    <label>
+            <div class="modal fade" id="review-modal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <form id="review-form" class="modal-body">
+                            <h4>Add a review</h4>
+                            <label>
                             <textarea class="input-text-field"
                                       id="review-text-field"
                                       name="review"
-                                      th:maxlength="${@constraints.MAX_VARCHAR_LENGTH}"
-                                      th:oninput="'updateCharCountAndResize(' + ${@constraints.MAX_VARCHAR_LENGTH} + ')'">
-                            </textarea>
-                                    </label>
-                                    <p id="charCount"></p>
-                                    <div class="place-button-bar">
-                                        <button id="rate-without-review" class="button">Rate without Review</button>
-                                        <button id="post-review" class="button">Post</button>
-                                    </div>
-                                </div>
+                                      th:oninput="'updateCharCountAndResize(' + ${@constraints.MAX_VARCHAR_LENGTH} + ')'"
+                                      th:maxlength="${@constraints.MAX_VARCHAR_LENGTH}"></textarea>
+                            </label>
+                            <p id="charCount"></p>
+                            <div class="place-button-bar">
+                                <button id="rate-without-review" type="button" class="button" data-bs-dismiss="modal">
+                                    Dismiss
+                                </button>
+                                <button id="post-review" type="submit" class="button">Post</button>
                             </div>
-                        </div>
+                        </form>
                     </div>
                 </div>
-            </form>
+            </div>
 
             <div id="uppy"></div>
 
@@ -133,8 +134,21 @@
             </div>
         </section>
 
+        <section th:if="${usersRatings}" class="place-review">
+            <h2></h2>
+            <div class="review-container">
+                <div class="review-text-container">
+                <textarea disabled id="review"
+                          th:maxlength="${@constraints.MAX_VARCHAR_LENGTH}"></textarea>
+                </div>
+            </div>
+        </section>
+
         <section class="place-map">
-            <div id="map"></div>
+            <h2>Location</h2>
+            <div class="place-map-container">
+                <div id="map"></div>
+            </div>
         </section>
 
         <section class="user-ratings">
@@ -187,11 +201,13 @@
     const placeName = [[${place.name}]];
     const placeLat = [[${place.latitude}]];
     const placeLng = [[${place.longitude}]];
+    const review = [[${review}]];
 </script>
 <script src="/scripts/placeMap.js"></script>
 <script src="/scripts/imageFetcher.js"></script>
 <script th:if="${placeRatings}" src="/scripts/placeRatingsExpand.js"></script>
 <script th:if="${usersRatings}" src="/scripts/rating.js"></script>
+<script th:if="${usersRatings}" src="/scripts/reviewForm.js"></script>
 <script th:if="${usersRatings}" type="module" src="/scripts/placeImageUpload.js"></script>
 
 </body>
