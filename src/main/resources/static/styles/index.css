@@ -27,6 +27,8 @@ footer {
 }
 
 .footer-links {
+    padding-top: 10px;
+    padding-bottom: 6px;
     width: 90%;
     display: flex;
     justify-content: space-around;
@@ -35,6 +37,11 @@ footer {
 .footer-links a {
     color: white;
     text-decoration: none;
+    display: block;
+}
+
+.footer-links a:hover {
+    text-decoration: underline;
 }
 
 .footer-page {
@@ -1045,9 +1052,9 @@ h4 {
     position: relative;
 }
 
-.credentials h6 {
+.credentials h6,
+.credentials label {
     margin-left: 1rem;
-    display: flex;
     align-self: flex-start;
 }
 
