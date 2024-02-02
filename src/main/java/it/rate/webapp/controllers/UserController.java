@@ -66,7 +66,47 @@ public class UserController {
     return "user/loginForm";
   }
 
-  @GetMapping("/users/{username}")
+  @GetMapping("/reset")
+  public String resetPassword(String token, Long ref, Model model,Principal principal) {
+    if (token == null || ref == null) {
+      return principal != null ? "redirect:/" : "user/resetPassword";
+    }
+    userService.validateToken(token, ref);
+
+    model.addAttribute("token", token);
+    model.addAttribute("ref", ref);
+    return "user/resetPasswordForm";
+  }
+
+  @PostMapping("/reset")
+  public String submitResetPassword(Model model, String email) {
+    Optional<AppUser> user = userService.findByEmailIgnoreCase(email);
+    user.ifPresent(userService::initPasswordReset);
+
+    model.addAttribute("email", email);
+    return "user/resetSubmitted";
+  }
+
+  @PutMapping("/reset")
+  public String updatePassword(PasswordResetDTO pwResetDTO, String confirmPassword, Model model) {
+    if (!confirmPassword.equals(pwResetDTO.password())) {
+      model.addAttribute("error", "Passwords do not match. Please try again.");
+      model.addAttribute("token", pwResetDTO.token());
+      model.addAttribute("ref", pwResetDTO.ref());
+      return "user/resetPasswordForm";
+    }
+    try {
+      userService.updatePassword(pwResetDTO);
+    } catch (InvalidUserDetailsException e) {
+      model.addAttribute("error", e.getMessage());
+      model.addAttribute("token", pwResetDTO.token());
+      model.addAttribute("ref", pwResetDTO.ref());
+      return "user/resetPasswordForm";
+    }
+    return "redirect:/login";
+  }
+
+    @GetMapping("/users/{username}")
   public String userPage(@PathVariable String username, Model model, Principal principal) {
     AppUser user =
         userService.findByUsernameIgnoreCase(username).orElseThrow(UserNotFoundException::new);
@@ -102,6 +142,6 @@ public class UserController {
       model.addAttribute("loggedUser", userService.getByEmail(principal.getName()));
     }
 
-    return "user/interest";
+     return "user/interest";
   }
 }
