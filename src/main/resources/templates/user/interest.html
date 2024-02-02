@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments.html :: head(title=${interest.interestName} + ' by ' + ${user.username})}">
+</head>
+
+<body>
+<div class="container-fluid">
+    <header class="header">
+        <div th:replace="~{fragments.html :: back-button}"></div>
+        <div th:replace="~{fragments.html :: logo}"></div>
+        <div th:replace="~{fragments.html :: login-menu}"></div>
+        <script th:replace="~{fragments.html :: topbar-script}"></script>
+    </header>
+    <main class="content user-profile">
+        <a th:href="@{/users/{username}(username=${user.username})}" th:text="${user.username}"
+           class="user-back-link"></a>
+        <h2 th:text="${interest.interestName}"></h2>
+        <section class="user-page-layout">
+            <div class="extendable user-detail-place" th:each="place : ${interest.ratedPlaces}" th:object="${place}"
+                 onclick="toggleExtension(this)">
+                <div class="user-detail-place-default">
+                    <h4 th:text="${place.placeName}"></h4>
+                    <div class="place-rating-average">
+                        <i class="fas fa-star"></i>
+                        <span class="rating" th:text="${place.avgRating}"></span>
+                    </div>
+                </div>
+                <div class="extension">
+                    <div class="extension-list">
+                        <ul class="user-interest-place" th:each="criterion : ${place.ratings}">
+                            <li th:object="${criterion}">
+                                <i class="fas fa-star"></i>
+                                <span class="place-rating-average" th:text="*{rating}"></span>
+                                <p th:text="*{criterionName}"></p>
+                            </li>
+                        </ul>
+                    </div>
+                    <a th:href="@{/interests/{intId}/places/{placeId}
+                    (intId=${interest.interestId}, placeId=${place.placeId()})}"
+                       class="button">Visit</a>
+                </div>
+            </div>
+        </section>
+    </main>
+    <footer th:replace="~{fragments.html :: footer}"></footer>
+</div>
+</body>
+
+<script src="/scripts/userItemLoading.js"></script>
+
+</html>

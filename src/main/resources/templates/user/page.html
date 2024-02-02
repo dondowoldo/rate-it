@@ -27,15 +27,15 @@
             </div>
         </section>
         <div class="user-follow">
-            <a th:text="${user.followers} + ' Followers'"></a>
+            <p th:text="${user.followers} + ' Followers'"></p>
             <button th:if="${loggedUser != null && loggedUser.id != user.id}" class="button follow"></button>
-            <a th:text="${user.follows} + ' Following'"></a>
+            <p th:text="${user.follows} + ' Following'"></p>
         </div>
 
         <h2 th:text="${user.username} + '\'s Interests'"></h2>
-        <section class="user-interests">
-            <div class="user-interest" th:each="interest : ${ratedInterests}" th:object="${interest}"
-                 onclick="toggleInterest(this)">
+        <section class="user-page-layout">
+            <div class="extendable user-interest" th:each="interest : ${ratedInterests}" th:object="${interest}"
+                 onclick="toggleExtension(this)">
                 <div class="user-interest-default">
                     <div class="user-interest-image">
                         <img th:if="*{imageName == null || imageName.isEmpty()}"
@@ -54,17 +54,18 @@
                     </header>
                 </div>
 
-                <div class="user-interest-extension">
-                    <div class="user-interest-places">
+                <div class="extension">
+                    <div class="extension-list">
                         <ul class="user-interest-place" th:each="place : ${interest.ratedPlaces}">
                             <li th:object="${place}">
-                                <i class="fas fa-star yellow"></i>
+                                <i class="fas fa-star"></i>
                                 <span class="place-rating-average" th:text="*{avgRating}"></span>
                                 <span th:text="*{placeName}"></span>
                             </li>
                         </ul>
                     </div>
-                    <a class="button">Details</a>
+                    <a th:href="@{/users/{username}/interests/{id}(username=${user.username}, id=${interest.interestId})}"
+                       class="button">Details</a>
                 </div>
             </div>
         </section>
@@ -78,7 +79,7 @@
     let isFollowed = [[${loggedUser.getFollows().contains(user)}]]
     const MAX_BIO_LENGTH = [[${@constraints.MAX_BIO_LENGTH}]];
 </script>
-<script src="/scripts/userInterests.js"></script>
+<script src="/scripts/userItemLoading.js"></script>
 <script th:if="${loggedUser != null && loggedUser.id != user.id}" src="/scripts/userFollow.js"></script>
 <script th:if="${loggedUser != null && loggedUser.id == user.id}" src="/scripts/userBioEdit.js"></script>
 </html>

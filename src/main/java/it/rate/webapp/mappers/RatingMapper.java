@@ -16,12 +16,9 @@ public class RatingMapper {
     return new RatingDTO(rating.getRating(), rating.getCriterion().getName());
   }
 
-  public static UserRatedPlaceDTO remapToUserRatedPlaceDTO(
-      Place place, List<Rating> ratings) {
+  public static UserRatedPlaceDTO remapToUserRatedPlaceDTO(Place place, List<Rating> ratings) {
     List<RatingDTO> ratingDTOS =
-        ratings.stream()
-            .map(RatingMapper::remapToUserRatingDTO)
-            .collect(Collectors.toList());
+        ratings.stream().map(RatingMapper::remapToUserRatingDTO).collect(Collectors.toList());
 
     return new UserRatedPlaceDTO(place, ratingDTOS);
   }

@@ -98,6 +98,7 @@ public class RatingService {
 
     Map<Interest, Map<Place, List<Rating>>> ratingsByInterestAndPlace =
         userRatings.stream()
+            .filter(rating -> !rating.getCriterion().isDeleted())
             .collect(
                 Collectors.groupingBy(
                     rating -> rating.getPlace().getInterest(),
@@ -117,5 +118,20 @@ public class RatingService {
                         .collect(Collectors.toList())))
         .sorted(Comparator.comparingInt(UserRatedInterestDTO::likes).reversed())
         .toList();
+  }
+
+  public UserRatedInterestDTO getUserRatedInterestDTO(AppUser appUser, Interest interest) {
+    List<Rating> userRatings = ratingRepository.findAllByAppUserAndInterestId(appUser, interest);
+    Map<Place, List<Rating>> ratingsByPlace =
+        userRatings.stream()
+            .filter(rating -> !rating.getCriterion().isDeleted())
+            .collect(Collectors.groupingBy(Rating::getPlace));
+
+    return new UserRatedInterestDTO(
+        interest,
+        ratingsByPlace.entrySet().stream()
+            .map(place -> RatingMapper.remapToUserRatedPlaceDTO(place.getKey(), place.getValue()))
+            .sorted(Comparator.comparingDouble(UserRatedPlaceDTO::avgRating).reversed())
+            .collect(Collectors.toList()));
   }
 }
