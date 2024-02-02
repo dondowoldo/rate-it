@@ -31,6 +31,7 @@ public class SecurityConfig {
                         "/icons/**",
                         "/images/**",
                         "/scripts/**",
+                        "/about/**",
                         "/",
                         "/interests/{id}",
                         "/interests/{id}/map",
@@ -41,11 +42,7 @@ public class SecurityConfig {
                         "/api/v1/interests/suggestions",
                         "/api/v1/interests/{id}/places",
                         "/api/v1/images/{id}",
-                        "/api/v1/emails/contact-us",
-                        "/contact",
-                        "/developers",
-                        "/about",
-                        "/terms")
+                        "/api/v1/emails/contact-us")
                     .permitAll()
                     .anyRequest()
                     .authenticated())
