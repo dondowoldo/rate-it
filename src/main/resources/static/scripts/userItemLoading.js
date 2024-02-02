@@ -1,3 +1,5 @@
+let DIVISION_DONE;
+
 document.addEventListener('DOMContentLoaded', function () {
     const ratingSpans = document.querySelectorAll('.rating');
 
@@ -39,8 +41,10 @@ function loadAndFormatItems(toggleDiv, maxItems) {
             const avgRating = parseFloat(avgRatingSpan.textContent);
 
             if (!isNaN(avgRating)) {
-                avgRatingSpan.textContent = (avgRating / 2).toFixed(1);
+                avgRatingSpan.textContent =
+                    DIVISION_DONE ? (avgRating).toFixed(1) : (avgRating / 2).toFixed(1);
             }
+            DIVISION_DONE = true;
 
             ulElement.style.display = 'flex';
         }
