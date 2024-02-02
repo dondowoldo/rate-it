@@ -262,6 +262,13 @@ h3 {
     visibility: hidden;
 }
 
+.hover-star-count {
+    margin: 0 0 0 0.2rem;
+    width: 1.5rem;
+    text-align: center;
+    font-size: 0.875rem;
+}
+
 .place-rating-average {
     margin-left: auto;
     display: flex;

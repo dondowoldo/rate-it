@@ -88,6 +88,10 @@ function initializeRating() {
                     // If newRating is 0, set it to null
                     newRating = (newRating === 0) ? null : newRating;
 
+                    let touchActiveStars = stars.querySelectorAll('.hover-active');
+                    activeStar = Math.max(...Array.from(touchActiveStars).map(s => parseInt(s.getAttribute('data-star'))));
+                    hoverStarCount.textContent = activeStar !== 0 ? `${(activeStar / 2).toFixed(1)}` : '---';
+
                     // Set the input value and add class based on the touchmove rating
                     let inputMove = stars.parentElement.querySelector('input');
                     inputMove.value = newRating;
