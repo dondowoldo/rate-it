@@ -1,6 +1,7 @@
 package it.rate.webapp.controllers;
 
 import it.rate.webapp.dtos.InterestInDTO;
+import it.rate.webapp.enums.InviteBy;
 import it.rate.webapp.exceptions.badrequest.BadRequestException;
 import it.rate.webapp.models.AppUser;
 import it.rate.webapp.models.Interest;
@@ -26,6 +27,7 @@ public class InterestAdminController {
   private final UserService userService;
   private final CriterionService criterionService;
   private final CategoryService categoryService;
+  private final EmailService emailService;
 
   @GetMapping("/edit")
   @PreAuthorize("@permissionService.manageCommunity(#interestId)")
@@ -43,9 +45,7 @@ public class InterestAdminController {
   @Transactional
   @PutMapping("/edit")
   @PreAuthorize("@permissionService.manageCommunity(#interestId)")
-  public String editInterest(
-          @PathVariable Long interestId,
-          InterestInDTO interestDTO) {
+  public String editInterest(@PathVariable Long interestId, InterestInDTO interestDTO) {
 
     Interest interest = interestService.getById(interestId);
     interest = interestService.update(interest, interestDTO);
@@ -101,17 +101,20 @@ public class InterestAdminController {
       @PathVariable Long interestId, String inviteBy, String user, RedirectAttributes ra) {
 
     Interest interest = interestService.getById(interestId);
+    InviteBy invite = manageInterestService.mapInvite(inviteBy);
     try {
-      manageInterestService.inviteUser(interest, inviteBy, user, Role.RoleType.VOTER);
+      Role role = manageInterestService.inviteUser(interest, invite, user, Role.RoleType.VOTER);
       ra.addFlashAttribute("status", "Invitation successfully sent");
       ra.addFlashAttribute("statusClass", "successful");
-      ra.addFlashAttribute("isChecked", inviteBy.equals("username"));
+      ra.addFlashAttribute("isChecked", invite == InviteBy.USERNAME);
+      emailService.sendInvite(role);
     } catch (BadRequestException e) {
       ra.addFlashAttribute("status", e.getMessage());
       ra.addFlashAttribute("statusClass", "error");
       ra.addFlashAttribute("user", user);
-      ra.addFlashAttribute("isChecked", inviteBy.equals("username"));
+      ra.addFlashAttribute("isChecked", invite == InviteBy.USERNAME);
     }
+
     return "redirect:/interests/{interestId}/admin/invite";
   }
 }
