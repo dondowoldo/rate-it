@@ -62,18 +62,24 @@ public class AppUser {
   @Builder.Default
   private List<Rating> ratings = new ArrayList<>();
 
+  @OneToMany(mappedBy = "appUser")
+  @Builder.Default
+  private List<Review> reviews = new ArrayList<>();
+
   @ManyToMany
   @Builder.Default
   @JoinTable(
-          name = "user_follows",
-          joinColumns = @JoinColumn(name = "follower_id"),
-          inverseJoinColumns = @JoinColumn(name = "followed_id")
-  )
+      name = "user_follows",
+      joinColumns = @JoinColumn(name = "follower_id"),
+      inverseJoinColumns = @JoinColumn(name = "followed_id"))
   private Set<AppUser> follows = new HashSet<>();
 
   @ManyToMany(mappedBy = "follows")
   @Builder.Default
   private Set<AppUser> followers = new HashSet<>();
+
+  @Length(max = Constraints.MAX_BIO_LENGTH)
+  private String bio;
 
   @OneToOne(mappedBy = "user")
   private PasswordReset passwordReset;

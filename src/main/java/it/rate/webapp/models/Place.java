@@ -59,6 +59,10 @@ public class Place {
   @Builder.Default
   private List<Rating> ratings = new ArrayList<>();
 
+  @OneToMany(mappedBy = "place")
+  @Builder.Default
+  private List<Review> reviews = new ArrayList<>();
+
   public Place(PlaceInDTO placeDTO) {
     this.name = placeDTO.name();
     this.address = placeDTO.address();

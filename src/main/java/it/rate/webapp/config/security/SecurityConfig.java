@@ -31,26 +31,25 @@ public class SecurityConfig {
                         "/icons/**",
                         "/images/**",
                         "/scripts/**",
+                        "/about/**",
                         "/",
                         "/interests/{id}",
                         "/interests/{id}/map",
                         "/interests/{interestId}/places/{placeId}",
-                        "/users/signup",
-                        "/users/login",
-                        "/users/reset",
+                        "/signup",
+                        "/login",
+                        "/reset",
+                        "/users/{username}",
+                        "/users/{username}/interests/{interestId}",
                         "/api/v1/interests/suggestions",
                         "/api/v1/interests/{id}/places",
                         "/api/v1/images/{id}",
-                        "/api/v1/emails/contact-us",
-                        "/contact",
-                        "/developers",
-                        "/about",
-                        "/terms")
+                        "/api/v1/emails/contact-us")
                     .permitAll()
                     .anyRequest()
                     .authenticated())
-        .formLogin(form -> form.loginPage("/users/login").defaultSuccessUrl("/").permitAll())
-        .logout(logout -> logout.logoutUrl("/users/logout").logoutSuccessUrl("/").permitAll())
+        .formLogin(form -> form.loginPage("/login").defaultSuccessUrl("/").permitAll())
+        .logout(logout -> logout.logoutUrl("/logout").logoutSuccessUrl("/").permitAll())
         .httpBasic(Customizer.withDefaults());
     return http.build();
   }
