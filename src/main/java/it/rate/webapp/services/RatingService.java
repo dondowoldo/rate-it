@@ -27,7 +27,7 @@ public class RatingService {
     return new RatingsDTO(ratings);
   }
 
-  public void updateRating(@NotNull @Valid RatingsDTO ratings, @Valid Place place, @Valid AppUser appUser) {
+  public void save(@NotNull @Valid RatingsDTO ratings, @Valid Place place, @Valid AppUser appUser) {
     Set<Criterion> ratedCriteria = validateRatings(ratings, place);
 
     ratings
