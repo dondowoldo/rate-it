@@ -50,7 +50,7 @@ function initializeRating() {
                     for (let j = 1; j <= STARS; j++) {
                         stars.querySelector('.star-' + j).classList.remove('hover-active');
                     }
-                    hoverStarCount.textContent = activeStar;
+                    hoverStarCount.textContent = (activeStar / 2).toFixed(1);
                     break;
 
                 case 'click':
