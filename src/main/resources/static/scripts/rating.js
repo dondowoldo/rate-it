@@ -40,7 +40,7 @@ function initializeRating() {
 
                     let hoverActiveStars = stars.querySelectorAll('.hover-active');
                     activeStar = Math.max(...Array.from(hoverActiveStars).map(s => parseInt(s.getAttribute('data-star'))));
-                    hoverStarCount.textContent = activeStar !== 0 ? `${(activeStar / 2).toFixed(1)}` : '---';
+                    hoverStarCount.textContent = activeStar !== -Infinity ? (activeStar !== 0 ? `${(activeStar / 2).toFixed(1)}` : '---') : '---';
                     break;
 
                 case 'mouseout':
