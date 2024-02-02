@@ -14,4 +14,5 @@ public class Constraints {
   public static final int MAX_USERNAME_LENGTH = 25;
   public static final String PASSWORD_REGEX = "^(?=.*[A-Z])(?=.*[0-9]).{8,}$";
   public static final int MAX_CATEGORIES_PER_INTEREST = 3;
+  public static final int MAX_BIO_LENGTH = 150;
 }

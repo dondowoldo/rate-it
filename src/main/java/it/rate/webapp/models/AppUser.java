@@ -77,4 +77,7 @@ public class AppUser {
   @ManyToMany(mappedBy = "follows")
   @Builder.Default
   private Set<AppUser> followers = new HashSet<>();
+
+  @Length(max = Constraints.MAX_BIO_LENGTH)
+  private String bio;
 }

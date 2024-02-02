@@ -10,7 +10,7 @@
     </header>
     <main class="user-form">
         <div class="form-container">
-            <form class="right-container top-container" th:action="@{/users/login}" method="post">
+            <form class="right-container top-container" th:action="@{/login}" method="post">
                 <h1>SIGN IN</h1>
                 <div class="rs-logo">
                     <img src="/icons/R-logo.png" alt="Logo">
@@ -34,7 +34,7 @@
                     <button type="submit" class="sign-button">Login</button>
                 </div>
             </form>
-            <div class="left-container back-container" th:onclick="|location.href='@{/users/signup}';|"
+            <div class="left-container back-container" th:onclick="|location.href='@{/signup}';|"
                  style="cursor: pointer;">
                 <div class="login-signup-wrapper">
                     <p>REGISTER</p>

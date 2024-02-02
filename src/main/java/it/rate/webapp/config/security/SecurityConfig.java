@@ -36,8 +36,9 @@ public class SecurityConfig {
                         "/interests/{id}",
                         "/interests/{id}/map",
                         "/interests/{interestId}/places/{placeId}",
-                        "/users/signup",
-                        "/users/login",
+                        "/signup",
+                        "/login",
+                        "/users/{username}",
                         "/api/v1/interests/suggestions",
                         "/api/v1/interests/{id}/places",
                         "/api/v1/images/{id}",
@@ -45,8 +46,8 @@ public class SecurityConfig {
                     .permitAll()
                     .anyRequest()
                     .authenticated())
-        .formLogin(form -> form.loginPage("/users/login").defaultSuccessUrl("/").permitAll())
-        .logout(logout -> logout.logoutUrl("/users/logout").logoutSuccessUrl("/").permitAll())
+        .formLogin(form -> form.loginPage("/login").defaultSuccessUrl("/").permitAll())
+        .logout(logout -> logout.logoutUrl("/logout").logoutSuccessUrl("/").permitAll())
         .httpBasic(Customizer.withDefaults());
     return http.build();
   }

@@ -1,25 +1,30 @@
 package it.rate.webapp.controllers;
 
+import it.rate.webapp.dtos.AppUserDTO;
 import it.rate.webapp.dtos.SignupUserInDTO;
 import it.rate.webapp.dtos.SignupUserOutDTO;
+import it.rate.webapp.dtos.UserRatedInterestDTO;
 import it.rate.webapp.exceptions.badrequest.BadRequestException;
+import it.rate.webapp.exceptions.notfound.UserNotFoundException;
+import it.rate.webapp.models.AppUser;
+import it.rate.webapp.services.RatingService;
 import it.rate.webapp.services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
+import java.security.Principal;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import java.security.Principal;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/users")
 public class UserController {
 
   private final UserService userService;
+  private final RatingService ratingService;
 
   @GetMapping("/signup")
   public String signupPage() {
@@ -53,5 +58,18 @@ public class UserController {
       return "redirect:/";
     }
     return "user/loginForm";
+  }
+
+  @GetMapping("/{username}")
+  public String userPage(@PathVariable String username, Model model, Principal principal) {
+    AppUser user =
+        userService.findByUsernameIgnoreCase(username).orElseThrow(UserNotFoundException::new);
+    List<UserRatedInterestDTO> ratedInterests = ratingService.getAllUserRatedInterestDTOS(user);
+    if (principal != null) {
+      model.addAttribute("loggedUser", userService.getByEmail(principal.getName()));
+    }
+    model.addAttribute("user", new AppUserDTO(user));
+    model.addAttribute("ratedInterests", ratedInterests);
+    return "user/page";
   }
 }

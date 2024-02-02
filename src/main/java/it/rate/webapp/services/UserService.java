@@ -1,14 +1,14 @@
 package it.rate.webapp.services;
 
 import it.rate.webapp.config.ServerRole;
+import it.rate.webapp.dtos.AppUserDTO;
 import it.rate.webapp.dtos.InterestUserDTO;
 import it.rate.webapp.dtos.SignupUserInDTO;
 import it.rate.webapp.exceptions.badrequest.BadRequestException;
 import it.rate.webapp.exceptions.badrequest.InvalidUserDetailsException;
 import it.rate.webapp.exceptions.badrequest.UserAlreadyExistsException;
-import it.rate.webapp.models.AppUser;
-import it.rate.webapp.models.Interest;
-import it.rate.webapp.models.Role;
+import it.rate.webapp.exceptions.unauthorised.ForbiddenOperationException;
+import it.rate.webapp.models.*;
 import it.rate.webapp.repositories.UserRepository;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.ConstraintViolation;
@@ -122,5 +122,13 @@ public class UserService {
       follower.getFollows().remove(followed);
     }
     userRepository.save(follower);
+  }
+
+  public void editUser(@Valid AppUser user, @Valid AppUserDTO editedUser) {
+    if (!user.getId().equals(editedUser.id())) {
+      throw new ForbiddenOperationException("Users cannot edit each other's details!");
+    }
+    user.setBio(editedUser.bio());
+    userRepository.save(user);
   }
 }

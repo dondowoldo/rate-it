@@ -10,13 +10,13 @@
     </header>
     <main class="user-form">
         <div class="form-container">
-            <div class="right-container back-container" th:onclick="|location.href='@{/users/login}';|"
+            <div class="right-container back-container" th:onclick="|location.href='@{/login}';|"
                  style="cursor: pointer;">
                 <div class="login-signup-wrapper">
                     <p>SIGN IN</p>
                 </div>
             </div>
-            <form class="left-container top-container" th:action="@{/users/signup}" method="post">
+            <form class="left-container top-container" th:action="@{/signup}" method="post">
                 <h1>REGISTER</h1>
                 <div class="rs-logo">
                     <img src="/icons/R-logo.png" alt="Logo">
