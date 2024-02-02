@@ -130,28 +130,15 @@
         </section>
 
         <section class="place-review">
-                <div class="review-container">
-                    <h2></h2>
-                    <p></p>
-                </div>
-            <!--            <div th:if="${review != null}" class="place-review">-->
-            <!--                <h2>Your review</h2>-->
-            <!--                <p th:text="${review.text()}"></p>-->
-            <!--                <p th:text="${#dates.format(review.timestamp(), 'yyyy-MM-dd HH:mm:ss')}"></p>-->
-            <!--                <div class="place-button-bar">-->
-            <!--                    <button id="edit-review" class="button">Edit Review</button>-->
-            <!--                    <button id="delete-review" class="button">Delete Review</button>-->
-            <!--                </div>-->
-            <!--            </div>-->
-            <!--            <div th:if="${review == null}" class="place-review">-->
-            <!--                <h2>Review</h2>-->
-            <!--                <p>Rate to add a review</p>-->
-            <!--            </div>-->
+            <h2></h2>
+            <div class="review-container">
+                <textarea disabled id="review"></textarea>
+            </div>
         </section>
 
-        <section>
+        <section class="place-map">
             <h2>Location</h2>
-            <div class="place-map">
+            <div class="place-map-container">
                 <div id="map"></div>
             </div>
         </section>

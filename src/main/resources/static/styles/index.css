@@ -211,6 +211,10 @@ h3 {
 }
 
 .place-map {
+    margin: 1rem 0;
+}
+
+.place-map-container {
     width: 100%;
     aspect-ratio: 16/10;
     border-radius: 1rem;
@@ -1347,4 +1351,23 @@ h4 {
 }
 .criterion-name {
     color: #888585;
+}
+
+.place-review {
+    margin: 1rem 0;
+}
+
+.review-container {
+    display: flex;
+    background: white;
+    border-radius: 2rem;
+}
+
+#review {
+    min-height: 3rem;
+    background-color: #E2E2E2;
+    border: none;
+    resize: none;
+    overflow: hidden;
+    margin: 0.5rem;
 }

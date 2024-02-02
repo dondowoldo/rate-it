@@ -80,17 +80,16 @@ document.addEventListener('DOMContentLoaded', async function () {
 });
 
 function displayReview(newReview) {
-    const reviewContainer = document.querySelector('.place-review');
-    const reviewElement = reviewContainer.querySelector('.review-container');
+    const reviewSection = document.querySelector('.place-review');
 
-    updateReviewText(reviewElement, newReview);
-    updateReviewTimestamp(reviewElement, newReview);
-    updateReviewButtons(reviewElement, newReview);
+    updateReviewText(reviewSection, newReview);
+    updateReviewTimestamp(reviewSection, newReview);
+    updateReviewButtons(reviewSection, newReview);
 }
 
-function updateReviewText(reviewElement, newReview) {
-    const reviewTextElement = reviewElement.querySelector('h2');
-    const reviewContentElement = reviewElement.querySelector('p');
+function updateReviewText(reviewSection, newReview) {
+    const reviewTextElement = reviewSection.querySelector('h2');
+    const reviewContentElement = reviewSection.querySelector('.review-container textarea'); // Updated selector
     const textarea = document.querySelector("#review-text-field");
 
     reviewTextElement.textContent = newReview ? 'Your Review' : 'Review';
@@ -98,35 +97,37 @@ function updateReviewText(reviewElement, newReview) {
     textarea.value = newReview ? newReview.text : '';
 }
 
-function updateReviewTimestamp(reviewElement, newReview) {
-    let timestampElement = reviewElement.querySelector('.timestamp');
+function updateReviewTimestamp(reviewSection, newReview) {
+    const reviewContainer = reviewSection.querySelector('.review-container');
+    let timestampElement = reviewContainer.querySelector('.timestamp');
 
     if (newReview) {
         if (!timestampElement) {
             timestampElement = document.createElement('p');
             timestampElement.classList.add('timestamp');
-            reviewElement.appendChild(timestampElement);
+            reviewContainer.appendChild(timestampElement); // Append to the review-container div
         }
 
         timestampElement.textContent = new Date(newReview.timestamp).toLocaleString();
     } else {
         if (timestampElement) {
-            reviewElement.removeChild(timestampElement);
+            reviewContainer.removeChild(timestampElement);
         }
     }
 }
 
-function updateReviewButtons(reviewElement, newReview) {
-    let editButton = reviewElement.querySelector('.btn-primary');
-    let deleteButton = reviewElement.querySelector('.btn-danger');
+function updateReviewButtons(reviewSection, newReview) {
+    const reviewContainer = reviewSection.querySelector('.review-container');
+    let editButton = reviewContainer.querySelector('.btn-primary');
+    let deleteButton = reviewContainer.querySelector('.btn-danger');
 
     if (newReview) {
-        updateButton(reviewElement, editButton, 'Edit Review', function () {
+        updateButton(reviewContainer, editButton, 'fa-pencil-alt', function () {
             $('#review-modal').modal('show');
-        }, ['btn-primary', 'mr-2']); // Additional classes as needed
+        }, ['btn-primary', 'mr-2']);
 
-        updateButton(reviewElement, deleteButton, 'Delete Review', function () {
-            deleteReview(); // You can define the deleteReview function as needed
+        updateButton(reviewContainer, deleteButton, 'fa-times', function () {
+            deleteReview();
         }, ['btn-danger']);
     } else {
         removeElementIfExist(editButton);
@@ -134,11 +135,16 @@ function updateReviewButtons(reviewElement, newReview) {
     }
 }
 
-function updateButton(reviewElement, button, text, clickHandler, classes = []) {
+function updateButton(reviewElement, button, iconClass, clickHandler, classes = []) {
     if (!button) {
         button = document.createElement('button');
         button.classList.add('btn', ...classes); // Adding the specified classes
-        button.textContent = text;
+
+        // Create an icon element and append it to the button
+        const icon = document.createElement('i');
+        icon.classList.add('fas', iconClass); // Bootstrap Icon classes
+        button.appendChild(icon);
+
         button.addEventListener('click', clickHandler);
         reviewElement.appendChild(button);
     }
@@ -170,6 +176,7 @@ async function deleteReview() {
         rateButton.setAttribute('data-bs-target', '#review-modal');
         const textarea = document.querySelector("#review-text-field");
         textarea.value = '';
+        previousReviewText = '';
     } catch (error) {
         console.error(error);
     }
