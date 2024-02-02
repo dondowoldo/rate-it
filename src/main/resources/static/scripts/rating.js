@@ -36,7 +36,7 @@ function initializeRating() {
             switch (event.type) {
                 case 'mouseover':
                     stars.classList.add('hover');
-                    addClassToStars(stars, rating, 'hover-active', criterionId);
+                    addClassToStars(stars, rating, 'hover-active');
 
                     let hoverActiveStars = stars.querySelectorAll('.hover-active');
                     activeStar = Math.max(...Array.from(hoverActiveStars).map(s => parseInt(s.getAttribute('data-star'))));
