@@ -13,20 +13,17 @@ import it.rate.webapp.services.InterestService;
 import it.rate.webapp.services.RatingService;
 import it.rate.webapp.services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
+import java.security.Principal;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import java.security.Principal;
-import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/users")
 public class UserController {
 
   private final UserService userService;

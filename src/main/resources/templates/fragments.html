@@ -76,8 +76,8 @@
             <li>
                 <hr class="dropdown-divider">
             </li>
-            <li th:if="${loggedUser}"><a class="dropdown-item" th:href="@{/users/logout}">Logout</a></li>
-            <li th:unless="${loggedUser}"><a class="dropdown-item" th:href="@{/users/login}">Login</a></li>
+            <li th:if="${loggedUser}"><a class="dropdown-item" th:href="@{/logout}">Logout</a></li>
+            <li th:unless="${loggedUser}"><a class="dropdown-item" th:href="@{/login}">Login</a></li>
         </ul>
     </div>
 </div>
@@ -125,10 +125,10 @@
 
 <footer th:fragment="page-footer">
     <div class="footer-links">
-        <a th:href="@{/contact}">Contact</a>
-        <a th:href="@{/developers}">Developers</a>
-        <a th:href="@{/about}">About</a>
-        <a th:href="@{/terms}">Terms</a>
+            <a th:href="@{/about/contact}">Feedback</a>
+            <a th:href="@{/about/}">About</a>
+            <a th:href="@{/about/terms-and-conditions}">T & C</a>
+            <a th:href="@{/about/privacy-policy}">Privacy policy</a>
     </div>
     <span>© 2024 RateSpot</span>
 </footer>

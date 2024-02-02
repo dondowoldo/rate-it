@@ -238,6 +238,7 @@ h3 {
     margin-left: 0.2rem;
     color: #bebebe;
     display: flex;
+    cursor: pointer;
 }
 
 .place-rating-star {
@@ -261,6 +262,22 @@ h3 {
 
 .place-rating-star:not(.is-active):hover {
     filter: invert(75%) sepia(56%) saturate(2222%) hue-rotate(4deg) brightness(98%) contrast(101%);
+}
+
+.empty-star {
+    opacity: 0;
+}
+
+.empty-star:first-child {
+    display: none;
+    visibility: hidden;
+}
+
+.hover-star-count {
+    margin: 0 0 0 0.2rem;
+    width: 1.5rem;
+    text-align: center;
+    font-size: 0.875rem;
 }
 
 .place-rating-average {
