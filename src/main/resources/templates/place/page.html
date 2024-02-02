@@ -132,7 +132,10 @@
         <section class="place-review">
             <h2></h2>
             <div class="review-container">
-                <textarea disabled id="review"></textarea>
+                <div class="review-text-container">
+                <textarea disabled id="review"
+                          th:maxlength="${@constraints.MAX_VARCHAR_LENGTH}"></textarea>
+                </div>
             </div>
         </section>
 
@@ -199,7 +202,7 @@
 <script src="/scripts/imageFetcher.js"></script>
 <script th:if="${placeRatings}" src="/scripts/placeRatingsExpand.js"></script>
 <script th:if="${usersRatings}" src="/scripts/rating.js"></script>
-<script th:if="${usersRatings != null}" src="/scripts/reviewForm.js"></script>
+<script th:if="${usersRatings}" src="/scripts/reviewForm.js"></script>
 <script th:if="${usersRatings}" type="module" src="/scripts/placeImageUpload.js"></script>
 
 </body>

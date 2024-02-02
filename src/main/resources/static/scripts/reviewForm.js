@@ -85,11 +85,12 @@ function displayReview(newReview) {
     updateReviewText(reviewSection, newReview);
     updateReviewTimestamp(reviewSection, newReview);
     updateReviewButtons(reviewSection, newReview);
+    resizeTextArea()
 }
 
 function updateReviewText(reviewSection, newReview) {
     const reviewTextElement = reviewSection.querySelector('h2');
-    const reviewContentElement = reviewSection.querySelector('.review-container textarea'); // Updated selector
+    const reviewContentElement = reviewSection.querySelector('.review-text-container textarea'); // Updated selector
     const textarea = document.querySelector("#review-text-field");
 
     reviewTextElement.textContent = newReview ? 'Your Review' : 'Review';
@@ -98,14 +99,14 @@ function updateReviewText(reviewSection, newReview) {
 }
 
 function updateReviewTimestamp(reviewSection, newReview) {
-    const reviewContainer = reviewSection.querySelector('.review-container');
+    const reviewContainer = reviewSection.querySelector('.review-text-container');
     let timestampElement = reviewContainer.querySelector('.timestamp');
 
     if (newReview) {
         if (!timestampElement) {
             timestampElement = document.createElement('p');
             timestampElement.classList.add('timestamp');
-            reviewContainer.appendChild(timestampElement); // Append to the review-container div
+            reviewContainer.appendChild(timestampElement);
         }
 
         timestampElement.textContent = new Date(newReview.timestamp).toLocaleString();
@@ -118,24 +119,34 @@ function updateReviewTimestamp(reviewSection, newReview) {
 
 function updateReviewButtons(reviewSection, newReview) {
     const reviewContainer = reviewSection.querySelector('.review-container');
-    let editButton = reviewContainer.querySelector('.btn-primary');
-    let deleteButton = reviewContainer.querySelector('.btn-danger');
+    let buttonsContainer = reviewContainer.querySelector('.review-buttons-container');
+
+    // If the container doesn't exist, create it
+    if (!buttonsContainer) {
+        buttonsContainer = document.createElement('div');
+        buttonsContainer.classList.add('review-buttons-container');
+        reviewContainer.appendChild(buttonsContainer);
+    }
+
+    let editButton = buttonsContainer.querySelector('.edit-button');
+    let deleteButton = buttonsContainer.querySelector('.delete-button');
 
     if (newReview) {
-        updateButton(reviewContainer, editButton, 'fa-pencil-alt', function () {
+        updateButton(buttonsContainer, editButton, 'fa-pencil-alt', function () {
             $('#review-modal').modal('show');
-        }, ['btn-primary', 'mr-2']);
+        }, ['button', 'edit-button']);
 
-        updateButton(reviewContainer, deleteButton, 'fa-times', function () {
+        updateButton(buttonsContainer, deleteButton, 'fa-times', function () {
             deleteReview();
-        }, ['btn-danger']);
+        }, ['button', 'delete-button']);
     } else {
         removeElementIfExist(editButton);
         removeElementIfExist(deleteButton);
+        removeElementIfExist(buttonsContainer);
     }
 }
 
-function updateButton(reviewElement, button, iconClass, clickHandler, classes = []) {
+function updateButton(buttonsContainer, button, iconClass, clickHandler, classes = []) {
     if (!button) {
         button = document.createElement('button');
         button.classList.add('btn', ...classes); // Adding the specified classes
@@ -146,7 +157,7 @@ function updateButton(reviewElement, button, iconClass, clickHandler, classes = 
         button.appendChild(icon);
 
         button.addEventListener('click', clickHandler);
-        reviewElement.appendChild(button);
+        buttonsContainer.appendChild(button);
     }
 }
 
@@ -199,3 +210,9 @@ function updateCharCountAndResize(maxLength) {
     charCount.textContent = "Characters remaining: " + remainingChars;
     textarea.style.height = textarea.scrollHeight + "px";
 }
+
+function resizeTextArea() {
+    const textarea = document.querySelector("#review");
+    textarea.style.height = textarea.scrollHeight + "px";
+}
+
