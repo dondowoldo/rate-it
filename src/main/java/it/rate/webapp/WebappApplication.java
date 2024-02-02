@@ -92,23 +92,8 @@ public class WebappApplication implements CommandLineRunner {
             .build();
     userRepository.saveAll(List.of(u1, u2, u3, u4));
 
-    List<String> categoryNames =
-        Arrays.asList(
-            "Food",
-            "Drink",
-            "Outdoor",
-            "Entertainment",
-            "Sport",
-            "Art & Culture",
-            "Relax",
-            "Services",
-            "Educational");
-    List<Category> categories = new ArrayList<>();
-    categoryNames.forEach(
-        name -> {
-          categories.add(new Category(name));
-        });
-    categoryRepository.saveAll(categories);
+
+    List<Category> categories = categoryRepository.findAll();
 
     Interest i1 =
         Interest.builder()
