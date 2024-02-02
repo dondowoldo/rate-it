@@ -77,7 +77,7 @@
                                 </th:block>
                                 <p th:id="'hover-count-' + ${criterionDTO.id}" class="hover-star-count"
                                    th:text="${usersRatings.ratings.get(criterionDTO.id)} == null ?
-                                   '0.0' : ${#numbers.formatDecimal(@thymeMath.roundRating(usersRatings.ratings.get(criterionDTO.id)), 1, 1, 'POINT')}"></p>
+                                   '---' : ${#numbers.formatDecimal(@thymeMath.roundRating(usersRatings.ratings.get(criterionDTO.id)), 1, 1, 'POINT')}"></p>
                             </div>
 
                             <input type="number" hidden="hidden"

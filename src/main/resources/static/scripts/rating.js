@@ -42,7 +42,7 @@ function initializeRating() {
 
                     let hoverActiveStars = stars.querySelectorAll('.hover-active');
                     activeStar = Math.max(...Array.from(hoverActiveStars).map(s => parseInt(s.getAttribute('data-star'))));
-                    hoverStarCount.textContent = activeStar !== -Infinity ? `${(activeStar / 2).toFixed(1)}` : '0.0';
+                    hoverStarCount.textContent = activeStar !== 0 ? `${(activeStar / 2).toFixed(1)}` : '---';
                     break;
 
                 case 'mouseout':
@@ -50,7 +50,11 @@ function initializeRating() {
                     for (let j = 1; j <= STARS; j++) {
                         stars.querySelector('.star-' + j).classList.remove('hover-active');
                     }
-                    hoverStarCount.textContent = (activeStar / 2).toFixed(1);
+                    if (activeStar === 0) {
+                        hoverStarCount.textContent = '---';
+                    } else {
+                        hoverStarCount.textContent = (activeStar / 2).toFixed(1);
+                    }
                     break;
 
                 case 'click':
