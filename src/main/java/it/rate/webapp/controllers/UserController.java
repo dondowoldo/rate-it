@@ -64,7 +64,7 @@ public class UserController {
     return "user/loginForm";
   }
 
-  @GetMapping("/{username}")
+  @GetMapping("/users/{username}")
   public String userPage(@PathVariable String username, Model model, Principal principal) {
     AppUser user =
         userService.findByUsernameIgnoreCase(username).orElseThrow(UserNotFoundException::new);
@@ -80,7 +80,7 @@ public class UserController {
     return "user/page";
   }
 
-  @GetMapping("/{username}/interests/{interestId}")
+  @GetMapping("/users/{username}/interests/{interestId}")
   public String interestDetail(
       @PathVariable String username,
       @PathVariable Long interestId,

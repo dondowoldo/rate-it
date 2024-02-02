@@ -1,4 +1,4 @@
-let DIVISION_DONE;
+let DIVISION_DONE = false;
 
 document.addEventListener('DOMContentLoaded', function () {
     const ratingSpans = document.querySelectorAll('.rating');
