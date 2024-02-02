@@ -80,4 +80,7 @@ public class AppUser {
 
   @Length(max = Constraints.MAX_BIO_LENGTH)
   private String bio;
+
+  @OneToOne(mappedBy = "user")
+  private PasswordReset passwordReset;
 }
