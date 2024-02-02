@@ -23,16 +23,26 @@ function initializeRating() {
     let placeRatingStars = document.querySelectorAll('.place-rating-star');
 
     placeRatingStars.forEach(function (star) {
+        let activeStars = document.querySelectorAll('.is-active');
+
         function handleStarEvent(event) {
             event.preventDefault(); // Prevent default behavior for touch events
 
             let stars = event.currentTarget.parentElement;
             let rating = parseInt(event.currentTarget.getAttribute("data-star"));
+            let criterionId = event.currentTarget.closest('.place-rating-stars').getAttribute('data-criterion-id');
+            let hoverStarCount = document.getElementById('hover-count-' + criterionId);
+            let activeStars = stars.querySelectorAll('.is-active');
+            let activeStar = Math.max(...Array.from(activeStars).map(s => parseInt(s.getAttribute('data-star'))), 0);
 
             switch (event.type) {
                 case 'mouseover':
                     stars.classList.add('hover');
-                    addClassToStars(stars, rating, 'hover-active');
+                    addClassToStars(stars, rating, 'hover-active', criterionId);
+
+                    let hoverActiveStars = stars.querySelectorAll('.hover-active');
+                    activeStar = Math.max(...Array.from(hoverActiveStars).map(s => parseInt(s.getAttribute('data-star'))));
+                    hoverStarCount.textContent = activeStar !== -Infinity ? `${(activeStar / 2).toFixed(1)}` : '0.0';
                     break;
 
                 case 'mouseout':
@@ -40,6 +50,7 @@ function initializeRating() {
                     for (let j = 1; j <= STARS; j++) {
                         stars.querySelector('.star-' + j).classList.remove('hover-active');
                     }
+                    hoverStarCount.textContent = activeStar;
                     break;
 
                 case 'click':
