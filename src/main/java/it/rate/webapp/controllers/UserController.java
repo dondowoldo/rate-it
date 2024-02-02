@@ -1,7 +1,7 @@
 package it.rate.webapp.controllers;
 
-import it.rate.webapp.dtos.PasswordResetDTO;
 import it.rate.webapp.dtos.AppUserDTO;
+import it.rate.webapp.dtos.PasswordResetDTO;
 import it.rate.webapp.dtos.SignupUserInDTO;
 import it.rate.webapp.dtos.SignupUserOutDTO;
 import it.rate.webapp.dtos.UserRatedInterestDTO;
@@ -17,12 +17,11 @@ import it.rate.webapp.services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -67,7 +66,7 @@ public class UserController {
   }
 
   @GetMapping("/reset")
-  public String resetPassword(String token, Long ref, Model model,Principal principal) {
+  public String resetPassword(String token, Long ref, Model model, Principal principal) {
     if (token == null || ref == null) {
       return principal != null ? "redirect:/" : "user/resetPassword";
     }
@@ -106,7 +105,7 @@ public class UserController {
     return "redirect:/login";
   }
 
-    @GetMapping("/users/{username}")
+  @GetMapping("/users/{username}")
   public String userPage(@PathVariable String username, Model model, Principal principal) {
     AppUser user =
         userService.findByUsernameIgnoreCase(username).orElseThrow(UserNotFoundException::new);
@@ -142,6 +141,6 @@ public class UserController {
       model.addAttribute("loggedUser", userService.getByEmail(principal.getName()));
     }
 
-     return "user/interest";
+    return "user/interest";
   }
 }
