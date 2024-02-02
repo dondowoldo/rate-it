@@ -4,7 +4,7 @@ const STARS = 10;
 
 function addClassToStars(stars, rating, className) {
     //loop through and set the active class on preceding stars
-    for (let i = 1; i <= STARS; i++) {
+    for (let i = 0; i <= STARS; i++) {
         if (i <= rating) {
             //check if the classlist contains the active class, if not, add the class
             if (!stars.querySelector('.star-' + i).classList.contains(className)) {
@@ -28,11 +28,19 @@ function initializeRating() {
 
             let stars = event.currentTarget.parentElement;
             let rating = parseInt(event.currentTarget.getAttribute("data-star"));
+            let criterionId = event.currentTarget.closest('.place-rating-stars').getAttribute('data-criterion-id');
+            let hoverStarCount = document.getElementById('hover-count-' + criterionId);
+            let activeStars = stars.querySelectorAll('.is-active');
+            let activeStar = Math.max(...Array.from(activeStars).map(s => parseInt(s.getAttribute('data-star'))), 0);
 
             switch (event.type) {
                 case 'mouseover':
                     stars.classList.add('hover');
                     addClassToStars(stars, rating, 'hover-active');
+
+                    let hoverActiveStars = stars.querySelectorAll('.hover-active');
+                    activeStar = Math.max(...Array.from(hoverActiveStars).map(s => parseInt(s.getAttribute('data-star'))));
+                    hoverStarCount.textContent = activeStar !== -Infinity ? (activeStar !== 0 ? `${(activeStar / 2).toFixed(1)}` : '---') : '---';
                     break;
 
                 case 'mouseout':
@@ -40,13 +48,22 @@ function initializeRating() {
                     for (let j = 1; j <= STARS; j++) {
                         stars.querySelector('.star-' + j).classList.remove('hover-active');
                     }
+                    if (activeStar === 0) {
+                        hoverStarCount.textContent = '---';
+                    } else {
+                        hoverStarCount.textContent = (activeStar / 2).toFixed(1);
+                    }
                     break;
 
                 case 'click':
                     // Set the input value and add class based on the click rating
                     let inputClick = stars.parentElement.querySelector('input');
-                    inputClick.value = rating;
-                    addClassToStars(stars, rating, 'is-active');
+
+                    // If the clicked star is the first one (position 0), set the value to null
+                    let newClickRating = (rating === 0) ? null : rating;
+
+                    inputClick.value = newClickRating;
+                    addClassToStars(stars, newClickRating, 'is-active');
                     break;
 
                 case 'touchmove':
@@ -68,6 +85,10 @@ function initializeRating() {
 
                     // If newRating is 0, set it to null
                     newRating = (newRating === 0) ? null : newRating;
+
+                    let touchActiveStars = stars.querySelectorAll('.hover-active');
+                    activeStar = Math.max(...Array.from(touchActiveStars).map(s => parseInt(s.getAttribute('data-star'))));
+                    hoverStarCount.textContent = activeStar !== 0 ? `${(activeStar / 2).toFixed(1)}` : '---';
 
                     // Set the input value and add class based on the touchmove rating
                     let inputMove = stars.parentElement.querySelector('input');

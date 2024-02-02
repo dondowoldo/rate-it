@@ -66,11 +66,16 @@
 
                         <div th:if="${usersRatings}">
 
-                            <div class="place-rating-stars">
+                            <div class="place-rating-stars" th:data-criterion-id="${criterionDTO.id}">
+                                <i class="place-rating-star star-0 empty-star is-active" th:attr="data-star=0"></i>
+                                <i class="place-rating-star star-0 empty-star is-active" th:attr="data-star=0"></i>
                                 <th:block th:each="i: ${#numbers.sequence(0, 9)}">
                                     <i th:class="'place-rating-star star-' + ${i+1} + ' ' + ${i < usersRatings.ratings.get(criterionDTO.id) ? 'is-active' : ''}"
                                        th:attr="data-star=${i+1}"></i>
                                 </th:block>
+                                <p th:id="'hover-count-' + ${criterionDTO.id}" class="hover-star-count"
+                                   th:text="${usersRatings.ratings.get(criterionDTO.id)} == null ?
+                                   '---' : ${#numbers.formatDecimal(@thymeMath.roundRating(usersRatings.ratings.get(criterionDTO.id)), 1, 1, 'POINT')}"></p>
                             </div>
 
                             <input type="number" hidden="hidden"
