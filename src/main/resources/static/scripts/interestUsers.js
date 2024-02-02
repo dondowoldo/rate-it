@@ -57,9 +57,9 @@ function getInviteType() {
     const inviteForm = document.getElementById('toggle')
     const inviteType = document.getElementById('type')
     if (inviteForm.checked) {
-        inviteType.value = 'username'
+        inviteType.value = 'USERNAME'
     } else {
-        inviteType.value = 'email'
+        inviteType.value = 'EMAIL'
     }
 }
 
