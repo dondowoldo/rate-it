@@ -46,7 +46,7 @@
                     </div>
                 </div>
             </section>
-            <h3 th:if="${likedInterests == null}"><a th:href="@{/users/login}">Log-in</a> to see your interests</h3>
+            <h3 th:if="${likedInterests == null}"><a th:href="@{/login}">Log-in</a> to see your interests</h3>
             <h3 th:if="${likedInterests != null && likedInterests.isEmpty()}">No interests yet. Add your FIRST!</h3>
         </section>
         <section>
