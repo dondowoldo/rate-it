@@ -1,4 +1,7 @@
 let DIVISION_DONE = false;
+let processedExtensionLists = 0;
+const totalExtensionLists = document.querySelectorAll('.extension-list').length;
+
 
 document.addEventListener('DOMContentLoaded', function () {
     const ratingSpans = document.querySelectorAll('.rating');
@@ -26,7 +29,7 @@ function loadAndFormatItems(toggleDiv, maxItems) {
 
     if (extensionContainer) {
 
-        const ulElements = extensionContainer.querySelectorAll('ul');
+        const ulElements = extensionContainer.querySelectorAll('.user-interest-place');
         let limit;
 
         if (maxItems === 3) {
@@ -44,9 +47,13 @@ function loadAndFormatItems(toggleDiv, maxItems) {
                 avgRatingSpan.textContent =
                     DIVISION_DONE ? (avgRating).toFixed(1) : (avgRating / 2).toFixed(1);
             }
-            DIVISION_DONE = true;
 
             ulElement.style.display = 'flex';
+        }
+
+        processedExtensionLists++;
+        if (processedExtensionLists === totalExtensionLists) {
+            DIVISION_DONE = true;
         }
     }
 }
