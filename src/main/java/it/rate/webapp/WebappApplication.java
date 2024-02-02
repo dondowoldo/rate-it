@@ -60,6 +60,7 @@ public class WebappApplication implements CommandLineRunner {
             .username("Lojza")
             .email("lojza@lojza.cz")
             .password("$2a$10$9g1X9rp6meCML3g/h32MyeQ369SEh/hQpZb82eqjpvI71xCIdPAlG")
+            .bio("Jsem Lojza, vášnivý cestovatel a fotograf. Rád hraji na kytaru a ponořuji se do světa knih. Srdce mi rozbušuje setkání s novými lidmi.")
             .serverRole(ServerRole.USER)
             .build();
 
@@ -67,6 +68,7 @@ public class WebappApplication implements CommandLineRunner {
         AppUser.builder()
             .username("Alfonz")
             .email("alfonz@alfonz.cz")
+            .bio("Jsem Alfonz, dobrodruh a kavárenský milovník. Jazz, knihy a sport jsou mé vášně. Každý den objevuji krásy města a nové kávovary.")
             .password("$2a$10$9g1X9rp6meCML3g/h32MyeQ369SEh/hQpZb82eqjpvI71xCIdPAlG")
             .serverRole(ServerRole.USER)
             .build();
@@ -75,6 +77,7 @@ public class WebappApplication implements CommandLineRunner {
         AppUser.builder()
             .username("Karel")
             .email("karel@karel.cz")
+            .bio("Kreativec s vášní pro design a cyklistiku. Miluji umění, kávu a výlety za objevováním nových míst. S každým slunečným dnem roste má radost ze života!!")
             .password("$2a$10$9g1X9rp6meCML3g/h32MyeQ369SEh/hQpZb82eqjpvI71xCIdPAlG")
             .serverRole(ServerRole.ADMIN)
             .build();
@@ -83,28 +86,14 @@ public class WebappApplication implements CommandLineRunner {
         AppUser.builder()
             .username("Franta")
             .email("franta@franta.cz")
+            .bio("Nadšenec do sportu a kuchařský mág. Hraje na kytaru, čte do noci a každý krok v přírodě ho inspiruje. Cestování a smích jsou jeho palčivé vášně.")
             .password("$2a$10$9g1X9rp6meCML3g/h32MyeQ369SEh/hQpZb82eqjpvI71xCIdPAlG")
             .serverRole(ServerRole.USER)
             .build();
     userRepository.saveAll(List.of(u1, u2, u3, u4));
 
-    List<String> categoryNames =
-        Arrays.asList(
-            "Food",
-            "Drink",
-            "Outdoor",
-            "Entertainment",
-            "Sport",
-            "Art & Culture",
-            "Relax",
-            "Services",
-            "Educational");
-    List<Category> categories = new ArrayList<>();
-    categoryNames.forEach(
-        name -> {
-          categories.add(new Category(name));
-        });
-    categoryRepository.saveAll(categories);
+
+    List<Category> categories = categoryRepository.findAll();
 
     Interest i1 =
         Interest.builder()

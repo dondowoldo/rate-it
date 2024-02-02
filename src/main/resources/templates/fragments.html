@@ -8,9 +8,9 @@
 
     <!--splide-->
     <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
-<!--    <script src="-->
-<!--https://cdn.jsdelivr.net/npm/@splidejs/splide-extension-auto-scroll@0.5.3/dist/js/splide-extension-auto-scroll.min.js">-->
-<!--    </script>-->
+    <!--    <script src="-->
+    <!--https://cdn.jsdelivr.net/npm/@splidejs/splide-extension-auto-scroll@0.5.3/dist/js/splide-extension-auto-scroll.min.js">-->
+    <!--    </script>-->
     <link href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css" rel="stylesheet">
 
     <!--    favicon-->
@@ -68,13 +68,17 @@
         <img role="button" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"
              th:src="@{/icons/user.svg}" alt="User Profile">
         <ul class="dropdown-menu">
-            <li th:if="${loggedUser}" class="dropdown-header" th:text="${loggedUser.getUsername()}"></li>
+            <li th:if="${loggedUser}" class="dropdown-header">
+                <a class="dropdown-item" th:href="@{/users/{username}(username=${loggedUser.getUsername()})}"
+                   th:text="${loggedUser.getUsername()}"></a>
+            </li>
             <li th:unless="${loggedUser}" class="dropdown-header" th:text="'Anonymous user'"></li>
             <li>
                 <hr class="dropdown-divider">
             </li>
-            <li th:if="${loggedUser}"><a class="dropdown-item" th:href="@{/users/logout}">Logout</a></li>
-            <li th:unless="${loggedUser}"><a class="dropdown-item" th:href="@{/users/login}">Login</a></li>
+            <li th:if="${loggedUser}"><a class="dropdown-item" th:href="@{/logout}">Logout</a></li>
+            <li th:unless="${loggedUser}"><a class="dropdown-item" th:href="@{/login}">Login</a></li>
+            <li th:unless="${loggedUser}"><a class="dropdown-item" th:href="@{/signup}">Register</a></li>
         </ul>
     </div>
 </div>
@@ -122,10 +126,10 @@
 
 <footer th:fragment="page-footer">
     <div class="footer-links">
-        <a>Contact</a>
-        <a>Developers</a>
-        <a>About</a>
-        <a>Terms</a>
+            <a th:href="@{/about/contact}">Feedback</a>
+            <a th:href="@{/about/}">About</a>
+            <a th:href="@{/about/terms-and-conditions}">T & C</a>
+            <a th:href="@{/about/privacy-policy}">Privacy policy</a>
     </div>
     <span>© 2024 RateSpot</span>
 </footer>

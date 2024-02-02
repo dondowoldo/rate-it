@@ -1,18 +1,16 @@
 package it.rate.webapp.services;
 
-import it.rate.webapp.dtos.CriteriaOfPlaceDTO;
-import it.rate.webapp.dtos.CriterionAvgRatingDTO;
-import it.rate.webapp.dtos.PlaceInfoDTO;
+import it.rate.webapp.dtos.*;
 import it.rate.webapp.models.*;
 import it.rate.webapp.models.AppUser;
 import it.rate.webapp.models.Interest;
 import it.rate.webapp.models.Place;
 import it.rate.webapp.repositories.PlaceRepository;
 import it.rate.webapp.repositories.RatingRepository;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import java.util.*;
 import java.util.stream.Collectors;
-
-import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -33,10 +31,17 @@ public class PlaceService {
     return placeRepository.getReferenceById(placeId);
   }
 
-  public Place save(Place place, @Valid Interest interest, @Valid AppUser appUser) {
+  public Place save(
+      @NotNull @Valid PlaceInDTO placeDTO, @Valid Interest interest, @Valid AppUser appUser) {
+    Place place = new Place(placeDTO);
     place.setCreator(appUser);
     place.setInterest(interest);
 
+    return placeRepository.save(place);
+  }
+
+  public Place update(@Valid Place place, @NotNull @Valid PlaceInDTO placeDTO) {
+    place.update(placeDTO);
     return placeRepository.save(place);
   }
 
@@ -84,5 +89,35 @@ public class PlaceService {
     }
 
     return new CriterionAvgRatingDTO(criterion.getId(), criterion.getName(), avgRating);
+  }
+
+  public PlaceAllUsersRatingsDTO getPlaceUserRatingDto(Place place) {
+    Map<AppUser, List<Rating>> ratingsByUser =
+        place.getRatings().stream().collect(Collectors.groupingBy(Rating::getAppUser));
+
+    List<PlaceUserRatingDTO> userRatings =
+        ratingsByUser.entrySet().stream()
+            .map(entry -> getSingleUserRatingDTO(entry.getKey(), entry.getValue()))
+            .collect(Collectors.toList());
+
+    return new PlaceAllUsersRatingsDTO(userRatings);
+  }
+
+  public PlaceUserRatingDTO getSingleUserRatingDTO(AppUser user, List<Rating> ratings) {
+
+    Map<String, Double> criterionRatings =
+        ratings.stream()
+            .collect(
+                Collectors.toMap(
+                    rating -> rating.getCriterion().getName(), rating -> rating.getRating() / 2.0));
+
+    double averageRating =
+        criterionRatings.values().stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
+
+    if (averageRating != 0.0) {
+      averageRating = Math.round(averageRating * 10.0) / 10.0;
+    }
+
+    return new PlaceUserRatingDTO(user.getUsername(), criterionRatings, averageRating);
   }
 }

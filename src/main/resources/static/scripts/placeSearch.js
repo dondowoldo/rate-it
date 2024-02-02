@@ -1,10 +1,34 @@
 let data = [];
 let usersCoords;
-let activeFilter = '';
-let interestCriteria = [];
-navigator.geolocation.getCurrentPosition(success, error);
 
-window.addEventListener('load', async () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    try {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(success, error);
+        } else {
+            console.log("Geolocation is not supported");
+            await fetchData();
+        }
+    } catch (error) {
+        console.error('Error fetching suggestions:', error);
+    }
+});
+
+async function success(position) {
+    usersCoords = [position.coords.latitude, position.coords.longitude];
+    try {
+        await fetchData();
+    } catch (error) {
+        console.error('Error fetching suggestions:', error);
+    }
+}
+
+async function error() {
+    console.log("Unable to retrieve your location");
+    await fetchData();
+}
+
+async function fetchData() {
     try {
         const fetchUrl = `/api/v1/interests/${interestId}/places`;
         const response = await fetch(fetchUrl);
@@ -14,68 +38,90 @@ window.addEventListener('load', async () => {
         data = await Promise.all(jsonData.map(async (place) => {
             place.imageUrl = await fetchImageUrl(place);
             return place;
-        }));
+        }))
 
         loadSortButtons();
         loadPlaces();
     } catch (error) {
         console.error('Error fetching places info:', error);
     }
-});
 
-document.addEventListener('DOMContentLoaded', () => {
-    loadPlaces();
-});
+}
 
 function loadSortButtons() {
     if (data.length < 1) {
         return;
     }
 
-    const container = document.querySelector(".sort-buttons");
+    const container = document.querySelector(".splide__list");
     const template = document.getElementById('sort-button-template');
 
-    createFilterButton(container, template, 'Nearest');
-    createFilterButton(container, template, 'Top Overall');
+    if (usersCoords !== undefined) {
+        createSortingButton(container, template, 'Nearest');
+    }
+
+    createSortingButton(container, template, 'Top Rated');
 
     if (data.length > 0) {
-        interestCriteria = data[0].criteria;
+        let interestCriteria = data[0].criteria;
         interestCriteria.forEach(criterion => {
-            createFilterButton(container, template, criterion.name);
+            createSortingButton(container, template, criterion.name);
         });
     }
+    initializeCheckboxesSplide()
 }
 
-function createFilterButton(container, template, filterName) {
+function createSortingButton(container, template, sortBy) {
     const clone = document.importNode(template.content, true);
     const checkbox = clone.querySelector('input');
     const title = clone.querySelector('span');
-    title.textContent = filterName;
+    title.textContent = sortBy;
 
-    checkbox.addEventListener('change', () => {
-        if (checkbox.checked) {
-            activeFilter = title.textContent;
-            uncheckOtherCheckboxes(container, title.textContent);
-        } else {
-            activeFilter = '';
-        }
-        loadPlaces();
+    checkbox.addEventListener('input', () => {
+        filterPlaces(sortBy);
     });
 
     container.appendChild(clone);
 }
 
-function uncheckOtherCheckboxes(container, currentTitle) {
-    const checkboxes = container.querySelectorAll('input');
+function filterPlaces(sortBy) {
+    let searchBar = document.querySelector('.search');
+    if (typeof sortBy === 'undefined' || sortBy === null) {
+        sortBy = getCheckedSorting();
+    }
+    if (sortBy !== null) {
+        uncheckOtherCheckboxes(sortBy)
+        loadPlaces(searchBar.value, sortBy);
+    } else {
+        loadPlaces(searchBar.value, null);
+    }
+}
+
+function uncheckOtherCheckboxes(sortBy) {
+    let checkboxes = document.querySelectorAll('.sort-checkbox');
     checkboxes.forEach(checkbox => {
         const title = checkbox.parentNode.querySelector('span').textContent;
-        if (title !== currentTitle) {
+        if (title !== sortBy) {
             checkbox.checked = false;
         }
     });
 }
 
-function loadPlaces(query) {
+function getCheckedSorting() {
+    let checkboxes = document.querySelectorAll('.sort-checkbox');
+    let checked = null;
+    checkboxes.forEach(c => {
+        if (c.checked && checked === null) {
+            checked = c;
+        }
+    });
+    if (checked === null) {
+        return null;
+    }
+    return checked.parentNode.querySelector('span').textContent;
+}
+
+function loadPlaces(query, sortBy) {
     if (data.length < 1) {
         return;
     }
@@ -84,20 +130,23 @@ function loadPlaces(query) {
     const template = document.getElementById('place-template');
     let dataSet = data;
 
-    if (typeof query !== 'undefined' && !isEmptyOrSpaces(query)) {
+    if (typeof query !== 'undefined' && query !== null && !isEmptyOrSpaces(query)) {
         dataSet = data.filter(place => place.name.toLowerCase().includes(query.toLowerCase()));
     }
 
-    if (activeFilter === 'Nearest') {
+    if (sortBy === 'Nearest') {
         dataSet = dataSet.sort((a, b) => distance(usersCoords[0], usersCoords[1], a.latitude, a.longitude) -
             distance(usersCoords[0], usersCoords[1], b.latitude, b.longitude));
-    } else if (activeFilter === 'Top Overall') {
-        dataSet = dataSet.sort((a, b) => b.avgRating - a.avgRating);
-    } else if (activeFilter !== '') {
-        dataSet = dataSet.sort((a, b) => b.criteria.find(criterion => criterion.name === activeFilter).avgRating -
-            a.criteria.find(criterion => criterion.name === activeFilter).avgRating);
+    } else if (sortBy === 'Top Rated') {
+        dataSet = dataSet.sort((a, b) => (b.avgRating || 0) - (a.avgRating || 0));
+    } else if (sortBy !== '') {
+        dataSet = dataSet.sort((a, b) => {
+            const ratingA = a.criteria.find(criterion => criterion.name === sortBy)?.avgRating || 0;
+            const ratingB = b.criteria.find(criterion => criterion.name === sortBy)?.avgRating || 0;
+            return ratingB - ratingA;
+        });
     } else {
-        // If no specific sort is selected, default to sorting by place ID
+        // If no specific sortBy is selected, default to sorting by place ID
         dataSet = dataSet.sort((a, b) => a.id - b.id);
     }
 
@@ -166,15 +215,6 @@ function createRatingItem(iconClass, ratingValue, criterionName) {
     li.appendChild(criterionSpan);
 
     return li;
-}
-
-function success(position) {
-    usersCoords = [position.coords.latitude, position.coords.longitude];
-    loadPlaces();
-}
-
-function error() {
-    console.log("Unable to retrieve your location");
 }
 
 function distance(lat1, lon1, lat2, lon2) {

@@ -2,36 +2,23 @@ package it.rate.webapp.controllers;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
 import it.rate.webapp.BaseIntegrationTest;
 import it.rate.webapp.models.Place;
 import it.rate.webapp.repositories.PlaceRepository;
 import java.util.Optional;
-
-import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.annotation.Rollback;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ExtendWith(SpringExtension.class)
-@AutoConfigureMockMvc
 class PlaceControllerIntegrationTest extends BaseIntegrationTest {
 
   @Autowired private MockMvc mockMvc;
   @Autowired private PlaceRepository placeRepository;
 
-  @Transactional
-  @Rollback
   @Test
   @WithMockUser(
       username = "alfonz@alfonz.cz",
@@ -51,8 +38,6 @@ class PlaceControllerIntegrationTest extends BaseIntegrationTest {
         .andReturn();
   }
 
-  @Transactional
-  @Rollback
   @Test
   @WithMockUser(
       username = "alfonz@alfonz.cz",
@@ -61,6 +46,8 @@ class PlaceControllerIntegrationTest extends BaseIntegrationTest {
     Long interestId = 1L;
     String name = "Test name";
     String description = "Test description";
+    Double latitude = 50.5;
+    Double longitude = 15.2;
 
     // Perform POST request to create a new place and expect redirection
     MvcResult res =
@@ -68,7 +55,9 @@ class PlaceControllerIntegrationTest extends BaseIntegrationTest {
             .perform(
                 post("/interests/" + interestId + "/places/new")
                     .param("name", name)
-                    .param("description", description))
+                    .param("description", description)
+                    .param("latitude", String.valueOf(latitude))
+                    .param("longitude", String.valueOf(longitude)))
             .andExpect(status().is3xxRedirection())
             .andReturn();
 

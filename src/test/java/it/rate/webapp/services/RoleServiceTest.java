@@ -36,12 +36,12 @@ class RoleServiceTest extends BaseTest {
         AppUser.builder()
             .username("Lojza")
             .id(1L)
-            .password("password")
+            .password("Password1")
             .email("l@l.com")
             .serverRole(ServerRole.USER)
             .build();
 
-    i1 = Interest.builder().id(1L).name("IT").description("IT").exclusive(true).build();
+    i1 = Interest.builder().id(1L).name("IT kurzy").description("IT kurzy").exclusive(true).build();
 
     Role r1 = new Role(u1, i1, Role.RoleType.VOTER);
 

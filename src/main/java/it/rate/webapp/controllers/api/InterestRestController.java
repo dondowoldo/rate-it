@@ -44,9 +44,6 @@ public class InterestRestController {
   @GetMapping("/my")
   @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
   public ResponseEntity<?> getMyInterestsSuggestions(Principal principal) {
-    if (principal == null) {
-      return ResponseEntity.badRequest().body("User not found");
-    }
     AppUser loggedUser = userService.getByEmail(principal.getName());
     return ResponseEntity.ok().body(interestService.getLikedInterestsDTOS(loggedUser));
   }
@@ -78,11 +75,11 @@ public class InterestRestController {
   @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
   public ResponseEntity<?> like(
       @PathVariable Long interestId, @RequestBody LikeDTO like, Principal principal) {
-    if (principal != null) {
-      AppUser loggedUser = userService.getByEmail(principal.getName());
-      Interest interest = interestService.getById(interestId);
-      likeService.setLike(loggedUser, interest, like.liked());
-    }
+
+    AppUser loggedUser = userService.getByEmail(principal.getName());
+    Interest interest = interestService.getById(interestId);
+    likeService.setLike(loggedUser, interest, like.liked());
+
     return ResponseEntity.ok().body(like);
   }
 

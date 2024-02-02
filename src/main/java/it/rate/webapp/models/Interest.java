@@ -1,9 +1,12 @@
 package it.rate.webapp.models;
 
+import it.rate.webapp.config.Constraints;
+import it.rate.webapp.dtos.InterestInDTO;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.hibernate.validator.constraints.Length;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,17 +20,21 @@ import java.util.stream.Collectors;
 @Entity
 @Table(name = "interests")
 public class Interest {
+
   @Id @GeneratedValue @NotNull private Long id;
 
   @NotBlank
+  @Length(min = Constraints.MIN_NAME_LENGTH, max = Constraints.MAX_NAME_LENGTH)
   @Column(nullable = false)
   private String name;
 
   @NotBlank
-  @Column(nullable = false)
+  @Length(max = Constraints.MAX_DESCRIPTION_LENGTH)
+  @Column(nullable = false, length = 1000)
   private String description;
 
   @Builder.Default private boolean deleted = false;
+
   private boolean exclusive;
 
   private String imageName;
@@ -56,6 +63,20 @@ public class Interest {
       inverseJoinColumns = @JoinColumn(name = "category_id"))
   private List<Category> categories = new ArrayList<>();
 
+  public Interest(InterestInDTO interestDTO) {
+    this.name = interestDTO.name();
+    this.description = interestDTO.description();
+    this.exclusive = interestDTO.exclusive();
+    this.imageName = interestDTO.imageName();
+  }
+
+  public void update(InterestInDTO interestDTO) {
+    this.name = interestDTO.name();
+    this.description = interestDTO.description();
+    this.exclusive = interestDTO.exclusive();
+    this.imageName = interestDTO.imageName();
+  }
+
   public int countLikes() {
     return likes.size();
   }
@@ -66,5 +87,11 @@ public class Interest {
 
   public int countPlaces() {
     return places.size();
+  }
+
+  public List<Criterion> getCriteria() {
+    return criteria.stream()
+        .filter(criterion -> !criterion.isDeleted())
+        .collect(Collectors.toList());
   }
 }

@@ -41,7 +41,7 @@ class RatingServiceTest extends BaseTest {
             .id(1L)
             .username("Lojza")
             .email("lojza@lojza.cz")
-            .password("pass")
+            .password("Password1")
             .serverRole(ServerRole.USER)
             .build();
 
@@ -85,7 +85,7 @@ class RatingServiceTest extends BaseTest {
     when(criterionRepository.findById(eq(c3.getId()))).thenReturn(Optional.of(c3));
 
     assertThrows(
-        InvalidRatingException.class, () -> ratingService.updateRating(ratingsDTO, p1, u1));
+        InvalidRatingException.class, () -> ratingService.save(ratingsDTO, p1, u1));
   }
 
   @Test
@@ -107,7 +107,7 @@ class RatingServiceTest extends BaseTest {
     when(criterionRepository.findById(eq(c3.getId()))).thenReturn(Optional.of(c3));
 
     assertThrows(
-        ConstraintViolationException.class, () -> ratingService.updateRating(ratingsDTO, p1, u1));
+        ConstraintViolationException.class, () -> ratingService.save(ratingsDTO, p1, u1));
   }
 
   @Test
@@ -128,7 +128,7 @@ class RatingServiceTest extends BaseTest {
     when(criterionRepository.findById(eq(c2.getId()))).thenReturn(Optional.of(c2));
     when(criterionRepository.findById(eq(c3.getId()))).thenReturn(Optional.of(c3));
 
-    ratingService.updateRating(ratingsDTO, p1, u1);
+    ratingService.save(ratingsDTO, p1, u1);
 
     verify(ratingRepository, times(2)).save(any());
     verify(criterionRepository, times(3)).findById(any());

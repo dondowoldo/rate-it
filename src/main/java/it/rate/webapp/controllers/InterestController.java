@@ -1,5 +1,6 @@
 package it.rate.webapp.controllers;
 
+import it.rate.webapp.dtos.InterestInDTO;
 import it.rate.webapp.exceptions.badrequest.InvalidInterestDetailsException;
 import it.rate.webapp.exceptions.notfound.InterestNotFoundException;
 import it.rate.webapp.models.*;
@@ -7,6 +8,7 @@ import it.rate.webapp.services.*;
 import java.security.Principal;
 import java.util.*;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -38,28 +40,24 @@ public class InterestController {
     model.addAttribute("method", "post");
     model.addAttribute("loggedUser", userService.getByEmail(principal.getName()));
     model.addAttribute("categories", categoryService.findAll());
-    model.addAttribute("maxCategories", categoryService.getMaxCategories());
 
     return "interest/form";
   }
 
+  @Transactional
   @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
   @PostMapping("/create")
   public String createInterest(
-      Interest interest,
-      @RequestParam Set<String> criteriaNames,
-      @RequestParam(required = false) Set<Long> categoryIds,
+      InterestInDTO interestDTO,
       Principal principal) {
 
+    Interest interest = interestService.save(interestDTO);
+    criterionService.saveAll(interest, interestDTO.criteriaNames());
     AppUser loggedUser = userService.getByEmail(principal.getName());
-    List<Category> categories = categoryService.findMaxLimitByIdIn(categoryIds);
-    interest.setCategories(categories);
-    Interest savedInterest = interestService.save(interest);
-    criterionService.createNew(savedInterest, criteriaNames);
-    roleService.setRole(savedInterest, loggedUser, Role.RoleType.CREATOR);
-    likeService.save(loggedUser, savedInterest);
+    roleService.setRole(interest, loggedUser, Role.RoleType.CREATOR);
+    likeService.save(loggedUser, interest);
 
-    return String.format("redirect:/interests/%d", savedInterest.getId());
+    return String.format("redirect:/interests/%d", interest.getId());
   }
 
   @GetMapping("/{interestId}")

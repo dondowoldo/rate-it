@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener( 'DOMContentLoaded', function() {
     const splide = new Splide('#splide-interests', {
         fixedWidth: '10rem',
         fixedHeight: '11rem',
@@ -9,5 +9,4 @@ document.addEventListener('DOMContentLoaded', () => {
         loop: false
     });
     splide.mount();
-    loadInterests();
 });

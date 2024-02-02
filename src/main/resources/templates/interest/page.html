@@ -15,8 +15,10 @@
     </header>
 
     <picture class="interest-image">
-        <img th:if="*{imageName == null || imageName.isEmpty()}" src="https://picsum.photos/500/300" alt="Generic image"/>
-        <img th:unless="*{imageName == null || imageName.isEmpty()}" id="picture-container" th:attr="data-image-id=*{imageName}" alt="Interest image"/>
+        <img th:if="*{imageName == null || imageName.isEmpty()}" src="https://picsum.photos/500/300"
+             alt="Generic image"/>
+        <img th:unless="*{imageName == null || imageName.isEmpty()}" id="picture-container"
+             th:attr="data-image-id=*{imageName}" alt="Interest image"/>
     </picture>
 
     <main class="content content-interest">
@@ -34,7 +36,7 @@
             </form>
             <a class="button"
                th:if="${loggedUser == null}"
-               th:href="@{/users/login}">Login</a>
+               th:href="@{/login}">Login</a>
         </div>
 
         <div class="content-header">
@@ -49,22 +51,28 @@
             <h2>Criteria</h2>
         </div>
         <ul>
-            <li th:each="criterion : ${interest.criteria}" th:text="${criterion.name}"></li>
+            <li th:each="criterion : ${interest.getCriteria()}" th:text="${criterion.name}"></li>
         </ul>
         <section class="interest-places-section"
                  th:unless="${places.isEmpty()}">
             <h2>Places</h2>
-            <div class="sort-buttons">
-                <template id="sort-button-template">
-                    <label class="sort-container">
-                        <input type="checkbox" class="sort-checkbox"/>
-                        <span></span>
-                    </label>
-                </template>
-            </div>
+            <section class="splide" id="splide-checkboxes" aria-label="Sort By">
+                <div class="splide__track">
+                    <div class="splide__list">
+                        <template id="sort-button-template">
+                            <div class="splide__slide">
+                                <label class="sort-container">
+                                    <input type="checkbox" class="sort-checkbox"/>
+                                    <span></span>
+                                </label>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </section>
 
             <div class="search-container">
-                <input type="text" class="search" name="query" oninput="loadPlaces(this.value)" autocomplete="off"
+                <input type="text" class="search" name="query" oninput="filterPlaces()" autocomplete="off"
                        placeholder="Find places…">
                 <img class="search-icon" th:src="@{/icons/search.svg}" alt="Search">
             </div>
@@ -117,15 +125,13 @@
 </div>
 
 <script th:inline="javascript">
-    /*<![CDATA[*/
-
     const interestId = [[${interest.id}]];
-
-    /*]]>*/
 </script>
+<script src="/scripts/checkboxesSplide.js"></script>
 <script src="/scripts/placeSearch.js"></script>
 <script src="/scripts/imageFetcher.js"></script>
-<script th:unless="${loggedUser == null || role != null && role.equals(role.CREATOR)}" src="/scripts/interestLike.js"></script>
+<script th:unless="${loggedUser == null || role != null && role.equals(role.CREATOR)}"
+        src="/scripts/interestLike.js"></script>
 
 </body>
 </html>

@@ -1,13 +1,14 @@
 package it.rate.webapp.services;
 
-import it.rate.webapp.dtos.CoordinatesDTO;
-import it.rate.webapp.dtos.InterestSuggestionDTO;
-import it.rate.webapp.dtos.LikedInterestsDTO;
+import it.rate.webapp.dtos.*;
 import it.rate.webapp.models.*;
 import it.rate.webapp.repositories.*;
-import jakarta.validation.Valid;
+import jakarta.validation.*;
+
 import java.util.*;
 import java.util.stream.Collectors;
+
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -18,6 +19,7 @@ import org.springframework.validation.annotation.Validated;
 public class InterestService {
 
   private final InterestRepository interestRepository;
+  private final CategoryService categoryService;
 
   public Optional<Interest> findById(Long interestId) {
     return interestRepository.findById(interestId);
@@ -27,7 +29,15 @@ public class InterestService {
     return interestRepository.getReferenceById(interestId);
   }
 
-  public Interest save(Interest interest) {
+  public Interest save(@NotNull @Valid InterestInDTO interestDTO) {
+    Interest interest = new Interest(interestDTO);
+    interest.setCategories(categoryService.findMaxLimitByIdIn(interestDTO.categoryIds()));
+    return interestRepository.save(interest);
+  }
+
+  public Interest update(@Valid Interest interest, @NotNull @Valid InterestInDTO interestDTO) {
+    interest.setCategories(categoryService.findMaxLimitByIdIn(interestDTO.categoryIds()));
+    interest.update(interestDTO);
     return interestRepository.save(interest);
   }
 

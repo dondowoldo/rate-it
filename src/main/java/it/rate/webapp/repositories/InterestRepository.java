@@ -4,6 +4,7 @@ import it.rate.webapp.models.AppUser;
 import it.rate.webapp.models.Interest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+
 import java.util.List;
 
 public interface InterestRepository extends JpaRepository<Interest, Long> {

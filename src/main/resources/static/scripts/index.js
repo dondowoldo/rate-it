@@ -1,8 +1,8 @@
 let data = [];
-let latitude = null;
-let longitude = null;
+let usersCoords;
 
 document.addEventListener('DOMContentLoaded', async () => {
+    initializeCheckboxesSplide()
     try {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(success, error);
@@ -16,8 +16,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 async function success(position) {
-    latitude = position.coords.latitude;
-    longitude = position.coords.longitude;
+    usersCoords = [position.coords.latitude, position.coords.longitude];
     try {
         await fetchData();
         setNumberOfTitleLinesForAll();
@@ -37,8 +36,8 @@ async function fetchData() {
         let url = '/api/v1/interests/suggestions';
 
         // Append query parameters if latitude and longitude are provided
-        if (latitude !== null && longitude !== null) {
-            url += `?latitude=${latitude}&longitude=${longitude}`;
+        if (usersCoords !== undefined) {
+            url += `?latitude=${usersCoords[0]}&longitude=${usersCoords[1]}`;
         }
 
         const response = await fetch(url, {
@@ -94,9 +93,7 @@ function loadInterests(query, category) {
         elements.interestLink.href = `/interests/${interest.id}`;
         elements.interestImg.src = interest.imageUrl;
         elements.titleH3.textContent = interest.name;
-        if (interest.distanceKm === null) {
-            elements.distanceSpan.textContent = 'N/A';
-        } else {
+        if (interest.distanceKm !== null) {
             elements.distanceSpan.textContent = interest.distanceKm.toFixed(1) + ' km';
         }
         elements.interestLikes.textContent = interest.likes;

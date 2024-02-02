@@ -1,11 +1,12 @@
 import {Uppy, Dashboard, XHRUpload, Webcam} from "https://releases.transloadit.com/uppy/v3.21.0/uppy.min.mjs"
 
-let dynamicEndpoint = window.location.pathname.concat('/new-image');
+const placeIdMatch = window.location.href.match(/\/(\d+)(#)?$/);
+let dynamicEndpoint = "/api/v1/images/".concat(placeId).concat("/new-place-image");
 
 const uppy = new Uppy({
     restrictions: {
         allowedFileTypes: ["image/*"],
-        maxFileSize: 5 * 1024 * 1024,
+        maxFileSize: 10 * 1024 * 1024,
 
     },
     allowMultipleUploadBatches: false

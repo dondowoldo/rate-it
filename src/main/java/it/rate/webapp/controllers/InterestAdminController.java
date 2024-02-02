@@ -1,11 +1,13 @@
 package it.rate.webapp.controllers;
 
+import it.rate.webapp.dtos.InterestInDTO;
+import it.rate.webapp.enums.InviteBy;
 import it.rate.webapp.exceptions.badrequest.BadRequestException;
 import it.rate.webapp.models.AppUser;
-import it.rate.webapp.models.Category;
 import it.rate.webapp.models.Interest;
 import it.rate.webapp.models.Role;
 import it.rate.webapp.services.*;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -14,8 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
-import java.util.List;
-import java.util.Set;
 
 @Controller
 @AllArgsConstructor
@@ -27,6 +27,7 @@ public class InterestAdminController {
   private final UserService userService;
   private final CriterionService criterionService;
   private final CategoryService categoryService;
+  private final EmailService emailService;
 
   @GetMapping("/edit")
   @PreAuthorize("@permissionService.manageCommunity(#interestId)")
@@ -37,22 +38,18 @@ public class InterestAdminController {
     model.addAttribute("method", "put");
     model.addAttribute("loggedUser", userService.getByEmail(principal.getName()));
     model.addAttribute("categories", categoryService.findAll());
-    model.addAttribute("maxCategories", categoryService.getMaxCategories());
+
     return "interest/form";
   }
 
+  @Transactional
   @PutMapping("/edit")
   @PreAuthorize("@permissionService.manageCommunity(#interestId)")
-  public String editInterest(
-      @PathVariable Long interestId,
-      Interest interest,
-      @RequestParam Set<String> criteriaNames,
-      @RequestParam(required = false) Set<Long> categoryIds) {
+  public String editInterest(@PathVariable Long interestId, InterestInDTO interestDTO) {
 
-    interest.setId(interestId);
-    List<Category> categories = categoryService.findMaxLimitByIdIn(categoryIds);
-    interest.setCategories(categories);
-    criterionService.updateExisting(interestService.save(interest), criteriaNames);
+    Interest interest = interestService.getById(interestId);
+    interest = interestService.update(interest, interestDTO);
+    criterionService.updateAll(interest, interestDTO.criteriaNames());
 
     return String.format("redirect:/interests/%d", interestId);
   }
@@ -104,17 +101,20 @@ public class InterestAdminController {
       @PathVariable Long interestId, String inviteBy, String user, RedirectAttributes ra) {
 
     Interest interest = interestService.getById(interestId);
+    InviteBy invite = manageInterestService.mapInvite(inviteBy);
     try {
-      manageInterestService.inviteUser(interest, inviteBy, user, Role.RoleType.VOTER);
+      Role role = manageInterestService.inviteUser(interest, invite, user, Role.RoleType.VOTER);
       ra.addFlashAttribute("status", "Invitation successfully sent");
       ra.addFlashAttribute("statusClass", "successful");
-      ra.addFlashAttribute("isChecked", inviteBy.equals("username"));
+      ra.addFlashAttribute("isChecked", invite == InviteBy.USERNAME);
+      emailService.sendInvite(role);
     } catch (BadRequestException e) {
       ra.addFlashAttribute("status", e.getMessage());
       ra.addFlashAttribute("statusClass", "error");
       ra.addFlashAttribute("user", user);
-      ra.addFlashAttribute("isChecked", inviteBy.equals("username"));
+      ra.addFlashAttribute("isChecked", invite == InviteBy.USERNAME);
     }
+
     return "redirect:/interests/{interestId}/admin/invite";
   }
 }

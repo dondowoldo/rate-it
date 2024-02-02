@@ -1,8 +1,11 @@
 package it.rate.webapp.controllers;
 
+import it.rate.webapp.dtos.PlaceInDTO;
+import it.rate.webapp.dtos.ReviewDTO;
 import it.rate.webapp.exceptions.notfound.PlaceNotFoundException;
 import it.rate.webapp.models.*;
 import it.rate.webapp.services.*;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -22,6 +25,7 @@ public class PlaceController {
   private final PermissionService permissionService;
   private final RoleService roleService;
   private final InterestService interestService;
+  private final ReviewService reviewService;
 
   @GetMapping("/new")
   @PreAuthorize("@permissionService.createPlace(#interestId)")
@@ -36,15 +40,17 @@ public class PlaceController {
     return "place/form";
   }
 
+  @Transactional
   @PostMapping("/new")
   @PreAuthorize("@permissionService.createPlace(#interestId)")
-  public String createNewPlace(@PathVariable Long interestId, Place place, Principal principal) {
+  public String createNewPlace(
+      @PathVariable Long interestId, PlaceInDTO placeDTO, Principal principal) {
 
-    AppUser loggedUser = userService.getByEmail(principal.getName());
     Interest interest = interestService.getById(interestId);
-    Place createdPlace = placeService.save(place, interest, loggedUser);
+    AppUser loggedUser = userService.getByEmail(principal.getName());
+    Place place = placeService.save(placeDTO, interest, loggedUser);
 
-    return String.format("redirect:/interests/%d/places/%d", interestId, createdPlace.getId());
+    return String.format("redirect:/interests/%d/places/%d", interestId, place.getId());
   }
 
   @GetMapping("/{placeId}")
@@ -54,12 +60,16 @@ public class PlaceController {
     Place place = placeService.findById(placeId).orElseThrow(PlaceNotFoundException::new);
     model.addAttribute("place", place);
     model.addAttribute("placeCriteria", placeService.getCriteriaOfPlaceDTO(place));
+    model.addAttribute("placeRatings", placeService.getPlaceUserRatingDto(place));
 
     if (principal != null) {
       AppUser loggedUser = userService.getByEmail(principal.getName());
       model.addAttribute("loggedUser", loggedUser);
       if (permissionService.hasRatingPermission(loggedUser, place.getInterest())) {
         model.addAttribute("usersRatings", ratingService.getUsersRatingsDto(loggedUser, place));
+        Optional<Review> optReview =
+            reviewService.findById(new ReviewId(loggedUser.getId(), placeId));
+        optReview.ifPresent(review -> model.addAttribute("review", new ReviewDTO(review)));
       }
       Optional<Role> optRole = roleService.findById(new RoleId(loggedUser.getId(), interestId));
       if (optRole.isPresent() && optRole.get().getRoleType().equals(Role.RoleType.APPLICANT)) {
@@ -83,15 +93,13 @@ public class PlaceController {
     return "place/form";
   }
 
+  @Transactional
   @PutMapping("/{placeId}/edit")
   @PreAuthorize("@permissionService.hasPlaceEditPermissions(#placeId, #interestId)")
   public String editPlace(
-      @PathVariable Long interestId, @PathVariable Long placeId, Place place, Principal principal) {
+      @PathVariable Long interestId, @PathVariable Long placeId, PlaceInDTO placeDTO) {
 
-    place.setId(placeId);
-    Interest interest = interestService.getById(interestId);
-    AppUser loggedUser = userService.getByEmail(principal.getName());
-    placeService.save(place, interest, loggedUser);
+    Place place = placeService.update(placeService.getById(placeId), placeDTO);
 
     return String.format("redirect:/interests/%d/places/%d", interestId, place.getId());
   }
