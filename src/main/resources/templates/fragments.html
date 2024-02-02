@@ -78,6 +78,7 @@
             </li>
             <li th:if="${loggedUser}"><a class="dropdown-item" th:href="@{/logout}">Logout</a></li>
             <li th:unless="${loggedUser}"><a class="dropdown-item" th:href="@{/login}">Login</a></li>
+            <li th:unless="${loggedUser}"><a class="dropdown-item" th:href="@{/signup}">Register</a></li>
         </ul>
     </div>
 </div>
