@@ -3,7 +3,7 @@ package it.rate.webapp.dtos;
 import java.util.HashSet;
 import java.util.List;
 
-public record PlaceAllUsersRatingsDTO(List<PlaceUserRatingDTO> userPlaceRatings) {
+public record PlaceRatingsDTO(List<PlaceUserRatingDTO> userPlaceRatings) {
 
   // for testing purposes
   @Override
@@ -15,7 +15,7 @@ public record PlaceAllUsersRatingsDTO(List<PlaceUserRatingDTO> userPlaceRatings)
       return false;
     }
 
-    PlaceAllUsersRatingsDTO that = (PlaceAllUsersRatingsDTO) object;
+    PlaceRatingsDTO that = (PlaceRatingsDTO) object;
 
     if (this.userPlaceRatings.size() != that.userPlaceRatings.size()) {
       return false;

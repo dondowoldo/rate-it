@@ -259,9 +259,9 @@ class PlaceServiceTest extends BaseTest {
 
     List<PlaceUserRatingDTO> expectedListOfUserRatings = List.of(userOneRatingDto, userTwoRatingDto);
 
-    PlaceAllUsersRatingsDTO expectedResult = new PlaceAllUsersRatingsDTO(expectedListOfUserRatings);
+    PlaceRatingsDTO expectedResult = new PlaceRatingsDTO(expectedListOfUserRatings);
 
-    PlaceAllUsersRatingsDTO actualResult = placeService.getPlaceUserRatingDto(p1);
+    PlaceRatingsDTO actualResult = placeService.getPlaceRatingsDTO(p1);
 
     assertNotNull(actualResult);
     assertEquals(actualResult, expectedResult);

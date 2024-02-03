@@ -91,7 +91,7 @@ public class PlaceService {
     return new CriterionAvgRatingDTO(criterion.getId(), criterion.getName(), avgRating);
   }
 
-  public PlaceAllUsersRatingsDTO getPlaceUserRatingDto(Place place) {
+  public PlaceRatingsDTO getPlaceRatingsDTO(Place place) {
     Map<AppUser, List<Rating>> ratingsByUser =
         place.getRatings().stream().collect(Collectors.groupingBy(Rating::getAppUser));
 
@@ -100,7 +100,7 @@ public class PlaceService {
             .map(entry -> getSingleUserRatingDTO(entry.getKey(), entry.getValue()))
             .collect(Collectors.toList());
 
-    return new PlaceAllUsersRatingsDTO(userRatings);
+    return new PlaceRatingsDTO(userRatings);
   }
 
   public PlaceUserRatingDTO getSingleUserRatingDTO(AppUser user, List<Rating> ratings) {
