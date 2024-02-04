@@ -94,18 +94,6 @@ public class PlaceService {
     return new CriterionAvgRatingDTO(criterion.getId(), criterion.getName(), avgRating);
   }
 
-  //  public PlaceRatingsDTO getPlaceRatingsDTO(Place place) {
-  //    Map<AppUser, List<Rating>> ratingsByUser =
-  //        place.getRatings().stream().collect(Collectors.groupingBy(Rating::getAppUser));
-  //
-  //    List<PlaceUserRatingDTO> userRatings =
-  //        ratingsByUser.entrySet().stream()
-  //            .map(entry -> getSingleUserRatingDTO(entry.getKey(), entry.getValue()))
-  //            .collect(Collectors.toList());
-  //
-  //    return new PlaceRatingsDTO(userRatings);
-  //  }
-
   public List<PlaceReviewDTO> getPlaceReviewDTOsByAppUser(AppUser user) {
     List<Review> reviews = reviewService.findAllByAppUser(user);
     List<Rating> ratings = ratingRepository.findAllByAppUser(user);
@@ -124,6 +112,18 @@ public class PlaceService {
 
     return distinctPlacesList.stream().map(place -> getPlaceReviewDTO(user, place)).toList();
   }
+
+  //  public PlaceRatingsDTO getPlaceRatingsDTO(Place place) {
+  //    Map<AppUser, List<Rating>> ratingsByUser =
+  //        place.getRatings().stream().collect(Collectors.groupingBy(Rating::getAppUser));
+  //
+  //    List<PlaceUserRatingDTO> userRatings =
+  //        ratingsByUser.entrySet().stream()
+  //            .map(entry -> getSingleUserRatingDTO(entry.getKey(), entry.getValue()))
+  //            .collect(Collectors.toList());
+  //
+  //    return new PlaceRatingsDTO(userRatings);
+  //  }
 
   public List<PlaceReviewDTO> getPlaceReviewDTOsByPlace(Place place) {
     List<Review> reviews = reviewService.findAllByPlace(place);
