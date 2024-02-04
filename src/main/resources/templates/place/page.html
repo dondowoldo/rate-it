@@ -173,7 +173,7 @@
                         <div class="average-rating-container">
                             <i class="fas fa-star"></i>
                             <div class="average-rating">
-                                <p th:text="${review.avgRating()}"></p>
+                                <p th:text="${#numbers.formatDecimal(@thymeMath.roundRating(review.avgRating()), 1, 1, 'POINT')}"></p>
                             </div>
                         </div>
                     </div>
@@ -183,7 +183,7 @@
                     <li th:each="rating : ${review.ratings()}">
                         <div class="criterion-rating">
                             <i class="fas fa-star"></i>
-                            <p th:text="${rating.rating()}"></p>
+                            <p th:text="${#numbers.formatDecimal(@thymeMath.roundRating(rating.rating()), 1, 1, 'POINT')}"></p>
                             <p th:text="${rating.criterionName()}" class="criterion-name"></p>
                         </div>
                     </li>
