@@ -9,6 +9,8 @@ import it.rate.webapp.repositories.PlaceRepository;
 import it.rate.webapp.repositories.RatingRepository;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+
+import java.sql.Timestamp;
 import java.util.*;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
@@ -22,6 +24,7 @@ public class PlaceService {
 
   private final PlaceRepository placeRepository;
   private final RatingRepository ratingRepository;
+  private final ReviewService reviewService;
 
   public Optional<Place> findById(Long id) {
     return placeRepository.findById(id);
@@ -91,33 +94,101 @@ public class PlaceService {
     return new CriterionAvgRatingDTO(criterion.getId(), criterion.getName(), avgRating);
   }
 
-  public PlaceRatingsDTO getPlaceRatingsDTO(Place place) {
-    Map<AppUser, List<Rating>> ratingsByUser =
-        place.getRatings().stream().collect(Collectors.groupingBy(Rating::getAppUser));
+  //  public PlaceRatingsDTO getPlaceRatingsDTO(Place place) {
+  //    Map<AppUser, List<Rating>> ratingsByUser =
+  //        place.getRatings().stream().collect(Collectors.groupingBy(Rating::getAppUser));
+  //
+  //    List<PlaceUserRatingDTO> userRatings =
+  //        ratingsByUser.entrySet().stream()
+  //            .map(entry -> getSingleUserRatingDTO(entry.getKey(), entry.getValue()))
+  //            .collect(Collectors.toList());
+  //
+  //    return new PlaceRatingsDTO(userRatings);
+  //  }
 
-    List<PlaceUserRatingDTO> userRatings =
-        ratingsByUser.entrySet().stream()
-            .map(entry -> getSingleUserRatingDTO(entry.getKey(), entry.getValue()))
-            .collect(Collectors.toList());
+  public List<PlaceReviewDTO> getPlaceReviewDTOsByAppUser(AppUser user) {
+    List<Review> reviews = reviewService.findAllByAppUser(user);
+    List<Rating> ratings = ratingRepository.findAllByAppUser(user);
+    List<Place> allPlaces = new ArrayList<>();
 
-    return new PlaceRatingsDTO(userRatings);
-  }
-
-  public PlaceUserRatingDTO getSingleUserRatingDTO(AppUser user, List<Rating> ratings) {
-
-    Map<String, Double> criterionRatings =
-        ratings.stream()
-            .collect(
-                Collectors.toMap(
-                    rating -> rating.getCriterion().getName(), rating -> rating.getRating() / 2.0));
-
-    double averageRating =
-        criterionRatings.values().stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
-
-    if (averageRating != 0.0) {
-      averageRating = Math.round(averageRating * 10.0) / 10.0;
+    for (Review review : reviews) {
+      allPlaces.add(review.getPlace());
     }
 
-    return new PlaceUserRatingDTO(user.getUsername(), criterionRatings, averageRating);
+    for (Rating rating : ratings) {
+      allPlaces.add(rating.getPlace());
+    }
+
+    Set<Place> distinctPlacesSet = new HashSet<>(allPlaces);
+    List<Place> distinctPlacesList = new ArrayList<>(distinctPlacesSet);
+
+    return distinctPlacesList.stream().map(place -> getPlaceReviewDTO(user, place)).toList();
+  }
+
+  public List<PlaceReviewDTO> getPlaceReviewDTOsByPlace(Place place) {
+    List<Review> reviews = reviewService.findAllByPlace(place);
+    List<Rating> ratings = ratingRepository.findAllByPlace(place);
+    List<AppUser> allUsers = new ArrayList<>();
+
+    for (Review review : reviews) {
+      allUsers.add(review.getAppUser());
+    }
+
+    for (Rating rating : ratings) {
+      allUsers.add(rating.getAppUser());
+    }
+
+    Set<AppUser> distinctUsersSet = new HashSet<>(allUsers);
+    List<AppUser> distinctUsersList = new ArrayList<>(distinctUsersSet);
+
+    return distinctUsersList.stream().map(appUser -> getPlaceReviewDTO(appUser, place)).toList();
+  }
+
+  private PlaceReviewDTO getPlaceReviewDTO(AppUser user, Place place) {
+    Optional<Review> optReview = reviewService.findById(new ReviewId(user.getId(), place.getId()));
+    String review = optReview.map(Review::getText).orElse(null);
+    List<Rating> ratings = ratingRepository.findAllByAppUserAndPlace(user, place);
+    List<RatingDTO> ratingDTOS = ratings.stream().map(RatingDTO::new).toList();
+    Double avgRating = null;
+    if (!ratings.isEmpty()) {
+      avgRating =
+          ratingDTOS.stream()
+              .mapToDouble(RatingDTO::rating)
+              .boxed()
+              .collect(Collectors.averagingDouble(Double::doubleValue));
+    }
+    List<Timestamp> timestamps =
+        new ArrayList<>(ratings.stream().map(Rating::getCreatedAt).toList());
+    optReview.ifPresent(value -> timestamps.add(value.getCreatedAt()));
+    Timestamp latestTimestamp = timestamps.stream().max(Comparator.naturalOrder()).orElse(null);
+
+    return new PlaceReviewDTO(
+        user.getUsername(),
+        place.getName(),
+        place.getId(),
+        review,
+        ratingDTOS,
+        avgRating,
+        latestTimestamp);
   }
 }
+
+//  public PlaceUserRatingDTO getSingleUserRatingDTO(AppUser user, List<Rating> ratings) {
+//
+//    Map<String, Double> criterionRatings =
+//        ratings.stream()
+//            .collect(
+//                Collectors.toMap(
+//                    rating -> rating.getCriterion().getName(), rating -> rating.getRating() /
+// 2.0));
+//
+//    double averageRating =
+//        criterionRatings.values().stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
+//
+//    if (averageRating != 0.0) {
+//      averageRating = Math.round(averageRating * 10.0) / 10.0;
+//    }
+//
+//    return new PlaceUserRatingDTO(user.getUsername(), criterionRatings, averageRating);
+//  }
+// }

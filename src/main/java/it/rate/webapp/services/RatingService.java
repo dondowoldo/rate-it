@@ -1,5 +1,6 @@
 package it.rate.webapp.services;
 
+import it.rate.webapp.dtos.RatingDTO;
 import it.rate.webapp.dtos.RatingsDTO;
 import it.rate.webapp.dtos.UserRatedInterestDTO;
 import it.rate.webapp.dtos.UserRatedPlaceDTO;
@@ -92,6 +93,8 @@ public class RatingService {
         .findById(criterionId)
         .orElseThrow(InvalidCriterionDetailsException::new);
   }
+
+
 
   public List<UserRatedInterestDTO> getAllUserRatedInterestDTOS(AppUser appUser) {
     List<Rating> userRatings = ratingRepository.findAllByAppUser(appUser);

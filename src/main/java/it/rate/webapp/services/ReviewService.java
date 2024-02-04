@@ -11,6 +11,7 @@ import org.hibernate.validator.constraints.Length;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -38,5 +39,13 @@ public class ReviewService {
       reviewRepository.deleteById(reviewId);
     }
     return new ReviewDTO(reviewRepository.save(new Review(loggedUser, place, text)));
+  }
+
+  public List<Review> findAllByPlace(Place place) {
+    return reviewRepository.findAllByPlace(place);
+  }
+
+  public List<Review> findAllByAppUser(AppUser user) {
+    return reviewRepository.findAllByAppUser(user);
   }
 }
