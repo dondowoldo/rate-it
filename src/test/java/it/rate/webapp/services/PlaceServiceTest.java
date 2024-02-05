@@ -1,5 +1,7 @@
 package it.rate.webapp.services;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -14,7 +16,11 @@ import it.rate.webapp.exceptions.badrequest.BadRequestException;
 import it.rate.webapp.models.*;
 import it.rate.webapp.repositories.PlaceRepository;
 import it.rate.webapp.repositories.RatingRepository;
+
+import java.sql.Timestamp;
 import java.util.*;
+
+import it.rate.webapp.repositories.ReviewRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,14 +30,22 @@ class PlaceServiceTest extends BaseTest {
 
   @MockBean PlaceRepository placeRepository;
   @MockBean RatingRepository ratingRepository;
+  @MockBean ReviewRepository reviewRepository;
 
   @Autowired PlaceService placeService;
   Interest i1;
   AppUser u1;
   AppUser u2;
   Place p1;
+
+  Rating r1;
+  Rating r2;
+  Rating r3;
+  Rating r4;
+  Review rev1;
   List<Criterion> criteria;
   List<Rating> ratings;
+  List<Review> reviews;
 
   @BeforeEach
   void setUp() {
@@ -62,16 +76,19 @@ class PlaceServiceTest extends BaseTest {
             .build();
 
     criteria =
-        Arrays.asList(
+        List.of(
             Criterion.builder().id(1L).name("Criterion1").build(),
             Criterion.builder().id(2L).name("Criterion2").build());
 
-    ratings =
-        Arrays.asList(
-            new Rating(u1, p1, criteria.get(0), 3),
-            new Rating(u1, p1, criteria.get(1), 4),
-            new Rating(u2, p1, criteria.get(0), 5),
-            new Rating(u2, p1, criteria.get(1), 6));
+    r1 = new Rating(u1, p1, criteria.get(0), 3);
+    r2 = new Rating(u1, p1, criteria.get(1), 4);
+    r3 = new Rating(u2, p1, criteria.get(0), 5);
+    r4 = new Rating(u2, p1, criteria.get(1), 6);
+
+    ratings = List.of(r1, r2, r3, r4);
+
+    rev1 = new Review(u1, p1, "Review1");
+    reviews = List.of(rev1);
   }
 
   @Test
@@ -181,7 +198,43 @@ class PlaceServiceTest extends BaseTest {
   }
 
   @Test
-  void getPlaceReviewDTOsHappyCase() {}
+  void getPlaceReviewDTOs() {
+    List<PlaceReviewDTO> expectedResult =
+        List.of(
+            new PlaceReviewDTO(
+                u1.getUsername(),
+                p1.getName(),
+                p1.getId(),
+                rev1.getText(),
+                List.of(new RatingDTO(r1), new RatingDTO(r2)),
+                3.5,
+                rev1.getCreatedAt()),
+            new PlaceReviewDTO(
+                u2.getUsername(),
+                p1.getName(),
+                p1.getId(),
+                null,
+                List.of(new RatingDTO(r3), new RatingDTO(r4)),
+                5.5,
+                r4.getCreatedAt()));
+
+    when(reviewRepository.findAllByPlace(p1)).thenReturn(reviews);
+    when(ratingRepository.findAllByPlaceAndCriterionDeletedFalse(p1)).thenReturn(ratings);
+    when(reviewRepository.findById(new ReviewId(p1.getId(), u1.getId())))
+        .thenReturn(Optional.of(rev1));
+    when(ratingRepository.findAllByAppUserAndPlaceAndCriterionDeletedFalse(u1, p1))
+        .thenReturn(List.of(r1, r2));
+    when(ratingRepository.findAllByAppUserAndPlaceAndCriterionDeletedFalse(u2, p1))
+        .thenReturn(List.of(r3, r4));
+
+
+    assertThat(placeService.getPlaceReviewDTOs(p1), containsInAnyOrder(expectedResult.toArray()));
+
+    verify(reviewRepository, times(1)).findAllByPlace(any(Place.class));
+    verify(ratingRepository, times(1)).findAllByPlaceAndCriterionDeletedFalse(any(Place.class));
+    verify(reviewRepository, times(2)).findById(any(ReviewId.class));
+    verify(ratingRepository, times(2)).findAllByAppUserAndPlaceAndCriterionDeletedFalse(any(AppUser.class), any(Place.class));
+  }
 
   //  @Test
   //  void getSingleUserRatingDtoHappyCase() {
