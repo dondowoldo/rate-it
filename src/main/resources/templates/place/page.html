@@ -58,10 +58,10 @@
                         <div th:class="${usersRatings} ? 'place-rating-average small' : 'place-rating-average'">
                             <i class="fas fa-star"></i>
                             <span th:id="${criterionDTO.id}"
-                                  th:unless="${criterionDTO.avgRating == null}" class="rating"
+                                  th:unless="${@thymeMath.isNaN(criterionDTO.avgRating)}" class="rating"
                                   th:text="${#numbers.formatDecimal(@thymeMath.roundRating(criterionDTO.avgRating), 1, 1, 'POINT')}"></span>
                             <span th:id="${criterionDTO.id}"
-                                  th:if="${criterionDTO.avgRating == null}" class="rating">N/A</span>
+                                  th:if="${@thymeMath.isNaN(criterionDTO.avgRating)}" class="rating">N/A</span>
                         </div>
 
                         <div th:if="${usersRatings}">

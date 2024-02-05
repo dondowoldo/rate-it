@@ -69,9 +69,7 @@ public class InterestService {
             interest ->
                 new InterestSuggestionDTO(
                     interest, getDistanceToNearestPlace(usersCoords, interest.getPlaces())))
-        .sorted(
-            Comparator.comparingDouble(
-                dto -> dto.distanceKm() != null ? dto.distanceKm() : Double.MAX_VALUE))
+        .sorted(Comparator.comparingDouble(InterestSuggestionDTO::distanceKm))
         .collect(Collectors.toList());
   }
 
@@ -92,7 +90,7 @@ public class InterestService {
 
   private Double getDistanceToNearestPlace(CoordinatesDTO usersCoords, List<Place> places) {
     if (places.isEmpty()) {
-      return null;
+      return Double.NaN;
     }
     double minDistance = Double.MAX_VALUE;
     for (Place place : places) {

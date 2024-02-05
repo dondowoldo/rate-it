@@ -16,10 +16,7 @@ import it.rate.webapp.exceptions.badrequest.BadRequestException;
 import it.rate.webapp.models.*;
 import it.rate.webapp.repositories.PlaceRepository;
 import it.rate.webapp.repositories.RatingRepository;
-
-import java.sql.Timestamp;
 import java.util.*;
-
 import it.rate.webapp.repositories.ReviewRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -189,7 +186,7 @@ class PlaceServiceTest extends BaseTest {
         new CriteriaOfPlaceDTO(
             List.of(
                 new CriterionAvgRatingDTO(
-                    criteria.get(0).getId(), criteria.get(0).getName(), null)));
+                    criteria.get(0).getId(), criteria.get(0).getName(), Double.NaN)));
 
     CriteriaOfPlaceDTO actualResult = placeService.getCriteriaOfPlaceDTO(p1);
 
@@ -297,11 +294,11 @@ class PlaceServiceTest extends BaseTest {
         .thenReturn(List.of(r3, r4));
 
     Comparator<PlaceReviewDTO> comparator =
-            Comparator.comparing(PlaceReviewDTO::timestamp).reversed();
+        Comparator.comparing(PlaceReviewDTO::timestamp).reversed();
 
     assertThat(
-            placeService.getPlaceReviewDTOs(u2, i1, comparator),
-            containsInAnyOrder(expectedResult.toArray()));
+        placeService.getPlaceReviewDTOs(u2, i1, comparator),
+        containsInAnyOrder(expectedResult.toArray()));
 
     verify(reviewRepository, times(1))
         .findAllByAppUserAndPlace_Interest(any(AppUser.class), any(Interest.class));

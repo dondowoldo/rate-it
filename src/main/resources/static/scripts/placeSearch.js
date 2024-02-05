@@ -173,23 +173,44 @@ function loadPlaces(query, sortBy) {
             elements.distanceSpan.textContent = distance(usersCoords[0], usersCoords[1], place.latitude, place.longitude).toFixed(1) + ' km';
         }
 
-        const averageRating = (place.avgRating / 2).toFixed(1);
+        let averageRating;
+        if (isNaN(place.avgRating)) {
+            averageRating = 'N/A';
+        } else {
+            averageRating = (place.avgRating / 2).toFixed(1);
+        }
+
         elements.rating.textContent = averageRating;
 
         const {bestCriterion, worstCriterion} = getBestAndWorstCriteria(place.criteria);
 
+        let bestCriterionAvgRating;
+        if (bestCriterion === null || isNaN(bestCriterion.avgRating)) {
+            bestCriterionAvgRating = 'N/A';
+        } else {
+            bestCriterionAvgRating = (bestCriterion.avgRating / 2).toFixed(1);
+        }
+
+        let worstCriterionAvgRating;
+        if (worstCriterion === null || isNaN(worstCriterion.avgRating)) {
+            worstCriterionAvgRating = 'N/A';
+        } else {
+            worstCriterionAvgRating = (worstCriterion.avgRating / 2).toFixed(1);
+        }
+
         elements.ratingContainer.innerHTML = '';
         elements.ratingContainer.appendChild(createRatingItem('fas fa-star overall yellow', averageRating, 'Overall'));
-        elements.ratingContainer.appendChild(createRatingItem('fas fa-star yellow', (bestCriterion.avgRating / 2).toFixed(1), bestCriterion.name));
-        elements.ratingContainer.appendChild(createRatingItem('fas fa-star', (worstCriterion.avgRating / 2).toFixed(1), worstCriterion.name));
+        elements.ratingContainer.appendChild(createRatingItem('fas fa-star yellow', (bestCriterionAvgRating), bestCriterion.name));
+        elements.ratingContainer.appendChild(createRatingItem('fas fa-star', (worstCriterionAvgRating), worstCriterion.name));
 
         container.appendChild(clone);
     });
 }
 
 function getBestAndWorstCriteria(criteria) {
-    const bestCriterion = criteria.reduce((max, cr) => (!max || cr.avgRating > max.avgRating ? cr : max), null);
-    const worstCriterion = criteria.reduce((min, cr) => (!min || cr.avgRating < min.avgRating ? cr : min), null);
+    const validCriteria = criteria.filter(cr => !isNaN(cr.avgRating));
+    const bestCriterion = validCriteria.reduce((max, cr) => (!max || cr.avgRating > max.avgRating ? cr : max), null);
+    const worstCriterion = validCriteria.reduce((min, cr) => (!min || cr.avgRating < min.avgRating ? cr : min), null);
     return {bestCriterion, worstCriterion};
 }
 

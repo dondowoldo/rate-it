@@ -77,18 +77,8 @@ public class PlaceService {
   }
 
   private CriterionAvgRatingDTO getCriterionAvgRatingDTO(Criterion criterion, Place place) {
-    OptionalDouble optAvgRating =
-        ratingService.findAllByCriterionAndPlace(criterion, place).stream()
-            .mapToDouble(Rating::getRating)
-            .average();
-
-    Double avgRating;
-
-    if (optAvgRating.isPresent()) {
-      avgRating = optAvgRating.getAsDouble();
-    } else {
-      avgRating = null;
-    }
+    List<Rating> ratings = ratingService.findAllByCriterionAndPlace(criterion, place);
+    Double avgRating = calculateAverageRating(ratings);
 
     return new CriterionAvgRatingDTO(criterion.getId(), criterion.getName(), avgRating);
   }
@@ -137,18 +127,8 @@ public class PlaceService {
     String review = optReview.map(Review::getText).orElse(null);
     List<Rating> ratings = ratingService.findAllByAppUserAndPlace(user, place);
     List<RatingDTO> ratingDTOS = ratings.stream().map(RatingDTO::new).toList();
-
-    Double avgRating =
-        ratingDTOS.stream()
-            .mapToDouble(RatingDTO::rating)
-            .boxed()
-            .collect(Collectors.averagingDouble(Double::doubleValue));
-
-    List<Timestamp> timestamps =
-        new ArrayList<>(ratings.stream().map(Rating::getCreatedAt).toList());
-    optReview.ifPresent(value -> timestamps.add(value.getCreatedAt()));
-
-    Timestamp latestTimestamp = timestamps.stream().max(Comparator.naturalOrder()).orElse(null);
+    Double avgRating = calculateAverageRating(ratings);
+    Timestamp latestTimestamp = findLatestTimestamp(optReview, ratings);
 
     return new PlaceReviewDTO(
         user.getUsername(),
@@ -158,5 +138,16 @@ public class PlaceService {
         ratingDTOS,
         avgRating,
         latestTimestamp);
+  }
+
+  private Double calculateAverageRating(List<Rating> ratings) {
+    return ratings.stream().mapToDouble(Rating::getRating).average().orElse(Double.NaN);
+  }
+
+  private Timestamp findLatestTimestamp(Optional<Review> optReview, List<Rating> ratings) {
+    List<Timestamp> timestamps =
+        new ArrayList<>(ratings.stream().map(Rating::getCreatedAt).toList());
+    optReview.ifPresent(value -> timestamps.add(value.getCreatedAt()));
+    return timestamps.stream().max(Comparator.naturalOrder()).orElse(null);
   }
 }
