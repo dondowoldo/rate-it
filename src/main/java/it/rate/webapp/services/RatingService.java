@@ -26,25 +26,27 @@ public class RatingService {
   private final RatingRepository ratingRepository;
   private final CriterionRepository criterionRepository;
 
-  public List<Rating> findAllByAppUserAndInterest(@Valid AppUser appUser,@Valid Interest interest){
-    return ratingRepository.findAllByAppUserAndCriterion_InterestAndCriterionDeletedFalse(appUser, interest);
+  public List<Rating> findAllByAppUserAndInterest(
+      @Valid AppUser appUser, @Valid Interest interest) {
+    return ratingRepository.findAllByAppUserAndCriterion_InterestAndCriterionDeletedFalse(
+        appUser, interest);
   }
 
-  public List<Rating> findAllByPlace(@Valid Place place){
+  public List<Rating> findAllByPlace(@Valid Place place) {
     return ratingRepository.findAllByPlaceAndCriterionDeletedFalse(place);
   }
 
-  public List<Rating> findAllByAppUserAndPlace(@Valid AppUser appUser, @Valid Place place){
+  public List<Rating> findAllByAppUserAndPlace(@Valid AppUser appUser, @Valid Place place) {
     return ratingRepository.findAllByAppUserAndPlaceAndCriterionDeletedFalse(appUser, place);
   }
 
-  public List<Rating> findAllByCriterionAndPlace(@Valid Criterion criterion, @Valid Place place){
+  public List<Rating> findAllByCriterionAndPlace(@Valid Criterion criterion, @Valid Place place) {
     return ratingRepository.findAllByCriterionAndPlaceAndCriterionDeletedFalse(criterion, place);
-
   }
 
   public RatingsDTO getUsersRatingsDto(@Valid AppUser appUser, @Valid Place place) {
-    List<Rating> ratings = ratingRepository.findAllByAppUserAndPlaceAndCriterionDeletedFalse(appUser, place);
+    List<Rating> ratings =
+        ratingRepository.findAllByAppUserAndPlaceAndCriterionDeletedFalse(appUser, place);
     return new RatingsDTO(ratings);
   }
 
@@ -109,8 +111,6 @@ public class RatingService {
         .findById(criterionId)
         .orElseThrow(InvalidCriterionDetailsException::new);
   }
-
-
 
   public List<UserRatedInterestDTO> getAllUserRatedInterestDTOS(AppUser appUser) {
     List<Rating> userRatings = ratingRepository.findAllByAppUser(appUser);

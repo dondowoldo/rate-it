@@ -151,7 +151,10 @@ class PlaceServiceTest extends BaseTest {
 
   @Test
   void getCriteriaOfPlaceDtoHappyCase() {
-    List<Criterion> criteria = Arrays.asList(new Criterion(), new Criterion());
+    List<Criterion> criteria =
+            Arrays.asList(
+                    Criterion.builder().id(1L).name("Criterion1").build(),
+                    Criterion.builder().id(2L).name("Criterion2").build());
 
     List<Rating> ratings =
         Arrays.asList(
