@@ -40,7 +40,7 @@ function fetchInterestImageUrl(interest) {
             .then(blob => URL.createObjectURL(blob))
             .catch(error => {
                 console.error('Error fetching image:', error);
-                return 'https://picsum.photos/400/300';
+                return fetchDefaultInterestImage(interest);
             });
     }
 }
