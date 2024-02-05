@@ -1028,6 +1028,8 @@ h4 {
     margin: auto;
     height: var(--form-container-height);
     width: 100%;
+    display: flex;
+    justify-content: center;
 }
 
 .left-container,
