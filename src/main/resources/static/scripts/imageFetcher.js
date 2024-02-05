@@ -26,7 +26,6 @@ function fetchInterestImageUrl(interest) {
 
     if (imageName == null || imageName === '') {
         console.error('No imageNames found');
-        let imgUrl;
         return fetchDefaultInterestImage(interest);
     } else {
         const apiUrl = '/api/v1/images/' + imageName;
