@@ -137,6 +137,7 @@ public class PlaceService {
     String review = optReview.map(Review::getText).orElse(null);
     List<Rating> ratings = ratingService.findAllByAppUserAndPlace(user, place);
     List<RatingDTO> ratingDTOS = ratings.stream().map(RatingDTO::new).toList();
+
     Double avgRating =
         ratingDTOS.stream()
             .mapToDouble(RatingDTO::rating)
@@ -146,6 +147,7 @@ public class PlaceService {
     List<Timestamp> timestamps =
         new ArrayList<>(ratings.stream().map(Rating::getCreatedAt).toList());
     optReview.ifPresent(value -> timestamps.add(value.getCreatedAt()));
+
     Timestamp latestTimestamp = timestamps.stream().max(Comparator.naturalOrder()).orElse(null);
 
     return new PlaceReviewDTO(

@@ -7,7 +7,6 @@ import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
 import it.rate.webapp.BaseTest;
 import it.rate.webapp.config.ServerRole;
 import it.rate.webapp.dtos.*;
@@ -20,16 +19,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 class PlaceServiceTest extends BaseTest {
 
-  @MockBean Authentication authentication;
-  @MockBean SecurityContext securityContext;
-  @MockBean InterestService interestService;
-  @MockBean UserService userService;
   @MockBean PlaceRepository placeRepository;
   @MockBean RatingRepository ratingRepository;
 
@@ -38,14 +30,8 @@ class PlaceServiceTest extends BaseTest {
   AppUser u1;
   AppUser u2;
   Place p1;
-
-  @BeforeEach
-  void setupAuthentication() {
-    when(securityContext.getAuthentication()).thenReturn(authentication);
-    when(authentication.getName()).thenReturn("joe");
-
-    SecurityContextHolder.setContext(securityContext);
-  }
+  List<Criterion> criteria;
+  List<Rating> ratings;
 
   @BeforeEach
   void setUp() {
@@ -74,6 +60,18 @@ class PlaceServiceTest extends BaseTest {
             .latitude(1.0)
             .longitude(1.0)
             .build();
+
+    criteria =
+        Arrays.asList(
+            Criterion.builder().id(1L).name("Criterion1").build(),
+            Criterion.builder().id(2L).name("Criterion2").build());
+
+    ratings =
+        Arrays.asList(
+            new Rating(u1, p1, criteria.get(0), 3),
+            new Rating(u1, p1, criteria.get(1), 4),
+            new Rating(u2, p1, criteria.get(0), 5),
+            new Rating(u2, p1, criteria.get(1), 6));
   }
 
   @Test
@@ -102,18 +100,6 @@ class PlaceServiceTest extends BaseTest {
 
   @Test
   void getPlaceInfoDTOSHappyCase() {
-    List<Criterion> criteria =
-        Arrays.asList(
-            Criterion.builder().id(1L).name("Criterion1").build(),
-            Criterion.builder().id(2L).name("Criterion2").build());
-
-    List<Rating> ratings =
-        Arrays.asList(
-            new Rating(u1, p1, criteria.get(0), 3),
-            new Rating(u1, p1, criteria.get(1), 4),
-            new Rating(u2, p1, criteria.get(0), 5),
-            new Rating(u2, p1, criteria.get(1), 6));
-
     CriterionAvgRatingDTO criterionAvgRatingOne =
         new CriterionAvgRatingDTO(criteria.get(1).getId(), criteria.get(1).getName(), 5D);
     CriterionAvgRatingDTO criterionAvgRatingTwo =
@@ -151,18 +137,6 @@ class PlaceServiceTest extends BaseTest {
 
   @Test
   void getCriteriaOfPlaceDtoHappyCase() {
-    List<Criterion> criteria =
-        Arrays.asList(
-            Criterion.builder().id(1L).name("Criterion1").build(),
-            Criterion.builder().id(2L).name("Criterion2").build());
-
-    List<Rating> ratings =
-        Arrays.asList(
-            new Rating(u1, p1, criteria.get(0), 3),
-            new Rating(u1, p1, criteria.get(1), 4),
-            new Rating(u2, p1, criteria.get(0), 5),
-            new Rating(u2, p1, criteria.get(1), 6));
-
     p1.setRatings(ratings);
     p1.setInterest(i1);
     i1.setCriteria(criteria);
@@ -205,6 +179,9 @@ class PlaceServiceTest extends BaseTest {
     assertNotNull(actualResult);
     assertEquals(actualResult, expectedResult);
   }
+
+  @Test
+  void getPlaceReviewDTOsHappyCase() {}
 
   //  @Test
   //  void getSingleUserRatingDtoHappyCase() {
@@ -260,8 +237,8 @@ class PlaceServiceTest extends BaseTest {
   //    PlaceUserRatingDTO userTwoRatingDto =
   //        new PlaceUserRatingDTO("Franta", criterionRatingsResultUserTwo, 2.5);
   //
-  //    List<PlaceUserRatingDTO> expectedListOfUserRatings = List.of(userOneRatingDto,
-  // userTwoRatingDto);
+  //    List<PlaceUserRatingDTO> expectedListOfUserRatings =
+  //        List.of(userOneRatingDto, userTwoRatingDto);
   //
   //    PlaceRatingsDTO expectedResult = new PlaceRatingsDTO(expectedListOfUserRatings);
   //
@@ -269,6 +246,5 @@ class PlaceServiceTest extends BaseTest {
   //
   //    assertNotNull(actualResult);
   //    assertEquals(actualResult, expectedResult);
-  //
   //  }
 }
