@@ -20,6 +20,7 @@ public class InterestService {
 
   private final InterestRepository interestRepository;
   private final CategoryService categoryService;
+  private final PlaceService placeService;
 
   public Optional<Interest> findById(Long interestId) {
     return interestRepository.findById(interestId);
@@ -72,6 +73,21 @@ public class InterestService {
             Comparator.comparingDouble(
                 dto -> dto.distanceKm() != null ? dto.distanceKm() : Double.MAX_VALUE))
         .collect(Collectors.toList());
+  }
+
+  public List<RatedInterestDTO> getAllRatedInterestsDTOS(@Valid AppUser appUser) {
+    List<Interest> ratedInterests =
+        interestRepository.findAllDistinctByCriteria_Ratings_AppUser(appUser);
+
+    Comparator<PlaceReviewDTO> comparator =
+        Comparator.comparing(PlaceReviewDTO::avgRating).reversed();
+
+    return ratedInterests.stream()
+        .map(
+            interest ->
+                new RatedInterestDTO(
+                    interest, placeService.getPlaceReviewDTOs(appUser, interest, comparator)))
+        .toList();
   }
 
   private Double getDistanceToNearestPlace(CoordinatesDTO usersCoords, List<Place> places) {

@@ -93,7 +93,8 @@ public class PlaceService {
     return new CriterionAvgRatingDTO(criterion.getId(), criterion.getName(), avgRating);
   }
 
-  public List<PlaceReviewDTO> getPlaceReviewDTOs(@Valid AppUser user, @Valid Interest interest) {
+  public List<PlaceReviewDTO> getPlaceReviewDTOs(
+      @Valid AppUser user, @Valid Interest interest, Comparator<PlaceReviewDTO> comparator) {
     List<Review> reviews = reviewService.findAllByAppUserAndInterest(user, interest);
     List<Rating> ratings = ratingService.findAllByAppUserAndInterest(user, interest);
     Set<Place> distinctPlaces = new HashSet<>();
@@ -108,7 +109,7 @@ public class PlaceService {
 
     return distinctPlaces.stream()
         .map(place -> getPlaceReviewDTO(user, place))
-        .sorted(Comparator.comparing(PlaceReviewDTO::timestamp).reversed())
+        .sorted(comparator)
         .toList();
   }
 
@@ -135,11 +136,7 @@ public class PlaceService {
     Optional<Review> optReview = reviewService.findById(new ReviewId(user.getId(), place.getId()));
     String review = optReview.map(Review::getText).orElse(null);
     List<Rating> ratings = ratingService.findAllByAppUserAndPlace(user, place);
-    List<RatingDTO> ratingDTOS =
-        ratings.stream()
-            .map(RatingDTO::new)
-            .sorted(Comparator.comparing(RatingDTO::rating))
-            .toList();
+    List<RatingDTO> ratingDTOS = ratings.stream().map(RatingDTO::new).toList();
     Double avgRating =
         ratingDTOS.stream()
             .mapToDouble(RatingDTO::rating)

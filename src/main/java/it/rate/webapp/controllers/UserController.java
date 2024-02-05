@@ -13,6 +13,7 @@ import it.rate.webapp.services.RatingService;
 import it.rate.webapp.services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import java.security.Principal;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -107,7 +108,7 @@ public class UserController {
   public String userPage(@PathVariable String username, Model model, Principal principal) {
     AppUser user =
         userService.findByUsernameIgnoreCase(username).orElseThrow(UserNotFoundException::new);
-    List<UserRatedInterestDTO> ratedInterests = ratingService.getAllUserRatedInterestDTOS(user);
+    List<RatedInterestDTO> ratedInterests = interestService.getAllRatedInterestsDTOS(user);
 
     model.addAttribute("user", new AppUserDTO(user));
     model.addAttribute("ratedInterests", ratedInterests);
@@ -130,7 +131,10 @@ public class UserController {
         userService.findByUsernameIgnoreCase(username).orElseThrow(UserNotFoundException::new);
     Interest interest =
         interestService.findById(interestId).orElseThrow(InterestNotFoundException::new);
-    List<PlaceReviewDTO> placesReviews = placeService.getPlaceReviewDTOs(user, interest);
+    Comparator<PlaceReviewDTO> comparator =
+        Comparator.comparing(PlaceReviewDTO::timestamp).reversed();
+    List<PlaceReviewDTO> placesReviews =
+        placeService.getPlaceReviewDTOs(user, interest, comparator);
 
     model.addAttribute("user", new AppUserDTO(user));
     model.addAttribute("interest", interest);

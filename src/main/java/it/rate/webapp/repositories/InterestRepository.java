@@ -18,4 +18,6 @@ public interface InterestRepository extends JpaRepository<Interest, Long> {
   List<Interest> findAllSortByLikes();
 
   List<Interest> findAllByLikes_AppUser(AppUser appUser);
+
+  List<Interest> findAllDistinctByCriteria_Ratings_AppUser(AppUser appUser);
 }

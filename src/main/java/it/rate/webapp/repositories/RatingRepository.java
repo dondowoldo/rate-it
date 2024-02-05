@@ -7,8 +7,6 @@ import java.util.List;
 
 public interface RatingRepository extends JpaRepository<Rating, RatingId> {
 
-  List<Rating> findAllByAppUser(AppUser appUser);
-
   List<Rating> findAllByCriterionAndPlaceAndCriterionDeletedFalse(Criterion criterion, Place place);
 
   List<Rating> findAllByAppUserAndCriterion_InterestAndCriterionDeletedFalse(

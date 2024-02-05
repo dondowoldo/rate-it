@@ -1,11 +1,8 @@
 package it.rate.webapp.services;
 
 import it.rate.webapp.dtos.RatingsDTO;
-import it.rate.webapp.dtos.UserRatedInterestDTO;
-import it.rate.webapp.dtos.UserRatedPlaceDTO;
 import it.rate.webapp.exceptions.badrequest.InvalidCriterionDetailsException;
 import it.rate.webapp.exceptions.badrequest.InvalidRatingException;
-import it.rate.webapp.mappers.RatingMapper;
 import it.rate.webapp.models.*;
 import it.rate.webapp.repositories.CriterionRepository;
 import it.rate.webapp.repositories.RatingRepository;
@@ -16,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @Validated
@@ -105,32 +101,5 @@ public class RatingService {
     return criterionRepository
         .findById(criterionId)
         .orElseThrow(InvalidCriterionDetailsException::new);
-  }
-
-  public List<UserRatedInterestDTO> getAllUserRatedInterestDTOS(AppUser appUser) {
-    List<Rating> userRatings = ratingRepository.findAllByAppUser(appUser);
-
-    Map<Interest, Map<Place, List<Rating>>> ratingsByInterestAndPlace =
-        userRatings.stream()
-            .filter(rating -> !rating.getCriterion().isDeleted())
-            .collect(
-                Collectors.groupingBy(
-                    rating -> rating.getPlace().getInterest(),
-                    Collectors.groupingBy(Rating::getPlace, Collectors.toList())));
-
-    return ratingsByInterestAndPlace.entrySet().stream()
-        .map(
-            interest ->
-                RatingMapper.remapToUserRatedInterestDTO(
-                    interest.getKey(),
-                    interest.getValue().entrySet().stream()
-                        .map(
-                            place ->
-                                RatingMapper.remapToUserRatedPlaceDTO(
-                                    place.getKey(), place.getValue()))
-                        .sorted(Comparator.comparingDouble(UserRatedPlaceDTO::avgRating).reversed())
-                        .collect(Collectors.toList())))
-        .sorted(Comparator.comparingInt(UserRatedInterestDTO::likes).reversed())
-        .toList();
   }
 }
