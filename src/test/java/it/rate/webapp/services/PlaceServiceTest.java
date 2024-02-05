@@ -152,9 +152,9 @@ class PlaceServiceTest extends BaseTest {
   @Test
   void getCriteriaOfPlaceDtoHappyCase() {
     List<Criterion> criteria =
-            Arrays.asList(
-                    Criterion.builder().id(1L).name("Criterion1").build(),
-                    Criterion.builder().id(2L).name("Criterion2").build());
+        Arrays.asList(
+            Criterion.builder().id(1L).name("Criterion1").build(),
+            Criterion.builder().id(2L).name("Criterion2").build());
 
     List<Rating> ratings =
         Arrays.asList(
@@ -206,68 +206,69 @@ class PlaceServiceTest extends BaseTest {
     assertEquals(actualResult, expectedResult);
   }
 
-//  @Test
-//  void getSingleUserRatingDtoHappyCase() {
-//    List<Criterion> criteria = Arrays.asList(new Criterion(), new Criterion());
-//    criteria.get(0).setName("Mnamovatost");
-//    criteria.get(1).setName("Pohlednost");
-//
-//    List<Rating> ratings =
-//        Arrays.asList(
-//            new Rating(u1, p1, criteria.get(0), 3), new Rating(u1, p1, criteria.get(1), 4));
-//
-//    p1.setRatings(ratings);
-//
-//    Map<String, Double> criterionRatingsResult = new HashMap<>();
-//    criterionRatingsResult.put("Mnamovatost", 1.5);
-//    criterionRatingsResult.put("Pohlednost", 2.0);
-//
-//    PlaceUserRatingDTO expectedResult =
-//        new PlaceUserRatingDTO("Lojza", criterionRatingsResult, 1.8);
-//
-//    PlaceUserRatingDTO actualResult = placeService.getSingleUserRatingDTO(u1, ratings);
-//
-//    assertNotNull(actualResult);
-//    assertEquals(actualResult, expectedResult);
-//  }
-//
-//  @Test
-//  void getPlaceUserRatingDtoWithMultipleUsersAndRatings() {
-//
-//    List<Criterion> criteria = Arrays.asList(new Criterion(), new Criterion());
-//    criteria.get(0).setName("Mnamovatost");
-//    criteria.get(1).setName("Pohlednost");
-//
-//    List<Rating> ratings =
-//        Arrays.asList(
-//            new Rating(u1, p1, criteria.get(0), 3),
-//            new Rating(u1, p1, criteria.get(1), 4),
-//            new Rating(u2, p1, criteria.get(0), 2),
-//            new Rating(u2, p1, criteria.get(1), 8));
-//
-//    p1.setRatings(ratings);
-//
-//    Map<String, Double> criterionRatingsResultUserOne = new HashMap<>();
-//    criterionRatingsResultUserOne.put("Mnamovatost", 1.5);
-//    criterionRatingsResultUserOne.put("Pohlednost", 2.0);
-//
-//    Map<String, Double> criterionRatingsResultUserTwo = new HashMap<>();
-//    criterionRatingsResultUserTwo.put("Mnamovatost", 1.0);
-//    criterionRatingsResultUserTwo.put("Pohlednost", 4.0);
-//
-//    PlaceUserRatingDTO userOneRatingDto =
-//        new PlaceUserRatingDTO("Lojza", criterionRatingsResultUserOne, 1.8);
-//    PlaceUserRatingDTO userTwoRatingDto =
-//        new PlaceUserRatingDTO("Franta", criterionRatingsResultUserTwo, 2.5);
-//
-//    List<PlaceUserRatingDTO> expectedListOfUserRatings = List.of(userOneRatingDto, userTwoRatingDto);
-//
-//    PlaceRatingsDTO expectedResult = new PlaceRatingsDTO(expectedListOfUserRatings);
-//
-//    PlaceRatingsDTO actualResult = placeService.getPlaceRatingsDTO(p1);
-//
-//    assertNotNull(actualResult);
-//    assertEquals(actualResult, expectedResult);
-//
-//  }
+  //  @Test
+  //  void getSingleUserRatingDtoHappyCase() {
+  //    List<Criterion> criteria = Arrays.asList(new Criterion(), new Criterion());
+  //    criteria.get(0).setName("Mnamovatost");
+  //    criteria.get(1).setName("Pohlednost");
+  //
+  //    List<Rating> ratings =
+  //        Arrays.asList(
+  //            new Rating(u1, p1, criteria.get(0), 3), new Rating(u1, p1, criteria.get(1), 4));
+  //
+  //    p1.setRatings(ratings);
+  //
+  //    Map<String, Double> criterionRatingsResult = new HashMap<>();
+  //    criterionRatingsResult.put("Mnamovatost", 1.5);
+  //    criterionRatingsResult.put("Pohlednost", 2.0);
+  //
+  //    PlaceUserRatingDTO expectedResult =
+  //        new PlaceUserRatingDTO("Lojza", criterionRatingsResult, 1.8);
+  //
+  //    PlaceUserRatingDTO actualResult = placeService.getSingleUserRatingDTO(u1, ratings);
+  //
+  //    assertNotNull(actualResult);
+  //    assertEquals(actualResult, expectedResult);
+  //  }
+  //
+  //  @Test
+  //  void getPlaceUserRatingDtoWithMultipleUsersAndRatings() {
+  //
+  //    List<Criterion> criteria = Arrays.asList(new Criterion(), new Criterion());
+  //    criteria.get(0).setName("Mnamovatost");
+  //    criteria.get(1).setName("Pohlednost");
+  //
+  //    List<Rating> ratings =
+  //        Arrays.asList(
+  //            new Rating(u1, p1, criteria.get(0), 3),
+  //            new Rating(u1, p1, criteria.get(1), 4),
+  //            new Rating(u2, p1, criteria.get(0), 2),
+  //            new Rating(u2, p1, criteria.get(1), 8));
+  //
+  //    p1.setRatings(ratings);
+  //
+  //    Map<String, Double> criterionRatingsResultUserOne = new HashMap<>();
+  //    criterionRatingsResultUserOne.put("Mnamovatost", 1.5);
+  //    criterionRatingsResultUserOne.put("Pohlednost", 2.0);
+  //
+  //    Map<String, Double> criterionRatingsResultUserTwo = new HashMap<>();
+  //    criterionRatingsResultUserTwo.put("Mnamovatost", 1.0);
+  //    criterionRatingsResultUserTwo.put("Pohlednost", 4.0);
+  //
+  //    PlaceUserRatingDTO userOneRatingDto =
+  //        new PlaceUserRatingDTO("Lojza", criterionRatingsResultUserOne, 1.8);
+  //    PlaceUserRatingDTO userTwoRatingDto =
+  //        new PlaceUserRatingDTO("Franta", criterionRatingsResultUserTwo, 2.5);
+  //
+  //    List<PlaceUserRatingDTO> expectedListOfUserRatings = List.of(userOneRatingDto,
+  // userTwoRatingDto);
+  //
+  //    PlaceRatingsDTO expectedResult = new PlaceRatingsDTO(expectedListOfUserRatings);
+  //
+  //    PlaceRatingsDTO actualResult = placeService.getPlaceRatingsDTO(p1);
+  //
+  //    assertNotNull(actualResult);
+  //    assertEquals(actualResult, expectedResult);
+  //
+  //  }
 }

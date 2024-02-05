@@ -9,7 +9,6 @@ import it.rate.webapp.models.AppUser;
 import it.rate.webapp.models.Interest;
 import it.rate.webapp.services.InterestService;
 import it.rate.webapp.services.PlaceService;
-import it.rate.webapp.services.RatingService;
 import it.rate.webapp.services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import java.security.Principal;
@@ -26,7 +25,6 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
   private final UserService userService;
-  private final RatingService ratingService;
   private final InterestService interestService;
   private final PlaceService placeService;
 
