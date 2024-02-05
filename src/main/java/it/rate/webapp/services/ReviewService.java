@@ -45,7 +45,7 @@ public class ReviewService {
     return reviewRepository.findAllByPlace(place);
   }
 
-  public List<Review> findAllByAppUser(AppUser user) {
-    return reviewRepository.findAllByAppUser(user);
+  public List<Review> findAllByAppUserAndInterest(AppUser appUser, Interest interest) {
+    return reviewRepository.findAllByAppUserAndPlace_Interest(appUser, interest);
   }
 }
