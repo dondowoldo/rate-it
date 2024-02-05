@@ -23,21 +23,11 @@ if (pictureContainer) {
 
 function fetchInterestImageUrl(interest) {
     const imageName = interest.imageName;
-    const categories = interest.categoryIds;
 
     if (imageName == null || imageName === '') {
         console.error('No imageNames found');
         let imgUrl;
-        if (categories.includes(1) || categories.includes(2)) {
-            imgUrl = '../images/food-drink2.svg';
-        } else if (categories.includes(3) || categories.includes(5) || categories.includes(7)) {
-            imgUrl = '../images/outdoor-sport-relax2.svg';
-        } else if (categories.includes(4) || categories.includes(6) || categories.includes(9)) {
-            imgUrl = '../images/art-culture-entertainment-educ2.svg';
-        } else {
-            imgUrl = '../images/services2.svg'
-        }
-        return imgUrl;
+        return fetchDefaultInterestImage(interest);
     } else {
         const apiUrl = '/api/v1/images/' + imageName;
 
@@ -57,7 +47,7 @@ function fetchInterestImageUrl(interest) {
 }
 
 
-function fetchImageUrl(place) {
+function fetchImageUrl(place, interest) {
     const imageNames = place.imageNames;
 
     if (imageNames && imageNames.length > 0) {
@@ -74,11 +64,25 @@ function fetchImageUrl(place) {
             .then(blob => URL.createObjectURL(blob))
             .catch(error => {
                 console.error('Error fetching image:', error);
-                return 'https://picsum.photos/400/300';
+                return fetchDefaultInterestImage(interest);
             });
     } else {
         console.error('No imageNames found for the place');
-        return 'https://picsum.photos/400/300';
+        return fetchDefaultInterestImage(interest);
     }
+}
 
+function fetchDefaultInterestImage(interest) {
+    const categories = interest.categoryIds;
+    let imgUrl;
+    if (categories.includes(1) || categories.includes(2)) {
+        imgUrl = '../images/food-drink.svg';
+    } else if (categories.includes(3) || categories.includes(5) || categories.includes(7)) {
+        imgUrl = '../images/outdoor-sport-relax.svg';
+    } else if (categories.includes(4) || categories.includes(6) || categories.includes(9)) {
+        imgUrl = '../images/art-culture-entertainment-educ.svg';
+    } else {
+        imgUrl = '../images/services.svg';
+    }
+    return imgUrl;
 }
