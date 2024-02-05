@@ -78,14 +78,9 @@ public class RatingService {
       return;
     }
 
-    if (optRating.isPresent()) {
-      Rating existingRating = optRating.get();
-      existingRating.setRating(rating);
-      ratingRepository.save(existingRating);
-    } else {
-      Rating newRating = new Rating(appUser, place, criterion, rating);
-      ratingRepository.save(newRating);
-    }
+    optRating.ifPresent(value -> ratingRepository.deleteById(value.getId()));
+    Rating newRating = new Rating(appUser, place, criterion, rating);
+    ratingRepository.save(newRating);
   }
 
   private Set<Criterion> validateRatings(RatingsDTO ratings, Place place) {

@@ -93,7 +93,7 @@ public class PlaceService {
     return new CriterionAvgRatingDTO(criterion.getId(), criterion.getName(), avgRating);
   }
 
-  public List<PlaceReviewDTO> getPlaceReviewDTOs(AppUser user, Interest interest) {
+  public List<PlaceReviewDTO> getPlaceReviewDTOs(@Valid AppUser user, @Valid Interest interest) {
     List<Review> reviews = reviewService.findAllByAppUserAndInterest(user, interest);
     List<Rating> ratings = ratingService.findAllByAppUserAndInterest(user, interest);
     Set<Place> distinctPlaces = new HashSet<>();
@@ -106,10 +106,13 @@ public class PlaceService {
       distinctPlaces.add(rating.getPlace());
     }
 
-    return distinctPlaces.stream().map(place -> getPlaceReviewDTO(user, place)).toList();
+    return distinctPlaces.stream()
+        .map(place -> getPlaceReviewDTO(user, place))
+        .sorted(Comparator.comparing(PlaceReviewDTO::timestamp).reversed())
+        .toList();
   }
 
-  public List<PlaceReviewDTO> getPlaceReviewDTOsByPlace(Place place) {
+  public List<PlaceReviewDTO> getPlaceReviewDTOs(@Valid Place place) {
     List<Review> reviews = reviewService.findAllByPlace(place);
     List<Rating> ratings = ratingService.findAllByPlace(place);
     Set<AppUser> distinctUsers = new HashSet<>();
@@ -122,14 +125,21 @@ public class PlaceService {
       distinctUsers.add(rating.getAppUser());
     }
 
-    return distinctUsers.stream().map(appUser -> getPlaceReviewDTO(appUser, place)).toList();
+    return distinctUsers.stream()
+        .map(appUser -> getPlaceReviewDTO(appUser, place))
+        .sorted(Comparator.comparing(PlaceReviewDTO::timestamp).reversed())
+        .toList();
   }
 
   private PlaceReviewDTO getPlaceReviewDTO(AppUser user, Place place) {
     Optional<Review> optReview = reviewService.findById(new ReviewId(user.getId(), place.getId()));
     String review = optReview.map(Review::getText).orElse(null);
     List<Rating> ratings = ratingService.findAllByAppUserAndPlace(user, place);
-    List<RatingDTO> ratingDTOS = ratings.stream().map(RatingDTO::new).toList();
+    List<RatingDTO> ratingDTOS =
+        ratings.stream()
+            .map(RatingDTO::new)
+            .sorted(Comparator.comparing(RatingDTO::rating))
+            .toList();
     Double avgRating =
         ratingDTOS.stream()
             .mapToDouble(RatingDTO::rating)
