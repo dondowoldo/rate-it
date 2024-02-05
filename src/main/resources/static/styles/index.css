@@ -334,6 +334,12 @@ h3 {
     background-color: #575757;
 }
 
+.place-button-bar #rate-confirmation {
+    color: #478363;
+    position: absolute;
+    margin-top: 3.5rem;
+}
+
 .location-button-bar {
     display: flex;
     justify-content: space-between;
