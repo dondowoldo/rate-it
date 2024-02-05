@@ -4,7 +4,6 @@ let usersCoords;
 document.addEventListener('DOMContentLoaded', async () => {
     initializeCheckboxesSplide()
     document.querySelector('.loader').style.display = 'block';
-    await new Promise(resolve => setTimeout(resolve, 4000)); // For testing purposes
     try {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(success, error);
