@@ -23,10 +23,21 @@ if (pictureContainer) {
 
 function fetchInterestImageUrl(interest) {
     const imageName = interest.imageName;
+    const categories = interest.categoryIds;
 
     if (imageName == null || imageName === '') {
         console.error('No imageNames found');
-        return 'https://picsum.photos/400/300';
+        let imgUrl;
+        if (categories.includes(1) || categories.includes(2)) {
+            imgUrl = '../images/food-drink2.svg';
+        } else if (categories.includes(3) || categories.includes(5) || categories.includes(7)) {
+            imgUrl = '../images/outdoor-sport-relax2.svg';
+        } else if (categories.includes(4) || categories.includes(6) || categories.includes(9)) {
+            imgUrl = '../images/art-culture-entertainment-educ2.svg';
+        } else {
+            imgUrl = '../images/services2.svg'
+        }
+        return imgUrl;
     } else {
         const apiUrl = '/api/v1/images/' + imageName;
 
@@ -44,7 +55,6 @@ function fetchInterestImageUrl(interest) {
             });
     }
 }
-
 
 
 function fetchImageUrl(place) {
