@@ -8,7 +8,9 @@
 name: Deploy to production
 
 on:
-  [ push,  pull_request ]
+  push:
+    branches:
+      - master
 
 permissions:
   contents: read
