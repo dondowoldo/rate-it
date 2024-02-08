@@ -76,7 +76,6 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE }}
           source: "build/resources/main/*.properties"
           target: "~/test_properties_archive/"
-        if: "!(contains(needs.build.outputs.PROPERTIES_FILE_NAME, '-dev'))"
           
       - name: Run jar file on server
         uses: appleboy/ssh-action@master
@@ -86,4 +85,4 @@ jobs:
           port: 12122 # Default SSH port, change if different
           key: ${{ secrets.SSH_PRIVATE }}
           script: |
-            java -jar ~/*.jar
+            screen -d -m bash -c "java -jar ~/*.jar"
