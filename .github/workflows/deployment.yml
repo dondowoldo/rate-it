@@ -31,8 +31,21 @@ jobs:
         uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25 # v2.6.0
         with:
           arguments: build
+
+          # Assuming the .jar file is located in build/libs and named app.jar. Adjust the path and name as necessary.
+      - name: Move current .jar to archive
+        uses: appleboy/ssh-action@master
+        with:
+          host: 0.petabyte.farm
+          username: root
+          port: 12122 # Default SSH port, change if different
+          key: ${{ secrets.SSH_PRIVATE }}
+          script: |
+            mv ~/test/build/libs/*.jar ~/test_archive/
+     
       # Assuming the .jar file is located in build/libs and named app.jar. Adjust the path and name as necessary.
       - name: Upload .jar file to server
+        if: "!contains(runner.job, 'plain')"
         uses: appleboy/scp-action@master
         with:
           host: 0.petabyte.farm
@@ -40,4 +53,14 @@ jobs:
           port: 12122 # Default SSH port, change if different
           key: ${{ secrets.SSH_PRIVATE }}
           source: "build/libs/*.jar" # Adjust the path to where your .jar files are located
-          target: "~/test/" # The target directory on your server, adjust as needed
+          target: "~/test2/" # The target directory on your server, adjust as needed
+          
+      - name: Run jar file on server
+        uses: appleboy/ssh-action@master
+        with:
+          host: 0.petabyte.farm
+          username: root
+          port: 12122 # Default SSH port, change if different
+          key: ${{ secrets.SSH_PRIVATE }}
+          script: |
+            java -jar ~/*.jar
