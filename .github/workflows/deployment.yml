@@ -36,9 +36,9 @@ jobs:
       - name: Stop Spring Boot application
         uses: appleboy/ssh-action@master
         with:
-          host: 0.petabyte.farm
-          username: root
-          port: 12122
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          port: ${{ secrets.SSH_PORT }}
           key: ${{ secrets.SSH_PRIVATE }}
           script: |
             pkill -f 'java -jar'
@@ -47,9 +47,9 @@ jobs:
       - name: Move current .jar to archive
         uses: appleboy/ssh-action@master
         with:
-          host: 0.petabyte.farm
-          username: root
-          port: 12122
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          port: ${{ secrets.SSH_PORT }}
           key: ${{ secrets.SSH_PRIVATE }}
           script: |
             mv ~/test/*.jar ~/test_archive/
@@ -65,9 +65,9 @@ jobs:
       - name: Upload .jar file to server
         uses: appleboy/scp-action@master
         with:
-          host: 0.petabyte.farm
-          username: root
-          port: 12122
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          port: ${{ secrets.SSH_PORT }}
           key: ${{ secrets.SSH_PRIVATE }}
           source: "build/libs/*.jar"
           target: "~/test2/"
@@ -85,9 +85,9 @@ jobs:
       - name: Upload properties files to server
         uses: appleboy/scp-action@master
         with:
-          host: 0.petabyte.farm
-          username: root
-          port: 12122
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          port: ${{ secrets.SSH_PORT }}
           key: ${{ secrets.SSH_PRIVATE }}
           source: "build/resources/main/*.properties"
           target: "~/test_properties_archive/"
@@ -97,9 +97,9 @@ jobs:
       - name: Run jar file on server
         uses: appleboy/ssh-action@master
         with:
-          host: 0.petabyte.farm
-          username: root
-          port: 12122
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          port: ${{ secrets.SSH_PORT }}
           key: ${{ secrets.SSH_PRIVATE }}
           script: |
             nohup java -jar ~/*.jar > /dev/null 2>&1 &
