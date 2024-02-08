@@ -34,14 +34,11 @@ jobs:
 
       - name: Replace placeholders in properties files with secrets
         run: |
-          # Get a list of secret keys
-          secrets_keys=$(env | grep -oP '^secrets_\K.*(?==)')
-      
-          # Iterate over each secret key
+          secrets_keys=$(echo "${{ toJson(secrets) }}" | jq -r 'keys[] | select(startswith("RATESPOT_"))')
           for secret_key in $secrets_keys; do
             placeholder="${secret_key}"
-            sed -i "s|\\\${$placeholder}|$(echo "${{ secrets.secret_key }}")|" build/resources/main/application.properties
-            sed -i "s|\\\${$placeholder}|$(echo "${{ secrets.secret_key }}")|" build/resources/main/application-production.properties
+            sed -i "s|\\\${$placeholder}|$(echo "${{ secrets.$secret_key }}")|" build/resources/main/application.properties
+            sed -i "s|\\\${$placeholder}|$(echo "${{ secrets.$secret_key }}")|" build/resources/main/application-production.properties
           done
 
 
