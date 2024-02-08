@@ -62,7 +62,8 @@ jobs:
           username: root
           port: 12122
           key: ${{ secrets.SSH_PRIVATE }}
-          source: "build/libs/*.jar $(ls build/libs/*.jar | grep -v 'plain')"
+          source: "build/libs/*.jar"
+          exclude: "build/libs/*plain*"
           target: "~/test2/"
           strip_components: 2
 
@@ -74,7 +75,8 @@ jobs:
           username: root
           port: 12122
           key: ${{ secrets.SSH_PRIVATE }}
-          source: "build/resources/main/*.properties $(ls build/resources/main/*.jar | grep -v 'dev')"
+          source: "build/resources/main/*.properties"
+          exclude: "build/resources/main/*dev*"
           target: "~/test_properties_archive/"
           strip_components: 3
 
