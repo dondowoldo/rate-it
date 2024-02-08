@@ -65,7 +65,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE }}
           source: "build/libs/*.jar" # Adjust the path to where your .jar files are located
           target: "~/test2/" # The target directory on your server, adjust as needed
-          flatten: true
+          strip_components: 1
 
                 # Upload properties files to server
       - name: Upload properties files to server
@@ -77,7 +77,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE }}
           source: "build/resources/main/*.properties"
           target: "~/test_properties_archive/"
-          flatten: true
+          strip_components: 1
           
       - name: Run jar file on server
         uses: appleboy/ssh-action@master
