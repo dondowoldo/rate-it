@@ -34,12 +34,15 @@ jobs:
 
       - name: Replace placeholders in properties files with secrets
         run: |
-          sed -i 's|${RATESPOT_EMAIL_USERNAME}|'"${{ secrets.RATESPOT_EMAIL_USERNAME }}"'|' build/resources/main/application.properties
-          sed -i 's|${RATESPOT_EMAIL_PASSWORD}|'"${{ secrets.RATESPOT_EMAIL_PASSWORD }}"'|' build/resources/main/application.properties
-          sed -i 's|${RATESPOT_GMAIL_USERNAME}|'"${{ secrets.RATESPOT_GMAIL_USERNAME }}"'|' build/resources/main/application.properties
-          sed -i 's|${RATESPOT_DB_URL}|'"${{ secrets.RATESPOT_DB_URL }}"'|' build/resources/main/application-production.properties
-          sed -i 's|${RATESPOT_DB_USERNAME}|'"${{ secrets.RATESPOT_DB_USERNAME }}"'|' build/resources/main/application-production.properties
-          sed -i 's|${RATESPOT_DB_PASSWORD}|'"${{ secrets.RATESPOT_DB_PASSWORD }}"'|' build/resources/main/application-production.properties
+          # Get a list of secret keys
+          secrets_keys=$(env | grep -oP '^secrets_\K.*(?==)')
+      
+          # Iterate over each secret key
+          for secret_key in $secrets_keys; do
+            placeholder="${secret_key}"
+            sed -i "s|\\\${$placeholder}|$(echo "${{ secrets.$secret_key }}")|" build/resources/main/application.properties
+            sed -i "s|\\\${$placeholder}|$(echo "${{ secrets.$secret_key }}")|" build/resources/main/application-production.properties
+          done
 
 
       - name: Stop Spring Boot application
