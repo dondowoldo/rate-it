@@ -32,6 +32,12 @@ jobs:
         with:
           arguments: build
 
+      - name: Replace placeholders in application.properties
+        run: |
+          sed -i 's/${RATESPOT_EMAIL_USERNAME}/'"$RATESPOT_EMAIL_USERNAME"'/' build/resources/main/application.properties
+          sed -i 's/${RATESPOT_EMAIL_PASSWORD}/'"$RATESPOT_EMAIL_PASSWORD"'/' build/resources/main/application.properties
+          sed -i 's/${RATESPOT_GMAIL_USERNAME}/'"$RATESPOT_GMAIL_USERNAME"'/' build/resources/main/application.properties
+
            # Stop currently running Spring Boot application
       - name: Stop Spring Boot application
         uses: appleboy/ssh-action@master
