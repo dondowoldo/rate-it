@@ -52,7 +52,7 @@ jobs:
           port: 12122 # Default SSH port, change if different
           key: ${{ secrets.SSH_PRIVATE }}
           script: |
-            mv ~/test/build/libs/*.jar ~/test_archive/
+            mv ~/test/*.jar ~/test_archive/
      
       # Assuming the .jar file is located in build/libs and named app.jar. Adjust the path and name as necessary.
       - name: Upload .jar file to server
@@ -65,6 +65,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE }}
           source: "build/libs/*.jar" # Adjust the path to where your .jar files are located
           target: "~/test2/" # The target directory on your server, adjust as needed
+          flatten: true
 
                 # Upload properties files to server
       - name: Upload properties files to server
@@ -76,6 +77,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE }}
           source: "build/resources/main/*.properties"
           target: "~/test_properties_archive/"
+          flatten: true
           
       - name: Run jar file on server
         uses: appleboy/ssh-action@master
