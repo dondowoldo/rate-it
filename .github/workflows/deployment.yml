@@ -32,13 +32,17 @@ jobs:
         with:
           arguments: build
 
-      - name: Replace placeholders in application.properties
+      - name: Replace placeholders in properties files with secrets
         run: |
           sed -i 's/${RATESPOT_EMAIL_USERNAME}/'"${{ secrets.RATESPOT_EMAIL_USERNAME }}"'/' build/resources/main/application.properties
           sed -i 's/${RATESPOT_EMAIL_PASSWORD}/'"${{ secrets.RATESPOT_EMAIL_PASSWORD }}"'/' build/resources/main/application.properties
           sed -i 's/${RATESPOT_GMAIL_USERNAME}/'"${{ secrets.RATESPOT_GMAIL_USERNAME }}"'/' build/resources/main/application.properties
 
-           # Stop currently running Spring Boot application
+          sed -i 's/${RATESPOT_DB_URL}/'"${{ secrets.RATESPOT_DB_URL }}"'/' build/resources/main/application-production.properties
+          sed -i 's/${RATESPOT_DB_USERNAME}/'"${{ secrets.RATESPOT_DB_USERNAME }}"'/' build/resources/main/application-production.properties
+          sed -i 's/${RATESPOT_DB_PASSWORD}/'"${{ secrets.RATESPOT_DB_PASSWORD }}"'/' build/resources/main/application-production.properties
+
+
       - name: Stop Spring Boot application
         uses: appleboy/ssh-action@master
         with:
