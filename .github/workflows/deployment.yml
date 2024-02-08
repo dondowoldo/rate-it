@@ -85,4 +85,4 @@ jobs:
           port: 12122 # Default SSH port, change if different
           key: ${{ secrets.SSH_PRIVATE }}
           script: |
-            screen -d -m bash -c "java -jar ~/*.jar"
+            nohup java -jar ~/*.jar > /dev/null 2>&1 &
